@@ -17,9 +17,9 @@ ifdef SUBDIRS
 .PHONY : $(SUBDIRS)
 $(SUBDIRS) : FORCE
 	@if [ -d $@ ]; then \
-		$(MAKE) --directory=$@ $(MAKECMDGOALS); \
+		$(MAKE) --no-print-directory --directory=$@ $(MAKECMDGOALS); \
 	fi
-	@echo $(HOST_SYSTEM)-$(TARGET_SYSTEM) build complete: $@ : $(shell date)
+	@echo '$(HOST_SYSTEM)'-'$(TARGET_SYSTEM)' build complete: $@ : $(shell date)
 endif
 
 .PHONY : all
