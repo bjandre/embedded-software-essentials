@@ -1,0 +1,24 @@
+# emacs
+*~
+
+# compiler build artifacts
+*.o
+*.elf
+*.hex
+*.a
+
+# python artifacts
+*.pyc
+
+# kicad files
+*.bak
+*.bck
+*.raw
+*.log
+*.dcm
+*.kicad_pcb-bak
+*autosave*
+*cache*
+
+# 3rd party library builds
+3rd-party/build-*
