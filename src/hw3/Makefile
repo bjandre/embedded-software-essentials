@@ -3,8 +3,8 @@ NATIVE_CC = cc
 NATIVE_CFLAGS = --std=c99 -Wall -g
 
 # arm-linux-gnueabi cross compiler
-ALG_X_CC = arm-linux-gnueabi-gcc
-ALG_X_CFLAGS = --std=c99 -Wall -g
+ALG_X_CC = arm-linux-gnueabihf-gcc
+ALG_X_CFLAGS = --std=c99 -Wall -g -march=armv7-a -mtune=cortex-a8 -mfpu=neon
 
 platform = unset
 ifeq ($(platform), unset)
@@ -23,19 +23,26 @@ HELLO_SRCS = hello.c
 
 HELLO_OBJS = $(HELLO_SRCS:%.c=%.o)
 
+REVERSE_EXE = reverse.out
+REVERSE_SRCS = reverse.c reverse-main.c
+REVERSE_OBJS = $(REVERSE_SRCS:%.c=%.o)
+
 %.o : %.c
 	$(CC) $(CFLAGS) -c -o $@ $<
 
 .PHONY : all
-all : $(HELLO_EXE)
+all : $(HELLO_EXE) $(REVERSE_EXE)
 
 $(HELLO_EXE) : $(HELLO_OBJS)
-	$(CC) $(CFLAGS) -o $@ $<
+	$(CC) $(CFLAGS) -o $@ $^
+
+$(REVERSE_EXE) : $(REVERSE_OBJS)
+	$(CC) $(CFLAGS) -o $@ $^
 
 
 .PHONY : clean
 clean : FORCE
-	-rm -rf *.o *~ $(HELLO_EXE)
+	-rm -rf *.o *~ $(HELLO_EXE) $(REVERSE_EXE)
 
 FORCE :
 
