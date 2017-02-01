@@ -5,11 +5,11 @@
 void print_byte_array(char *str, int length);
 
 void print_byte_array(char *str, int length) {
-  printf("{ ");
+  printf("\"");
   for (int i = 0; i < length; i++) {
-    printf("%c ", *(str + i));
+    printf("%c", *(str + i));
   }
-  printf("}\n");
+  printf("\"\n");
 }
 
 int main(int argc, char **argv) {
