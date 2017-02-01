@@ -17,21 +17,33 @@ else
   endif
 endif
 
+#------------------------------------------
 HELLO_EXE = hello.out
 
 HELLO_SRCS = hello.c
 
 HELLO_OBJS = $(HELLO_SRCS:%.c=%.o)
 
+#------------------------------------------
 REVERSE_EXE = reverse.out
+
 REVERSE_SRCS = reverse.c reverse-main.c
+
 REVERSE_OBJS = $(REVERSE_SRCS:%.c=%.o)
 
+#------------------------------------------
+SIZEOF_EXE = sizeof.out
+
+SIZEOF_SRCS = sizeof.c
+
+SIZEOF_OBJS = $(SIZEOF_SRCS:%.c=%.o)
+
+#------------------------------------------
 %.o : %.c
 	$(CC) $(CFLAGS) -c -o $@ $<
 
 .PHONY : all
-all : $(HELLO_EXE) $(REVERSE_EXE)
+all : $(HELLO_EXE) $(REVERSE_EXE) $(SIZEOF_EXE)
 
 $(HELLO_EXE) : $(HELLO_OBJS)
 	$(CC) $(CFLAGS) -o $@ $^
@@ -39,10 +51,13 @@ $(HELLO_EXE) : $(HELLO_OBJS)
 $(REVERSE_EXE) : $(REVERSE_OBJS)
 	$(CC) $(CFLAGS) -o $@ $^
 
+$(SIZEOF_EXE) : $(SIZEOF_OBJS)
+	$(CC) $(CFLAGS) -o $@ $^
+
 
 .PHONY : clean
 clean : FORCE
-	-rm -rf *.o *~ $(HELLO_EXE) $(REVERSE_EXE)
+	-rm -rf *.o *~ $(HELLO_EXE) $(REVERSE_EXE) $(SIZEOF_EXE)
 
 FORCE :
 
