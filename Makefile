@@ -57,6 +57,10 @@ compile-all : $(SUBDIRS)
 .PHONY : test
 test : $(SUBDIRS)
 
+.PHONY : astyle
+astyle : FORCE
+	astyle --options=.astylerc --recursive src/*.c src/*.h
+
 .PHONY : clean
 clean : $(SUBDIRS)
 	-rm -rf $(EDITOR_FILES) $(BUILD_ARTIFACTS)

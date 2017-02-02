@@ -8,5 +8,5 @@ BUILD_ARTIFACTS = \
 	*.map
 
 EDITOR_FILES = \
-	*~
-
+	*~ \
+	*.astyle.orig
