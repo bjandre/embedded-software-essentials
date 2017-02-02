@@ -1,9 +1,17 @@
 # -*- mode: Makefile -*-
-include ../../globals.makefile
+include ../../makerules/globals.makefile
+include ../../makerules/platform.makefile
 
 # subdirectories that will be built.
 #SUBDIRS = 
 
+LIB = \
+	libutil.a
+
+SRCS = \
+	memory.c
+
+OBJS = $(SRCS:%.c=%.o)
 
 #
 # macro for executing TARGET in all SUBDIRS
@@ -17,14 +25,23 @@ $(SUBDIRS) :
 	@echo build complete: $@ : $(shell date)
 endif	
 
+#
+# Generic rule to generate objects
+#
+%.o : %.c 
+	$(CC) $(CFLAGS) -c -o $@ $<
+
+$(LIB) : $(OBJS)
+	$(AR) $(ARFLAGS) $@ $(OBJS)
+
 .PHONY : all
-all : $(SUBDIRS)
+all : $(SUBDIRS) $(LIB)
 
 .PHONY : comile-all
 compile-all : $(SUBDIRS)
 
 .PHONY : test
-test : $(SUBDIRS)
+test : $(SUBDIRS) all
 
 .PHONY : clean
 clean : $(SUBDIRS)

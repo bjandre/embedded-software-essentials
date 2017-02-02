@@ -1,5 +1,6 @@
 # -*- mode: Makefile -*-
-include ../../globals.makefile
+include ../../makerules/globals.makefile
+include ../../makerules/platform.makefile
 
 EXE = main.out
 
@@ -8,14 +9,20 @@ SRCS = \
 
 OBJS = $(SRCS:%.c=%.o)
 
+LIBS = \
+	-L../util -lutil
+
+DEPEND_LIBS = \
+	../util/libutil.a
+
 #
 # Generic rule to generate objects
 #
 %.o : %.c 
 	$(CC) $(CFLAGS) -c -o $@ $<
 
-$(EXE) : $(OBJS)
-	$(CC) $(CFLAGS) -o $@ $<
+$(EXE) : $(OBJS) $(DEPEND_LIBS)
+	$(LD) -o $@ $< $(LDFLAGS)
 
 .PHONY : all
 all : $(EXE)

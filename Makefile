@@ -1,35 +1,8 @@
 # -*- mode: Makefile -*-
 
 # Makefile for building ECEN 5013 class projects on unix systems
-include globals.makefile
-
-
-# command line configurable options
-debug = unset
-platform = unset
-
-# setup options based on command line options and defaults.
-ifeq ($(platform), unset)
-  PLATFORM = $(shell uname -s)
-else
-  ifeq ($(platform), host)
-    PLATFORM = host
-  else
-    ifeq ($(platform), bbb)
-      PLATFORM = bbb
-    else
-      ifeq ($(platform), frdm)
-        PLATFORM = frdm
-      endif
-    endif
-  endif
-endif
-
-ifeq ($(debug), unset)
-  DEBUG = 1
-else
-  DEBUG = $(debug)
-endif
+include makerules/globals.makefile
+include makerules/platform.makefile
 
 # subdirectories that will be built.
 SUBDIRS = \

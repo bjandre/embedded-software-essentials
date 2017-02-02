@@ -1,5 +1,6 @@
 # -*- mode: Makefile -*-
-include ../globals.makefile
+include ../makerules/globals.makefile
+include ../makerules/platform.makefile
 
 # subdirectories that will be built in order.
 SUBDIRS = \
