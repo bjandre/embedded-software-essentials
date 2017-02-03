@@ -23,9 +23,9 @@ DEPEND_LIBS = \
 
 $(EXE) : $(OBJS) $(DEPEND_LIBS)
 #	$(CC) $(CFLAGS) -o $@ $^ -v
+	$(LD) $(LDFLAGS) -o $@ $^ $(LDLIBS)
 #	file $@
 #	ldd $@
-	$(LD) $(LDFLAGS) -o $@ $^ $(LDLIBS)
 
 .PHONY : all
 all : $(EXE)
