@@ -1,6 +1,8 @@
 # -*- mode: Makefile -*-
-include ../../makerules/globals.makefile
-include ../../makerules/platform.makefile
+WORKSPACE_PATH := $(shell expr $(PWD) : '\(.*\)/src.*' \| $(PWD))
+MAKERULES = $(WORKSPACE_PATH)/makerules
+
+include $(MAKERULES)/config.makefile
 
 EXE = main.out
 
@@ -15,17 +17,10 @@ LIBS = \
 DEPEND_LIBS = \
 	../util/libutil.a
 
-#
-# Generic rule to generate objects
-#
-%.o : %.c 
-	$(CC) $(CFLAGS) -c -o $@ $<
+INCLUDES = \
+	-I../util
 
-$(EXE) : $(OBJS) $(DEPEND_LIBS)
-#	$(CC) $(CFLAGS) -o $@ $^ -v
-	$(LD) $(LDFLAGS) -o $@ $^ $(LDLIBS)
-#	file $@
-#	ldd $@
+include $(MAKERULES)/generic.makefile
 
 .PHONY : all
 all : $(EXE)
@@ -36,10 +31,6 @@ compile-all :
 .PHONY : test
 test : all
 	./$(EXE)
-
-.PHONY : clean
-clean :
-	-rm -rf $(EDITOR_FILES) $(BUILD_ARTIFACTS)
 
 
 # working

@@ -1,6 +1,8 @@
 # -*- mode: Makefile -*-
-include ../../makerules/globals.makefile
-include ../../makerules/platform.makefile
+WORKSPACE_PATH := $(shell expr $(PWD) : '\(.*\)/src.*' \| $(PWD))
+MAKERULES = $(WORKSPACE_PATH)/makerules
+
+include $(MAKERULES)/config.makefile
 
 # subdirectories that will be built.
 #SUBDIRS = 
@@ -22,30 +24,20 @@ $(SUBDIRS) :
 	@if [ -d $@ ]; then \
 		$(MAKE) --directory=$@ $(MAKECMDGOALS); \
 	fi	
-	@echo build complete: $@ : $(shell date)
+	$(BUILD_COMPLETE)
 endif	
 
-#
-# Generic rule to generate objects
-#
-%.o : %.c 
-	$(CC) $(CFLAGS) -c -o $@ $<
-
-$(LIB) : $(OBJS)
-	$(AR) $(ARFLAGS) $@ $(OBJS)
+include $(MAKERULES)/generic.makefile
 
 .PHONY : all
 all : $(SUBDIRS) $(LIB)
 
-.PHONY : comile-all
-compile-all : $(SUBDIRS)
+$(LIB) : $(OBJS)
+	$(AR) $(ARFLAGS) $@ $(OBJS)
 
 .PHONY : test
 test : $(SUBDIRS) all
 
-.PHONY : clean
-clean : $(SUBDIRS)
-	-rm -rf $(EDITOR_FILES) $(BUILD_ARTIFACTS)
 
 
 

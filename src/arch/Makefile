@@ -1,6 +1,8 @@
 # -*- mode: Makefile -*-
-include ../../makerules/globals.makefile
-include ../../makerules/platform.makefile
+WORKSPACE_PATH := $(shell expr $(PWD) : '\(.*\)/src.*' \| $(PWD))
+MAKERULES = $(abspath $(WORKSPACE_PATH)/makerules)
+
+include $(MAKERULES)/config.makefile
 
 # subdirectories that will be built.
 SUBDIRS = 
@@ -17,8 +19,10 @@ $(SUBDIRS) :
 	@if [ -d $@ ]; then \
 		$(MAKE) --directory=$@ $(MAKECMDGOALS); \
 	fi	
-	@echo Build complete: $@ : $(shell date)
+	$(BUILD_COMPLETE)
 endif	
+
+include $(MAKERULES)/generic.makefile
 
 .PHONY : all
 all : $(SUBDIRS)
@@ -29,9 +33,6 @@ compile-all : $(SUBDIRS)
 .PHONY : test
 test : $(SUBDIRS)
 
-.PHONY : clean
-clean : $(SUBDIRS)
-	-rm -rf $(EDITOR_FILES) $(BUILD_ARTIFACTS)
 
 
 

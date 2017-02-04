@@ -1,8 +1,10 @@
 # -*- mode: Makefile -*-
 
 # Makefile for building ECEN 5013 class projects on unix systems
-include makerules/globals.makefile
-include makerules/platform.makefile
+WORKSPACE_PATH := $(PWD)
+MAKERULES = $(WORKSPACE_PATH)/makerules
+
+include $(MAKERULES)/config.makefile
 
 # subdirectories that will be built.
 SUBDIRS = \
@@ -16,13 +18,12 @@ ifdef SUBDIRS
 $(SUBDIRS) : FORCE
 	@if [ -d $@ ]; then \
 		$(MAKE) --directory=$@ $(MAKECMDGOALS); \
-	fi	
+	fi
+	@echo $(HOST_SYSTEM)-$(TARGET_SYSTEM) build complete: $@ : $(shell date)
 endif
-	@echo $(PLATFORM) build complete: $@ : $(shell date)
 
 .PHONY : all
 all : $(SUBDIRS)
-
 
 .PHONY : comile-all
 compile-all : $(SUBDIRS)
@@ -36,7 +37,7 @@ astyle : FORCE
 
 .PHONY : clean
 clean : $(SUBDIRS)
-	-rm -rf $(EDITOR_FILES) $(BUILD_ARTIFACTS)
+	@-$(RM) -rf $(EDITOR_FILES) $(BUILD_ARTIFACTS)
 
 FORCE :
 
