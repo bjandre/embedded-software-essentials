@@ -11,7 +11,8 @@ LIB = \
 	libutil.a
 
 SRCS = \
-	memory.c
+	memory.c \
+	data.c
 
 OBJS = $(SRCS:%.c=%.o)
 
@@ -31,9 +32,6 @@ include $(MAKERULES)/generic.makefile
 
 .PHONY : all
 all : $(SUBDIRS) $(LIB)
-
-$(LIB) : $(OBJS)
-	$(AR) $(ARFLAGS) $@ $(OBJS)
 
 .PHONY : test
 test : $(SUBDIRS) all

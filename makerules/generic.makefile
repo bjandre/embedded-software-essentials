@@ -11,6 +11,9 @@ $(shell mkdir -p $(DEPENDS_DIR))
 %.i : %.c
 	$(CPP) $(CPPFLAGS) -c -o $*.i $<
 
+$(LIB) : $(OBJS)
+	$(AR) $(ARFLAGS) $@ $(OBJS)
+
 $(EXE) : $(OBJS) $(DEPEND_LIBS)
 #	$(CC) $(CFLAGS) -o $@ $^ -v
 	$(LD) $(LDFLAGS) -o $@ $^ $(LDLIBS)

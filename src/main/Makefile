@@ -15,10 +15,14 @@ LIBS = \
 	-L../util -lutil
 
 DEPEND_LIBS = \
-	../util/libutil.a
+	../util/libutil.a \
+	../project-1/libproject1.a
 
 INCLUDES = \
-	-I../util
+	-I../util \
+	-I../project-1
+
+CFLAGS += -DPROJECT=1
 
 include $(MAKERULES)/generic.makefile
 

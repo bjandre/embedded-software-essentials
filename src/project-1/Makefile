@@ -7,6 +7,14 @@ include $(MAKERULES)/config.makefile
 # subdirectories that will be built.
 #SUBDIRS = \
 
+LIB = libproject1.a
+
+SRCS = project_1.c
+
+OBJS = $(SRCS:%.c=%.o)
+
+INCLUDES = -I../util
+
 #
 # macro for executing TARGET in all SUBDIRS
 #
@@ -22,13 +30,13 @@ endif
 include $(MAKERULES)/generic.makefile
 
 .PHONY : all
-all : $(SUBDIRS)
+all : $(SUBDIRS) $(LIB)
 
 .PHONY : comile-all
 compile-all : $(SUBDIRS)
 
 .PHONY : test
-test : $(SUBDIRS)
+test : $(SUBDIRS) all
 
 
 
