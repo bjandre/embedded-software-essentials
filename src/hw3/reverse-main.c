@@ -5,6 +5,10 @@
 void print_byte_array(char *str, int length);
 
 void print_byte_array(char *str, int length) {
+  for (int i = 0; i < length; i++) {
+    printf("0x%0.2x ", *(str + i));
+  }
+  printf("\n");
   printf("\"");
   for (int i = 0; i < length; i++) {
     printf("%c", *(str + i));
