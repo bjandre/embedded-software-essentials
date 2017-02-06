@@ -1,4 +1,5 @@
 #include <stdint.h>
+#include <stdio.h>
 
 #include "data.h"
 
@@ -24,5 +25,8 @@ int8_t little_to_big32(uint32_t *data, uint32_t length)
 
 void print_memory(uint8_t *start, uint32_t length)
 {
-
+    printf("0x");
+    for (uint32_t i = 0; i < length; i++) {
+        printf("%.2x", *(start + i));
+    }
 }

@@ -1,4 +1,5 @@
 #include <stdint.h>
+#include <stdio.h>
 #include <stdlib.h>
 
 #include "data.h"
@@ -22,22 +23,40 @@ size_t const set_size = 32;
 void project_1_report()
 {
     uint8_t set_1[set_size];
-    *set_1 = 0; // 0x0123456789ABCDEF0123456789ABCDEF;
+    for (uint32_t s = 0; s < set_size / 8; s++) {
+        uint32_t offset = s * 8;
+        uint8_t *position = set_1 + offset;
+        *(position) = 0x01;
+        for (uint32_t i = 1; i < 8; i++) {
+            position++;
+            *position = *(position - 1) + 0x22;
+        }
+    }
+    printf("set_1 :\n");
+    print_memory(set_1, set_size);
+    printf("\n");
 
     uint8_t set_2[set_size];
-    for (uint8_t i = 0; i < set_size; i++) {
+    for (uint32_t i = 0; i < set_size; i++) {
         *(set_2 + i) = i;
     }
+    printf("set_2 :\n");
+    print_memory(set_2, set_size);
+    printf("\n");
 
     uint8_t set_3[set_size];
-    for (uint8_t i = 0; i < set_size; i++) {
+    for (uint32_t i = 0; i < set_size; i++) {
         *(set_3 + i) = 'a' + i;
     }
+    printf("set_3 :\n");
+    print_memory(set_3, set_size);
+    printf("\n\n");
 
-    test_data1(set_1);
-    test_data2(set_2);
-    test_data3();
-    test_memory(set_2);
+
+    //test_data1(set_1, set_size);
+    //test_data2(set_2, set_size);
+    //test_data3();
+    test_memory(set_2, set_size);
 }
 
 /*
@@ -51,10 +70,13 @@ void project_1_report()
 void test_data1(uint8_t *data, uint32_t size)
 {
     print_memory(data, size);
+    printf("\n");
     big_to_little32((uint32_t *)data, size);
     print_memory(data, size);
+    printf("\n");
     little_to_big32((uint32_t *)data, size);
     print_memory(data, size);
+    printf("\n");
 }
 
 /*
@@ -70,6 +92,7 @@ void test_data2(uint8_t *data, uint32_t size)
     int32_t base = 2;
     my_itoa(string, *(int32_t *)data, base);
     print_memory(data, size);
+    printf("\n");
 }
 
 /*
@@ -99,13 +122,34 @@ void test_data3()
  * 7. print_memory(); all 32 bytes
  *
  */
-void test_memory()
+void test_memory(uint8_t *data, uint32_t size)
 {
-//    print_memory(data);
-//    my_reverse(data);
-//    my_memset(data);
-//    my_memmove(data);
-//    my_memzero(data);
-//    my_memmove(data);
-//    print_memory(data);
+    print_memory(data, size);
+    printf("\n");
+
+    uint8_t *position = data;
+    uint32_t length = 12;
+    my_reverse(position, length);
+
+    position = data + 16;
+    length = 4;
+    uint8_t value = 0xEE;
+    my_memset(position, length, value);
+
+    uint8_t *source = data + 26;
+    uint8_t *destination = data + 20;
+    length = 6;
+    my_memmove(source, destination, length);
+
+    position = data + 12;
+    length = 5;
+    my_memzero(position, length);
+
+    source = data;
+    destination = data + 9;
+    length = 8;
+    my_memmove(source, destination, length);
+
+    print_memory(data, size);
+    printf("\n");
 }

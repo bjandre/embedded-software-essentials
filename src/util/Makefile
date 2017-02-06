@@ -16,6 +16,10 @@ SRCS = \
 
 OBJS = $(SRCS:%.c=%.o)
 
+TEST_SRCS = test_utils.c
+TEST_OBJS = $(TEST_SRCS:%.c=%.o)
+TEST_EXE = test_utils.out
+
 #
 # macro for executing TARGET in all SUBDIRS
 #
@@ -34,8 +38,8 @@ include $(MAKERULES)/generic.makefile
 all : $(SUBDIRS) $(LIB)
 
 .PHONY : test
-test : $(SUBDIRS) all
-
+test : $(SUBDIRS) all $(TEST_EXE)
+	./$(TEST_EXE)
 
 
 

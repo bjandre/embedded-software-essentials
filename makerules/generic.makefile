@@ -20,6 +20,9 @@ $(EXE) : $(OBJS) $(DEPEND_LIBS)
 #	file $@
 #	ldd $@
 
+$(TEST_EXE) : $(TEST_OBJS) $(OBJS)
+	$(CC) $(CFLAGS) -O0 -g -U NDEBUG -o $@ $^
+
 $(DEPENDS_DIR)/%.d : ;
 .PRECIOUS : $(DEPENDS_DIR)/%.d
 
