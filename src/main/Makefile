@@ -15,8 +15,8 @@ LIBS = \
 	-L../util -lutil
 
 DEPEND_LIBS = \
-	../util/libutil.a \
-	../project-1/libproject1.a
+	../project-1/libproject1.a \
+	../util/libutil.a
 
 INCLUDES = \
 	-I../util \
