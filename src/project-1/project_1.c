@@ -32,7 +32,7 @@ void project_1_report()
             *position = *(position - 1) + 0x22;
         }
     }
-    printf("set_1 :\n");
+    printf("set_1 :\n  ");
     print_memory(set_1, set_size);
     printf("\n");
 
@@ -40,7 +40,7 @@ void project_1_report()
     for (uint32_t i = 0; i < set_size; i++) {
         *(set_2 + i) = i;
     }
-    printf("set_2 :\n");
+    printf("set_2 :\n  ");
     print_memory(set_2, set_size);
     printf("\n");
 
@@ -48,14 +48,13 @@ void project_1_report()
     for (uint32_t i = 0; i < set_size; i++) {
         *(set_3 + i) = 'a' + i;
     }
-    printf("set_3 :\n");
+    printf("set_3 :\n  ");
     print_memory(set_3, set_size);
-    printf("\n\n");
+    printf("\n");
 
 
-    //test_data1(set_1, set_size);
+    test_data1(set_1, set_size);
     //test_data2(set_2, set_size);
-    //test_data3();
     test_memory(set_2, set_size);
 }
 
@@ -69,11 +68,12 @@ void project_1_report()
  */
 void test_data1(uint8_t *data, uint32_t size)
 {
+    printf("\ntest_data_1 :\n  ");
     print_memory(data, size);
-    printf("\n");
+    printf("\n  ");
     big_to_little32((uint32_t *)data, size);
     print_memory(data, size);
-    printf("\n");
+    printf("\n  ");
     little_to_big32((uint32_t *)data, size);
     print_memory(data, size);
     printf("\n");
@@ -88,6 +88,7 @@ void test_data1(uint8_t *data, uint32_t size)
  */
 void test_data2(uint8_t *data, uint32_t size)
 {
+    printf("\ntest_data_2 :\n");
     int8_t string[set_size];
     int32_t base = 2;
     my_itoa(string, *(int32_t *)data, base);
@@ -95,17 +96,6 @@ void test_data2(uint8_t *data, uint32_t size)
     printf("\n");
 }
 
-/*
- * void test_data3();
- *
- * i. Show your data functions work by calling the following functions in this
- * order with the second array, set_3 : my_atoi() & then print_memory()
- *
- */
-void test_data3()
-{
-
-}
 
 /*
  * void test_memory();
@@ -124,8 +114,8 @@ void test_data3()
  */
 void test_memory(uint8_t *data, uint32_t size)
 {
+    printf("\ntest_memory :\n  ");
     print_memory(data, size);
-    printf("\n");
 
     uint8_t *position = data;
     uint32_t length = 12;
@@ -150,6 +140,7 @@ void test_memory(uint8_t *data, uint32_t size)
     length = 8;
     my_memmove(source, destination, length);
 
+    printf("\n  ");
     print_memory(data, size);
     printf("\n");
 }

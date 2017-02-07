@@ -12,25 +12,31 @@
 int8_t *my_itoa(int8_t *string, int32_t data, int32_t base);
 
 /*
- * my_()
+ * my_atoi()
  *
- * i. AsciI-to-Integer needs to convert data back from an ASCII represented string into an integer type. Need to handle signed data.
+ * Convert data from an ASCII represented string into an integer type. Handles signed data.
+ *
+ * Returns the integer.
+ *
+ * Note the input parameter must be an null terminated string.
  */
 int32_t my_atoi(int8_t *string);
 
 /*
- * my_()
+ * big_to_little32()
  *
- *i. Needs to be able to convert data types in memory from a big endian representation to little endian.
- ii. Should return an error if the conversion fails for any reason.
+ * Convert data types in memory from a big endian representation to little endian.
+ *
+ * Returns non-zero if the conversion fails for any reason.
 
 */
 int8_t big_to_little32(uint32_t *data, uint32_t length);
 /*
- * my_()
+ * little_to_big32()
  *
- i. Needs to be able to convert data types in memory from a little endian representation to big endian.
- ii. Should return an error if the conversion fails for any reason.
+ * Convert data types in memory from a little endian representation to big endian.
+ *
+ * Returns non-zero the conversion fails for any reason.
  *
  */
 int8_t little_to_big32(uint32_t *data, uint32_t length);

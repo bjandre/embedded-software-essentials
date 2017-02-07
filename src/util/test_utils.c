@@ -4,6 +4,7 @@
 #include <stdio.h>
 
 #include "memory.h"
+#include "data.h"
 
 void compare_array_test(uint8_t *a, uint8_t *b, int length);
 
@@ -24,6 +25,9 @@ uint8_t test_my_reverse_4(void);
 uint8_t test_my_reverse_5(void);
 uint8_t test_my_reverse_6(void);
 uint8_t test_my_reverse_7(void);
+
+uint8_t test_convert_endian32_1(void);
+uint8_t test_convert_endian32_2(void);
 
 int main(int argc, char **argv)
 {
@@ -47,6 +51,9 @@ int main(int argc, char **argv)
     success += test_my_reverse_5();
     success += test_my_reverse_6();
     success += test_my_reverse_7();
+
+    success += test_convert_endian32_1();
+    success += test_convert_endian32_2();
 
     printf(" : %hhu tests PASS\n", success);
 }
@@ -346,4 +353,57 @@ uint8_t test_my_reverse_7()
     return 1;
 }
 
+uint8_t test_convert_endian32_1()
+{
+    uint32_t const length = 1;
+    uint32_t data = 0x01234567;
+    uint32_t expected = 0x67452301;
+    size_t num_bytes = sizeof(data);
+
+    // note: just calling the wrapper to avoid exposing convert_endian
+    uint8_t status = big_to_little32(&data, length);
+    assert(status == 0);
+    compare_array_test((uint8_t *)&expected, (uint8_t *)&data, length * num_bytes);
+
+    uint32_t expected_orig = 0x01234567;
+    status = little_to_big32(&data, length);
+    assert(status == 0);
+    compare_array_test((uint8_t *)&expected_orig, (uint8_t *)&data,
+                       length * num_bytes);
+    printf(".");
+    return 1;
+}
+
+uint8_t test_convert_endian32_2()
+{
+    uint32_t const length = 4;
+    uint32_t data[length];
+    uint32_t expected[length];
+    size_t num_bytes = sizeof(*data);
+    *data = 0x01234567;
+    *expected = 0x67452301;
+    *(data + 1) = 0x89abcdef;
+    *(expected + 1) = 0xefcdab89;
+    *(data + 2) = 0x01020304;
+    *(expected + 2) = 0x04030201;
+    *(data + 3) = 0x05060708;
+    *(expected + 3) = 0x08070605;
+
+    uint32_t expected_orig[length];
+    for (uint32_t i = 0; i < length; i++) {
+        *(expected_orig + i) = *(data + i);
+    }
+
+    // note: just calling the wrapper to avoid exposing convert_endian
+    uint8_t status = little_to_big32(data, length);
+    assert(status == 0);
+    compare_array_test((uint8_t *)expected, (uint8_t *)data, length * num_bytes);
+
+    status = big_to_little32(data, length);
+    assert(status == 0);
+    compare_array_test((uint8_t *)expected_orig, (uint8_t *)data,
+                       length * num_bytes);
+    printf(".");
+    return 1;
+}
 

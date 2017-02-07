@@ -33,14 +33,6 @@ void test_data1();
 void test_data2();
 
 /*
- * void test_data3();
- *
- * i. Show your data functions work by calling the following functions in this order with the second array,  set_3 :  my_atoi() & then  print_memory()
- *
- */
-void test_data3();
-
-/*
  * void test_memory();
  *
  * i. Perform the following operations on a point to the set_2 data block.
