@@ -58,6 +58,8 @@ else
   else ifeq ($(HOST_SYSTEM), Ubuntu 16.04.1 LTS)
     ifeq ($(TARGET_SYSTEM), bbb)
       include $(MAKERULES)/ubuntu-bbb.makefile
+    else ifeq ($(TARGET_SYSTEM), frdm)
+      include $(MAKERULES)/ubuntu-frdm.makefile
     else
       $(error Unsupported ubuntu cross compile : "$(TARGET_SYSTEM)")
     endif
