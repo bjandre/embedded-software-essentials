@@ -22,22 +22,10 @@ $(SUBDIRS) : FORCE
 	@echo '$(HOST_SYSTEM)'-'$(TARGET_SYSTEM)' build complete: $@ : $(shell date)
 endif
 
-.PHONY : all
-all : $(SUBDIRS)
-
-.PHONY : comile-all
-compile-all : $(SUBDIRS)
-
-.PHONY : test
-test : $(SUBDIRS)
+include $(MAKERULES)/generic.makefile
 
 .PHONY : astyle
 astyle : FORCE
 	astyle --options=.astylerc --recursive src/*.c src/*.h
 
-.PHONY : clean
-clean : $(SUBDIRS)
-	@-$(RM) -rf $(EDITOR_FILES) $(BUILD_ARTIFACTS)
-
-FORCE :
 

@@ -5,6 +5,7 @@
 *.o
 *.elf
 *.hex
+*.asm
 *.a
 *.out
 *.i

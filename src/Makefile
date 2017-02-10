@@ -23,18 +23,6 @@ $(SUBDIRS) : FORCE
 	$(BUILD_COMPLETE)
 endif	
 
-.PHONY : all
-all : $(SUBDIRS)
-
-.PHONY : comile-all
-compile-all : $(SUBDIRS)
-
-.PHONY : test
-test : $(SUBDIRS)
-
-.PHONY : clean
-clean : $(SUBDIRS)
-	@-$(RM) -rf $(EDITOR_FILES) $(BUILD_ARTIFACTS)
+include $(MAKERULES)/generic.makefile
 
 
-FORCE : 

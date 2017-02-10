@@ -24,14 +24,6 @@ endif
 
 include $(MAKERULES)/generic.makefile
 
-.PHONY : all
-all : $(SUBDIRS)
-
-.PHONY : comile-all
-compile-all : $(SUBDIRS)
-
-.PHONY : test
-test : $(SUBDIRS)
 
 
 

@@ -24,18 +24,9 @@ INCLUDES = \
 
 CFLAGS += -DPROJECT=1
 
+TEST_EXE = $(EXE)
+
 include $(MAKERULES)/generic.makefile
-
-.PHONY : all
-all : $(EXE)
-
-.PHONY : compile-all
-compile-all :
-
-.PHONY : test
-test : all
-	./$(EXE)
-
 
 # working
 #file main.out

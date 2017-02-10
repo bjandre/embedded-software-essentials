@@ -34,12 +34,7 @@ endif
 
 include $(MAKERULES)/generic.makefile
 
-.PHONY : all
-all : $(SUBDIRS) $(LIB)
-
-.PHONY : test
-test : $(SUBDIRS) all $(TEST_EXE)
-	./$(TEST_EXE)
-
+$(TEST_EXE) : $(TEST_OBJS) $(OBJS)
+	$(CC) $(CFLAGS) -O0 -g -U NDEBUG -o $@ $^
 
 

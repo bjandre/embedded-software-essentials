@@ -67,9 +67,9 @@ endif
 # compile unoptimized debug by default. specific release flags will be
 # added depending on the host and target architectures
 ifeq ($(release), unset)
-  RELEASE_CFLAGS = -g -O0
+  RELEASE_CFLAGS = -g -O0 -UNDEBUG
 else
-  RELEASE_CFLAGS = 
+  RELEASE_CFLAGS = -0s -DNDEBUG
 endif
 
 GENERAL_CFLAGS = $(RELEASE_FLAGS) --std=c99 -Wall -Werror

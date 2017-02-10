@@ -9,7 +9,10 @@ $(shell mkdir -p $(DEPENDS_DIR))
 	$(POSTCOMPILE)
 
 %.i : %.c
-	$(CPP) $(CPPFLAGS) -c -o $*.i $<
+	$(CC) $(CPPFLAGS) $(CFLAGS) $(INCLUDES) -c -o $*.i $<
+
+%.asm : %.c
+	$(CC) -S $(CFLAGS) $(INCLUDES) -c -o $*.asm $<
 
 $(LIB) : $(OBJS)
 	$(AR) $(ARFLAGS) $@ $(OBJS)
@@ -17,21 +20,38 @@ $(LIB) : $(OBJS)
 $(EXE) : $(OBJS) $(DEPEND_LIBS)
 #	$(CC) $(CFLAGS) -o $@ $^ -v
 	$(LD) $(LDFLAGS) -o $@ $^ $(LDLIBS)
+	$(SIZE) $(SIZEFLAGS) $@
 #	file $@
 #	ldd $@
 
-$(TEST_EXE) : $(TEST_OBJS) $(OBJS)
-	$(CC) $(CFLAGS) -O0 -g -U NDEBUG -o $@ $^
 
 $(DEPENDS_DIR)/%.d : ;
 .PRECIOUS : $(DEPENDS_DIR)/%.d
 
 -include $(patsubst %, $(DEPENDS_DIR)/%.d, $(basename, $(SRCS)))
 
+.PHONY : all
+all : $(SUBDIRS) $(LIB) $(EXE)
+
+.PHONY : test
+test : $(SUBDIRS) all $(TEST_EXE)
+ifdef TEST_EXE
+	if [ -e ./$(TEST_EXE) ]; then \
+    ./$(TEST_EXE); \
+fi
+endif
+
 .PHONY : compile-all
 compile-all : $(SUBDIRS) $(OBJS)
 
+.PHONY : build-lib
+build-lib : $(SUBDIRS) $(LIB)
+
+.PHONY : build
+build : all
+
 .PHONY : clean
-clean :
+clean : $(SUBDIRS)
 	@-$(RM) -rf $(EDITOR_FILES) $(BUILD_ARTIFACTS)
 
+FORCE :
