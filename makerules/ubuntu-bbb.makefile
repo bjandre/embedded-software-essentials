@@ -10,8 +10,8 @@ CFLAGS = -march=$(ARCH) -mtune=$(CPU) -mfpu=neon \
   -Wl,--print-output-format
 
 AR = arm-linux-gnueabihf-ar
-LD = arm-linux-gnueabihf-ld
 
+LD = arm-linux-gnueabihf-ld
 LDFLAGS = \
   --print-output-format \
   -L/usr/lib/gcc-cross/arm-linux-gnueabihf/5 \
@@ -26,3 +26,6 @@ LDLIBS = \
   --as-needed -lgcc_s --no-as-needed \
   /usr/lib/gcc-cross/arm-linux-gnueabihf/5/crtend.o \
   /usr/lib/gcc-cross/arm-linux-gnueabihf/5/../../../../arm-linux-gnueabihf/lib/../lib/crtn.o
+
+SIZE = arm-linux-gnueabihf-size
+SIZEFLAGS = --format=sysv -x

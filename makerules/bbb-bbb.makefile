@@ -4,10 +4,10 @@
 
 CC = cc
 CFLAGS = 
+
 AR = ar
+
 LD = ld
-
-
 LDFLAGS = \
 	-L/usr/lib/gcc/arm-linux-gnueabihf/4.6 \
 	-L/usr/lib/gcc/arm-linux-gnueabihf/4.6/../../../arm-linux-gnueabihf \
@@ -24,3 +24,5 @@ LDLIBS = /usr/lib/gcc/arm-linux-gnueabihf/4.6/../../../arm-linux-gnueabihf/crt1.
 	/usr/lib/gcc/arm-linux-gnueabihf/4.6/crtend.o \
 	/usr/lib/gcc/arm-linux-gnueabihf/4.6/../../../arm-linux-gnueabihf/crtn.o
 
+SIZE = size
+SIZEFLAGS = --format=sysv -x

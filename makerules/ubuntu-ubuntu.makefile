@@ -4,7 +4,9 @@
 
 CC = cc
 CFLAGS = 
+
 AR = ar
+
 LD = ld
 LDFLAGS = \
 	-L/usr/lib/gcc/x86_64-linux-gnu/5 \
@@ -24,3 +26,5 @@ LDLIBS = \
 	/usr/lib/gcc/x86_64-linux-gnu/5/crtend.o \
 	/usr/lib/gcc/x86_64-linux-gnu/5/../../../x86_64-linux-gnu/crtn.o
 
+SIZE = size
+SIZEFLAGS = --format=sysv -x
