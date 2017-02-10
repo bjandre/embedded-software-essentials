@@ -1,4 +1,5 @@
 #include <assert.h>
+#include <stdbool.h>
 #include <stdint.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -8,6 +9,7 @@
 
 void compare_array_test(uint8_t *a, uint8_t *b, int length);
 
+// memory.h
 uint8_t test_my_memmove_1(void);
 uint8_t test_my_memmove_2(void);
 uint8_t test_my_memmove_3(void);
@@ -26,8 +28,17 @@ uint8_t test_my_reverse_5(void);
 uint8_t test_my_reverse_6(void);
 uint8_t test_my_reverse_7(void);
 
+// data.h
 uint8_t test_convert_endian32_1(void);
 uint8_t test_convert_endian32_2(void);
+
+uint8_t test_my_atoi_1(void);
+uint8_t test_my_atoi_2(void);
+
+uint8_t test_my_itoa_1(void);
+uint8_t test_my_itoa_2(void);
+uint8_t test_my_itoa_3(void);
+uint8_t test_my_itoa_4(void);
 
 int main(int argc, char **argv)
 {
@@ -55,17 +66,28 @@ int main(int argc, char **argv)
     success += test_convert_endian32_1();
     success += test_convert_endian32_2();
 
+    success += test_my_atoi_1();
+    success += test_my_atoi_2();
+
+    success += test_my_itoa_1();
+    success += test_my_itoa_2();
+    success += test_my_itoa_3();
+    success += test_my_itoa_4();
+
     printf(" : %hhu tests PASS\n", success);
 }
 
 void compare_array_test(uint8_t *a, uint8_t *b, int length)
 {
     for (int i = 0; i < length; i++) {
+        if (false) {
+            printf("i = %d  0x%.2x =? 0x%.2x\n", i, *(a + i), *(b + i));
+        }
         assert(*(a + i) == *(b + i));
     }
 }
 
-uint8_t test_my_memmove_1()
+uint8_t test_my_memmove_1(void)
 {
     // test complete overlap
 #define SIZE 16
@@ -88,7 +110,7 @@ uint8_t test_my_memmove_1()
     return 1;
 }
 
-uint8_t test_my_memmove_2()
+uint8_t test_my_memmove_2(void)
 {
     // test no overlap, source before destestination
 #define SIZE 16
@@ -111,7 +133,7 @@ uint8_t test_my_memmove_2()
     return 1;
 }
 
-uint8_t test_my_memmove_3()
+uint8_t test_my_memmove_3(void)
 {
     // test no overlap, destination before source
 #define SIZE 16
@@ -134,7 +156,7 @@ uint8_t test_my_memmove_3()
     return 1;
 }
 
-uint8_t test_my_memmove_4()
+uint8_t test_my_memmove_4(void)
 {
     // test overlap, destination before source, copy from begining of source
 #define SIZE 16
@@ -157,7 +179,7 @@ uint8_t test_my_memmove_4()
     return 1;
 }
 
-uint8_t test_my_memmove_5()
+uint8_t test_my_memmove_5(void)
 {
     // test overlap, source before destination, copy from end of source
 #define SIZE 16
@@ -180,7 +202,7 @@ uint8_t test_my_memmove_5()
     return 1;
 }
 
-uint8_t test_my_memset_1()
+uint8_t test_my_memset_1(void)
 {
     // test setting entire array
     size_t const size = 20;
@@ -201,7 +223,7 @@ uint8_t test_my_memset_1()
     return 1;
 }
 
-uint8_t test_my_memset_2()
+uint8_t test_my_memset_2(void)
 {
     // test a subset of an array to ensure we are not changing values outside
     // the specified range.
@@ -225,7 +247,7 @@ uint8_t test_my_memset_2()
     return 1;
 }
 
-uint8_t test_my_memzero()
+uint8_t test_my_memzero(void)
 {
     size_t const size = 20;
     uint8_t data[size];
@@ -336,7 +358,7 @@ uint8_t test_my_reverse_6(void)
     return 1;
 }
 
-uint8_t test_my_reverse_7()
+uint8_t test_my_reverse_7(void)
 {
     size_t const size = 20;
     uint8_t data[size];
@@ -353,7 +375,7 @@ uint8_t test_my_reverse_7()
     return 1;
 }
 
-uint8_t test_convert_endian32_1()
+uint8_t test_convert_endian32_1(void)
 {
     uint32_t const length = 1;
     uint32_t data = 0x01234567;
@@ -374,7 +396,7 @@ uint8_t test_convert_endian32_1()
     return 1;
 }
 
-uint8_t test_convert_endian32_2()
+uint8_t test_convert_endian32_2(void)
 {
     uint32_t const length = 4;
     uint32_t data[length];
@@ -406,4 +428,120 @@ uint8_t test_convert_endian32_2()
     printf(".");
     return 1;
 }
+
+uint8_t test_my_atoi_1(void)
+{
+#define LENGTH 10
+    int8_t string[LENGTH] = "     1002\0";
+    uint32_t expected = 1002;
+    uint32_t received = my_atoi(string);
+    assert(expected == received);
+#undef LENGTH
+    printf(".");
+    return 1;
+}
+
+uint8_t test_my_atoi_2(void)
+{
+#define LENGTH 10
+    int8_t string[LENGTH] = " -1537902\0";
+    uint32_t expected = -1537902;
+    uint32_t received = my_atoi(string);
+    assert(expected == received);
+#undef LENGTH
+    printf(".");
+    return 1;
+}
+
+uint8_t test_my_itoa_1(void)
+{
+#define LENGTH 33
+    uint32_t length = LENGTH;
+    int8_t string[LENGTH];
+    int8_t expected[LENGTH];
+    for (uint8_t i = 0; i < length; i++) {
+        string[i] = '\0';
+        expected[i] = string[i];
+    }
+    my_memmove((uint8_t *)"1023", (uint8_t *)expected, 4);
+    uint32_t data = 1023;
+    uint32_t base = 10;
+    int8_t *junk = my_itoa(string, data, base);
+
+    assert(junk == string);
+    compare_array_test((uint8_t *)string, (uint8_t *)expected, length);
+#undef LENGTH
+    printf(".");
+    return 1;
+}
+
+uint8_t test_my_itoa_2(void)
+{
+#define LENGTH 33
+    uint32_t length = LENGTH;
+    int8_t string[LENGTH];
+    int8_t expected[LENGTH];
+    for (uint8_t i = 0; i < length; i++) {
+        string[i] = '\0';
+        expected[i] = string[i];
+    }
+    my_memmove((uint8_t *)"-10325476", (uint8_t *)expected, 9);
+    uint32_t data = -10325476;
+    uint32_t base = 10;
+    int8_t *junk = my_itoa(string, data, base);
+
+    assert(junk == string);
+    compare_array_test((uint8_t *)string, (uint8_t *)expected, length);
+#undef LENGTH
+    printf(".");
+    return 1;
+}
+
+
+uint8_t test_my_itoa_3(void)
+{
+#define LENGTH 33
+    uint32_t length = LENGTH;
+    int8_t string[LENGTH];
+    int8_t expected[LENGTH];
+    for (uint8_t i = 0; i < length; i++) {
+        string[i] = '\0';
+        expected[i] = string[i];
+    }
+    my_memmove((uint8_t *)"1111110101", (uint8_t *)expected, 10);
+
+    uint32_t data = 1013;
+    uint32_t base = 2;
+    int8_t *junk = my_itoa(string, data, base);
+
+    assert(junk == string);
+    compare_array_test((uint8_t *)string, (uint8_t *)expected, length);
+#undef LENGTH
+    printf(".");
+    return 1;
+}
+
+uint8_t test_my_itoa_4(void)
+{
+#define LENGTH 33
+    uint32_t length = LENGTH;
+    int8_t string[LENGTH];
+    int8_t expected[LENGTH];
+    for (uint8_t i = 0; i < length; i++) {
+        string[i] = '\0';
+        expected[i] = string[i];
+    }
+    my_memmove((uint8_t *)"-9d8de4", (uint8_t *)expected, 7);
+
+    uint32_t data = -10325476;
+    uint32_t base = 16;
+    int8_t *junk = my_itoa(string, data, base);
+
+    assert(junk == string);
+    compare_array_test((uint8_t *)string, (uint8_t *)expected, length);
+#undef LENGTH
+    printf(".");
+    return 1;
+}
+
 

@@ -6,23 +6,47 @@
 #include "memory.h"
 #include "project_1.h"
 
+size_t const set_size = 32;
+
+void initialize_set_1(uint8_t *data, size_t size);
+void initialize_set_2(uint8_t *data, size_t size);
+void initialize_set_3(uint8_t *data, size_t size);
+void test_data1(uint8_t *data, uint32_t size);
+void test_data2(uint8_t *data, uint32_t size);
+void test_memory(uint8_t *data, uint32_t size);
+
 /*
  * void project_1_report()
  *
- * i. set_1 : Create an array of 32 bytes (unsigned). Initialize this array to increasing
- * hex numbers like: 0x0123456789ABCDEF0123456789ABCDEF
- * ii. set_2 : Create another array of 32 bytes (unsigned). Initialize this array to an
- * increasing integer count of 1 ,2, 3, 4, 5, 6, 7, 8, 9, 10, 11, ...., 31.
- * iii. set_3 : Create another array of 32 bytes (unsigned). Initialize this array to an
- * increasing integer count of “abcdefghijklmnopqrstuvwxyzABCDEF”
- * iv. This should call the functions below in order.
+ * report function to test project 1
+ *
+ * This should call the functions below in order.
  */
-
-size_t const set_size = 32;
-
 void project_1_report()
 {
     uint8_t set_1[set_size];
+    initialize_set_1(set_1, set_size);
+
+    uint8_t set_2[set_size];
+    initialize_set_2(set_2, set_size);
+
+    uint8_t set_3[set_size];
+    initialize_set_3(set_3, set_size);
+
+    test_data1(set_1, set_size);
+    test_data2(set_2, set_size);
+    test_memory(set_2, set_size);
+}
+
+/*
+ * void initialize_set_1()
+ *
+ * set_1 : Create an array of 32 bytes (unsigned). Initialize this array to
+ * increasing hex numbers like: 0x0123456789ABCDEF0123456789ABCDEF
+ *
+ */
+void initialize_set_1(uint8_t *set_1, size_t size)
+{
     for (uint32_t s = 0; s < set_size / 8; s++) {
         uint32_t offset = s * 8;
         uint8_t *position = set_1 + offset;
@@ -32,38 +56,64 @@ void project_1_report()
             *position = *(position - 1) + 0x22;
         }
     }
-    printf("set_1 :\n  ");
-    print_memory(set_1, set_size);
-    printf("\n");
 
-    uint8_t set_2[set_size];
+    if (0) {
+        printf("set_1 :\n  ");
+        print_memory(set_1, set_size);
+        printf("\n");
+    }
+}
+
+/*
+ * void initialize_set_2()
+ *
+ * set_2 : Create another array of 32 bytes (unsigned). Initialize this array to
+ * an increasing integer count of 1 ,2, 3, 4, 5, 6, 7, 8, 9, 10, 11, ...., 31.
+ *
+ */
+void initialize_set_2(uint8_t *set_2, size_t size)
+{
     for (uint32_t i = 0; i < set_size; i++) {
         *(set_2 + i) = i;
     }
-    printf("set_2 :\n  ");
-    print_memory(set_2, set_size);
-    printf("\n");
 
-    uint8_t set_3[set_size];
+    if (0) {
+        printf("set_2 :\n  ");
+        print_memory(set_2, set_size);
+        printf("\n");
+    }
+}
+
+/*
+ * void initialize_set_3()
+ *
+ * set_3 : Create another array of 32 bytes (unsigned). Initialize this array to
+ * an increasing integer count of “abcdefghijklmnopqrstuvwxyzABCDEF”
+ *
+ */
+void initialize_set_3(uint8_t *set_3, size_t size)
+{
     for (uint32_t i = 0; i < set_size; i++) {
         *(set_3 + i) = 'a' + i;
     }
-    printf("set_3 :\n  ");
-    print_memory(set_3, set_size);
-    printf("\n");
-
-
-    test_data1(set_1, set_size);
-    //test_data2(set_2, set_size);
-    test_memory(set_2, set_size);
+    if (0) {
+        printf("set_3 :\n  ");
+        print_memory(set_3, set_size);
+        printf("\n");
+    }
 }
 
 /*
  * void test_data1();
  *
- *i. Show your data functions work by calling the following functions in this
- *order with the first array, set_1 : 1. print_memory() 2. big_to_little32()
- *3. print_memory() 4. little_to_big32() 5. print_memory()
+ * Show your data functions work by calling the following functions in this
+ * order with the first array, set_1 :
+ *
+ * 1. print_memory()
+ * 2. big_to_little32()
+ * 3. print_memory()
+ * 4. little_to_big32()
+ * 5. print_memory()
  *
  */
 void test_data1(uint8_t *data, uint32_t size)
@@ -82,18 +132,27 @@ void test_data1(uint8_t *data, uint32_t size)
 /*
  * void test_data2();
  *
- * i. Show your data functions work by calling the following functions in this
- * order with the second array, set_2 : my_itoa() & then print_memory()
+ * Show your data functions work by calling the following functions in this
+ * order with the second array, set_2
+ *
+ * 1. my_itoa()
+ * 2. print_memory()
+ * 3. my_atoi()
+ * 4. print_memory()
  *
  */
 void test_data2(uint8_t *data, uint32_t size)
 {
-    printf("\ntest_data_2 :\n");
+    printf("\ntest_data_2 :\n  ");
     int8_t string[set_size];
-    int32_t base = 2;
+    int32_t base = 10;
     my_itoa(string, *(int32_t *)data, base);
     print_memory(data, size);
-    printf("\n");
+    printf("\n  ");
+    int32_t result = my_atoi(string);
+    print_memory(data, size);
+    printf("\n  ");
+    printf("%d == '%s'\n", result, string);
 }
 
 

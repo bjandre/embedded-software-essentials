@@ -8,17 +8,24 @@
  *
  * Convert a standard integer type into an ascii string. Handles signed data.
  *
+ * Note: the return pointer value is the same as the input string.
+ *
  */
 int8_t *my_itoa(int8_t *string, int32_t data, int32_t base);
 
 /*
  * my_atoi()
  *
- * Convert data from an ASCII represented string into an integer type. Handles signed data.
+ * Convert data from an ASCII represented string into an integer type. Handles
+ * signed data.
  *
  * Returns the integer.
  *
  * Note the input parameter must be an null terminated string.
+ * assumes that digits are stored in the string such that the most
+ * siginificant digit is at the lowest index in the string, e.g.
+ * 1002 = str = {'1', '0', '0', '2'}
+ *
  */
 int32_t my_atoi(int8_t *string);
 
