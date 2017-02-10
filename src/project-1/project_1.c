@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include "compatibility.h"
 #include "data.h"
 #include "memory.h"
 #include "project_1.h"
@@ -152,7 +153,7 @@ void test_data2(uint8_t *data, uint32_t size)
     int32_t result = my_atoi(string);
     print_memory(data, size);
     printf("\n  ");
-    printf("%d == '%s'\n", result, string);
+    printf("%" UI32 " == '%s'\n", result, string);
 }
 
 

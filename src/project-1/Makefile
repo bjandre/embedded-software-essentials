@@ -13,7 +13,7 @@ SRCS = project_1.c
 
 OBJS = $(SRCS:%.c=%.o)
 
-INCLUDES = -I../util
+INCLUDES = -I../arch -I../util
 
 #
 # macro for executing TARGET in all SUBDIRS

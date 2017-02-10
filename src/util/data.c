@@ -1,6 +1,7 @@
 #include <stdint.h>
 #include <stdio.h>
 
+#include "compatibility.h"
 #include "data.h"
 #include "memory.h"
 
@@ -42,7 +43,7 @@ int8_t *my_itoa(int8_t *string, int32_t data, int32_t base)
             length++;
         }
         if (0) {
-            printf("itoa length = %d   string = '%s'\n", length, string);
+            printf("itoa length = %" UI32 "   string = '%s'\n", length, string);
             for (uint32_t i = 0; i < 32; i++) {
                 printf("<%c>", string[i]);
             }

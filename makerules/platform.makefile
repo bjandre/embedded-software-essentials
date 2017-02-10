@@ -49,7 +49,13 @@ ifeq ($(HOST_SYSTEM), $(TARGET_SYSTEM))
   endif
 else
   # cross compiling
-  ifeq ($(HOST_SYSTEM), Ubuntu 16.04.1 LTS)
+  ifeq ($(HOST_SYSTEM), Darwin)
+    ifeq ($(TARGET_SYSTEM), frdm)
+      include $(MAKERULES)/darwin-frdm.makefile
+    else
+      $(error Unsupported darwin cross compile : "$(TARGET_SYSTEM)")
+    endif
+  else ifeq ($(HOST_SYSTEM), Ubuntu 16.04.1 LTS)
     ifeq ($(TARGET_SYSTEM), bbb)
       include $(MAKERULES)/ubuntu-bbb.makefile
     else
@@ -72,7 +78,12 @@ else
   RELEASE_CFLAGS = -0s -DNDEBUG
 endif
 
-GENERAL_CFLAGS = $(RELEASE_FLAGS) --std=c99 -Wall -Werror
+DEFINES =
+ifneq ($(origin UINT32_FMT), undefined)
+  DEFINES += -DUINT32_FMT=$(UINT32_FMT)
+endif
+
+GENERAL_CFLAGS = $(RELEASE_FLAGS) $(DEFINES) --std=c99 -Wall -Werror
 CFLAGS += $(GENERAL_CFLAGS)
 CPPFLAGS = -E
 DEPENDS_FLAGS = -MT $@ -MMD -MP -MF $(DEPENDS_DIR)/$*.Td

@@ -16,6 +16,8 @@ SRCS = \
 
 OBJS = $(SRCS:%.c=%.o)
 
+INCLUDES = -I../arch
+
 TEST_SRCS = test_utils.c
 TEST_OBJS = $(TEST_SRCS:%.c=%.o)
 TEST_EXE = test_utils.out
