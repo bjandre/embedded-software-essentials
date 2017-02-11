@@ -80,9 +80,14 @@ int main(int argc, char **argv)
 void compare_array_test(uint8_t *a, uint8_t *b, int length)
 {
     for (int i = 0; i < length; i++) {
-        if (false) {
+#       if DEBUG_VERBOSE
             printf("i = %d  0x%.2x =? 0x%.2x\n", i, *(a + i), *(b + i));
+#       endif
+#       ifdef NDEBUG
+        if (*(a + i) != *(b + i)) {
+            printf("ERROR: i = %d  0x%.2x =? 0x%.2x\n", i, *(a + i), *(b + i));
         }
+#       endif
         assert(*(a + i) == *(b + i));
     }
 }
@@ -106,6 +111,7 @@ uint8_t test_my_memmove_1(void)
 
 #undef SIZE
 #undef RANGE
+    (void)status; // silence the unused variable error in release mode.
     printf(".");
     return 1;
 }
@@ -129,6 +135,7 @@ uint8_t test_my_memmove_2(void)
 
 #undef SIZE
 #undef RANGE
+    (void)status; // silence the unused variable error in release mode.
     printf(".");
     return 1;
 }
@@ -152,6 +159,7 @@ uint8_t test_my_memmove_3(void)
 
 #undef SIZE
 #undef RANGE
+    (void)status; // silence the unused variable error in release mode.
     printf(".");
     return 1;
 }
@@ -175,6 +183,7 @@ uint8_t test_my_memmove_4(void)
 
 #undef SIZE
 #undef RANGE
+    (void)status; // silence the unused variable error in release mode.
     printf(".");
     return 1;
 }
@@ -198,6 +207,7 @@ uint8_t test_my_memmove_5(void)
 
 #undef SIZE
 #undef RANGE
+    (void)status; // silence the unused variable error in release mode.
     printf(".");
     return 1;
 }
@@ -214,11 +224,18 @@ uint8_t test_my_memset_1(void)
     uint8_t status = my_memset(data, size, expected);
 
     for (size_t i = 0; i < size; i++) {
+#       ifdef NDEBUG
+        if (*(data + i) != expected) {
+            printf("ERROR: i = %zu  0x%.2x =? 0x%.2x\n", i, *(data + i), expected);
+        }
+#       endif
         assert(*(data + i) == expected);
     }
 
     status = my_memset(NULL, size, expected);
     assert(status != 0);
+
+    (void)status; // silence the unused variable error in release mode.
     printf(".");
     return 1;
 }
@@ -238,17 +255,17 @@ uint8_t test_my_memset_2(void)
     uint8_t expected[SIZE] = {0, 1, value, value, value, value, 6, 7};
     uint8_t status = my_memset(data + 2, range, value);
     assert(status == 0);
-    for (size_t i = 0; i < size; i++) {
-        assert(*(data + i) == *(expected + i));
-    }
+    compare_array_test(data, expected, size);
 #undef SIZE
 #undef RANGE
+    (void)status; // silence the unused variable error in release mode.
     printf(".");
     return 1;
 }
 
 uint8_t test_my_memzero(void)
 {
+    // test zeroing an set of bytes
     size_t const size = 20;
     uint8_t data[size];
     for (size_t i = 0; i < size; i++) {
@@ -259,11 +276,18 @@ uint8_t test_my_memzero(void)
     assert(status == 0);
     uint8_t expected = 0;
     for (size_t i = 0; i < size; i++) {
+#       ifdef NDEBUG
+        if (*(data + i) != expected) {
+            printf("ERROR: i = %zu  0x%.2x =? 0x%.2x\n", i, *(data + i), expected);
+        }
+#       endif
         assert(*(data + i) == expected);
     }
 
     status = my_memzero(NULL, size);
     assert(status != 0);
+
+    (void)status; // silence the unused variable error in release mode.
     printf(".");
     return 1;
 }
@@ -279,6 +303,7 @@ uint8_t test_my_reverse_1(void)
     assert(status != 0);
     compare_array_test(expected, data, length);
 #undef LENGTH
+    (void)status; // silence the unused variable error in release mode.
     printf(".");
     return 1;
 }
@@ -294,6 +319,7 @@ uint8_t test_my_reverse_2(void)
     assert(status == 0);
     compare_array_test(expected, data, length);
 #undef LENGTH
+    (void)status; // silence the unused variable error in release mode.
     printf(".");
     return 1;
 }
@@ -309,6 +335,7 @@ uint8_t test_my_reverse_3(void)
     assert(status == 0);
     compare_array_test(expected, data, length);
 #undef LENGTH
+    (void)status; // silence the unused variable error in release mode.
     printf(".");
     return 1;
 }
@@ -324,6 +351,7 @@ uint8_t test_my_reverse_4(void)
     assert(status == 0);
     compare_array_test(expected, data, length);
 #undef LENGTH
+    (void)status; // silence the unused variable error in release mode.
     printf(".");
     return 1;
 }
@@ -339,6 +367,7 @@ uint8_t test_my_reverse_5(void)
     assert(status == 0);
     compare_array_test(expected, data, length);
 #undef LENGTH
+    (void)status; // silence the unused variable error in release mode.
     printf(".");
     return 1;
 }
@@ -354,12 +383,14 @@ uint8_t test_my_reverse_6(void)
     assert(status == 0);
     compare_array_test(expected, data, length);
 #undef LENGTH
+    (void)status; // silence the unused variable error in release mode.
     printf(".");
     return 1;
 }
 
 uint8_t test_my_reverse_7(void)
 {
+    // test reversing the entire array, even length
     size_t const size = 20;
     uint8_t data[size];
     uint8_t expected[size];
@@ -371,12 +402,15 @@ uint8_t test_my_reverse_7(void)
     uint8_t status = my_reverse(data, size);
     assert(status == 0);
     compare_array_test(expected, data, size);
+
+    (void)status; // silence the unused variable error in release mode.
     printf(".");
     return 1;
 }
 
 uint8_t test_convert_endian32_1(void)
 {
+    // test convert endian by round tripping data, single 8-byte int
     uint32_t const length = 1;
     uint32_t data = 0x01234567;
     uint32_t expected = 0x67452301;
@@ -392,12 +426,15 @@ uint8_t test_convert_endian32_1(void)
     assert(status == 0);
     compare_array_test((uint8_t *)&expected_orig, (uint8_t *)&data,
                        length * num_bytes);
+
+    (void)status; // silence the unused variable error in release mode.
     printf(".");
     return 1;
 }
 
 uint8_t test_convert_endian32_2(void)
 {
+    // test convert endian, array of 4 8-byte ints
     uint32_t const length = 4;
     uint32_t data[length];
     uint32_t expected[length];
@@ -425,16 +462,24 @@ uint8_t test_convert_endian32_2(void)
     assert(status == 0);
     compare_array_test((uint8_t *)expected_orig, (uint8_t *)data,
                        length * num_bytes);
+
+    (void)status; // silence the unused variable error in release mode.
     printf(".");
     return 1;
 }
 
 uint8_t test_my_atoi_1(void)
 {
+    // test converting a null terminated string with leading whitespace.
 #define LENGTH 10
     int8_t string[LENGTH] = "     1002\0";
     uint32_t expected = 1002;
     uint32_t received = my_atoi(string);
+#   ifdef NDEBUG
+    if (received != expected) {
+       printf("ERROR: 0x%.2x =? 0x%.2x\n", received, expected);
+    }
+#   endif
     assert(expected == received);
 #undef LENGTH
     printf(".");
@@ -443,10 +488,16 @@ uint8_t test_my_atoi_1(void)
 
 uint8_t test_my_atoi_2(void)
 {
+    // test converting a negative number as a null terminated string
 #define LENGTH 10
     int8_t string[LENGTH] = " -1537902\0";
     uint32_t expected = -1537902;
     uint32_t received = my_atoi(string);
+#   ifdef NDEBUG
+    if (received != expected) {
+       printf("ERROR: 0x%.2x =? 0x%.2x\n", received, expected);
+    }
+#   endif
     assert(expected == received);
 #undef LENGTH
     printf(".");
@@ -455,6 +506,7 @@ uint8_t test_my_atoi_2(void)
 
 uint8_t test_my_itoa_1(void)
 {
+    // test converting an integer base 10 to a string
 #define LENGTH 33
     uint32_t length = LENGTH;
     int8_t string[LENGTH];
@@ -471,12 +523,14 @@ uint8_t test_my_itoa_1(void)
     assert(junk == string);
     compare_array_test((uint8_t *)string, (uint8_t *)expected, length);
 #undef LENGTH
+    (void)junk; // silence the unused variable error in release mode.
     printf(".");
     return 1;
 }
 
 uint8_t test_my_itoa_2(void)
 {
+    // test converting an negative integer base 10 to a string
 #define LENGTH 33
     uint32_t length = LENGTH;
     int8_t string[LENGTH];
@@ -493,6 +547,7 @@ uint8_t test_my_itoa_2(void)
     assert(junk == string);
     compare_array_test((uint8_t *)string, (uint8_t *)expected, length);
 #undef LENGTH
+    (void)junk; // silence the unused variable error in release mode.
     printf(".");
     return 1;
 }
@@ -500,6 +555,7 @@ uint8_t test_my_itoa_2(void)
 
 uint8_t test_my_itoa_3(void)
 {
+    // test converting an integer base 2 to a string
 #define LENGTH 33
     uint32_t length = LENGTH;
     int8_t string[LENGTH];
@@ -517,12 +573,14 @@ uint8_t test_my_itoa_3(void)
     assert(junk == string);
     compare_array_test((uint8_t *)string, (uint8_t *)expected, length);
 #undef LENGTH
+    (void)junk; // silence the unused variable error in release mode.
     printf(".");
     return 1;
 }
 
 uint8_t test_my_itoa_4(void)
 {
+    // test converting a negative integer base 16 to a string
 #define LENGTH 33
     uint32_t length = LENGTH;
     int8_t string[LENGTH];
@@ -540,6 +598,7 @@ uint8_t test_my_itoa_4(void)
     assert(junk == string);
     compare_array_test((uint8_t *)string, (uint8_t *)expected, length);
 #undef LENGTH
+    (void)junk; // silence the unused variable error in release mode.
     printf(".");
     return 1;
 }
