@@ -22,8 +22,6 @@ INCLUDES = \
 	-I../util \
 	-I../project-1
 
-CFLAGS += -DPROJECT=1
-
 TEST_EXE = $(EXE)
 
 include $(MAKERULES)/generic.makefile

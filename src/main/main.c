@@ -1,17 +1,19 @@
 #include <stdio.h>
 #include <stdint.h>
 
-#include "projects.h"
+#if PROJECT == 1
+#    include "project_1.h"
+#else
+#    error Unsupported project number in PROJECT macro. Valid values: 1
+#endif
 
 int main(int argc, char **argv)
 {
     printf("Hello, world!\n");
 
-    uint32_t const project = PROJECT;
-
-    if (project == 1) {
+#   if PROJECT == 1
         project_1_report();
-    }
+#   endif
 
     return 0;
 }
