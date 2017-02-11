@@ -1,9 +1,9 @@
+#include <inttypes.h>
 #include <stdbool.h>
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "compatibility.h"
 #include "data.h"
 #include "memory.h"
 
@@ -57,8 +57,8 @@ int8_t *my_itoa(int8_t *string, int32_t data, int32_t base)
         position++;
         length++;
     }
-#   if DEBUG_VERBOSE
-        printf("itoa length = %" UI32 "   string = '%s'\n", length, string);
+#   ifdef DEBUG_VERBOSE
+        printf("itoa length = %" PRIu32 "   string = '%s'\n", length, string);
         for (uint32_t i = 0; i < 32; i++) {
             printf("<%c>", string[i]);
         }
@@ -67,7 +67,7 @@ int8_t *my_itoa(int8_t *string, int32_t data, int32_t base)
 
     my_reverse((uint8_t *)string, length);
 
-#   if DEBUG_VERBOSE
+#   ifdef DEBUG_VERBOSE
         printf("itoa string = '%s'\n", string);
         for (uint32_t i = 0; i < 32; i++) {
             printf("<%c>", string[i]);

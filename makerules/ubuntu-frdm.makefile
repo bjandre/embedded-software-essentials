@@ -7,8 +7,6 @@ CPU := cortex-m0plus
 
 TOOLS_PREFIX := arm-none-eabi
 
-UINT32_FMT := lu
-
 CC = $(TOOLS_PREFIX)-gcc
 CFLAGS = -march=$(ARCH) -mtune=$(CPU) -mthumb \
   -Wl,--print-output-format

@@ -1,10 +1,10 @@
 #include <assert.h>
+#include <inttypes.h>
 #include <limits.h>
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "compatibility.h"
 #include "data.h"
 #include "memory.h"
 #include "project_1.h"
@@ -182,7 +182,7 @@ void test_data2(uint8_t *data, uint32_t size)
         *(data_ptr + i) = result;
         print_memory(data, size);
         printf("\n  ");
-        printf("%" UI32 " == '%s'\n  ", result, string);
+        printf("compare int to string: %" PRIu32 " == '%s'\n  ", result, string);
     }
 }
 

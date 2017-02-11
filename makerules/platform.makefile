@@ -90,10 +90,10 @@ else
   RELEASE_CFLAGS = -Os -DNDEBUG
 endif
 
-# Defines is used elsewhere, e.g. adding the PROJECT macro.
-ifneq ($(origin UINT32_FMT), undefined)
-  DEFINES += -DUINT32_FMT=$(UINT32_FMT)
-endif
+# Defines is used elsewhere, e.g. adding the PROJECT macro. But could
+# alse be amended here.
+
+#DEFINES +=
 
 GENERAL_CFLAGS = --std=c99 -Wall -Werror
 
