@@ -18,9 +18,15 @@ Project Repository
   * compile-all - Compiles all source, but does not create libraries
   or executables.
   
+  * build-lib - builds all sources necessary to create libraries
+  or executables.
+  
+  * build - builds all sources, create libraries, necessary to link
+    executables.
+  
   * test - Build all, then run any tests.
   
-    * clean - Removes all build artifacts and editor files.
+  * clean - Removes all build artifacts and editor files.
   
 ## Supported options
   
@@ -39,13 +45,24 @@ Project Repository
         ```
   
   * release - The default build is a debug build because that is the
-    most common use case. Setting release to a non-empty value will
+    most common use case. Setting release to a non-zero value will
     produce an optimized release build.
 
         ```
         
         make clean
         make platform=bbb release=1 all
+        
+        ```
+  
+  * project - The controlls the project code build via the
+    preprocessor.  The default is the current project. To build
+    another project set project to an integer.
+
+        ```
+        
+        make clean
+        make project=1 all
         
         ```
   

@@ -22,18 +22,6 @@ TEST_SRCS = test_utils.c
 TEST_OBJS = $(TEST_SRCS:%.c=%.o)
 TEST_EXE = test_utils.out
 
-#
-# macro for executing TARGET in all SUBDIRS
-#
-ifdef SUBDIRS
-.PHONY : $(SUBDIRS)
-$(SUBDIRS) : 
-	@if [ -d $@ ]; then \
-		$(MAKE) --directory=$@ $(MAKECMDGOALS); \
-	fi	
-	$(BUILD_COMPLETE)
-endif	
-
 include $(MAKERULES)/generic.makefile
 
 $(TEST_EXE) : $(TEST_OBJS) $(OBJS)

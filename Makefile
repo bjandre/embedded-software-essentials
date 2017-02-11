@@ -10,17 +10,6 @@ include $(MAKERULES)/config.makefile
 SUBDIRS = \
 	src
 
-#
-# macro for executing TARGET in all SUBDIRS
-#
-ifdef SUBDIRS
-.PHONY : $(SUBDIRS)
-$(SUBDIRS) : FORCE
-	@if [ -d $@ ]; then \
-		$(MAKE) --no-print-directory --directory=$@ $(MAKECMDGOALS); \
-	fi
-	@echo '$(HOST_SYSTEM)'-'$(TARGET_SYSTEM)' build complete: $@ : $(shell date)
-endif
 
 include $(MAKERULES)/generic.makefile
 

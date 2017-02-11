@@ -13,14 +13,6 @@ SUBDIRS =
 #
 # macro for executing TARGET in all SUBDIRS
 #
-ifdef SUBDIRS
-.PHONY : $(SUBDIRS)
-$(SUBDIRS) : 
-	@if [ -d $@ ]; then \
-		$(MAKE) --directory=$@ $(MAKECMDGOALS); \
-	fi	
-	$(BUILD_COMPLETE)
-endif	
 
 include $(MAKERULES)/generic.makefile
 

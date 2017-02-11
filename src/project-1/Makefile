@@ -15,17 +15,6 @@ OBJS = $(SRCS:%.c=%.o)
 
 INCLUDES = -I../arch -I../util
 
-#
-# macro for executing TARGET in all SUBDIRS
-#
-ifdef SUBDIRS
-.PHONY : $(SUBDIRS)
-$(SUBDIRS) : 
-	@if [ -d $@ ]; then \
-		$(MAKE) --directory=$@ $(TARGET); \
-	fi	
-	$(BUILD_COMPLETE)
-endif	
 
 include $(MAKERULES)/generic.makefile
 

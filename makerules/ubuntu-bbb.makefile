@@ -5,13 +5,15 @@
 ARCH := armv7-a
 CPU := cortex-a8
 
-CC = arm-linux-gnueabihf-gcc
+TOOLS_PREFIX := arm-linux-gnueabihf
+
+CC = $(TOOLS_PREFIX)-gcc
 CFLAGS = -march=$(ARCH) -mtune=$(CPU) -mfpu=neon \
   -Wl,--print-output-format
 
-AR = arm-linux-gnueabihf-ar
+AR = $(TOOLS_PREFIX)-ar
 
-LD = arm-linux-gnueabihf-ld
+LD = $(TOOLS_PREFIX)-ld
 LDFLAGS = \
   --print-output-format \
   -L/usr/lib/gcc-cross/arm-linux-gnueabihf/5 \
@@ -27,5 +29,5 @@ LDLIBS = \
   /usr/lib/gcc-cross/arm-linux-gnueabihf/5/crtend.o \
   /usr/lib/gcc-cross/arm-linux-gnueabihf/5/../../../../arm-linux-gnueabihf/lib/../lib/crtn.o
 
-SIZE = arm-linux-gnueabihf-size
+SIZE = $(TOOLS_PREFIX)-size
 SIZEFLAGS = --format=sysv -x

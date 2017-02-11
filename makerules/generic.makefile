@@ -12,7 +12,7 @@ $(shell mkdir -p $(DEPENDS_DIR))
 	$(CC) $(CPPFLAGS) $(CFLAGS) $(INCLUDES) -c -o $*.i $<
 
 %.asm : %.c
-	$(CC) -S $(CFLAGS) $(INCLUDES) -c -o $*.asm $<
+	$(CC) $(C_ASM_FLAGS) $(CFLAGS) $(INCLUDES) -c -o $*.asm $<
 
 $(LIB) : $(OBJS)
 	$(AR) $(ARFLAGS) $@ $(OBJS)
@@ -24,6 +24,18 @@ $(EXE) : $(OBJS) $(DEPEND_LIBS)
 #	file $@
 #	ldd $@
 
+
+#
+# macro for executing TARGET in all SUBDIRS
+#
+ifdef SUBDIRS
+.PHONY : $(SUBDIRS)
+$(SUBDIRS) : 
+	@if [ -d $@ ]; then \
+		$(MAKE) --directory=$@ $(MAKECMDGOALS); \
+	fi	
+	$(BUILD_COMPLETE)
+endif	
 
 $(DEPENDS_DIR)/%.d : ;
 .PRECIOUS : $(DEPENDS_DIR)/%.d
