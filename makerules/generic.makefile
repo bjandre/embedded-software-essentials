@@ -32,7 +32,7 @@ ifdef SUBDIRS
 .PHONY : $(SUBDIRS)
 $(SUBDIRS) : 
 	@if [ -d $@ ]; then \
-		$(MAKE) --directory=$@ $(MAKECMDGOALS); \
+		$(MAKE) --no-print-directory --directory=$@ $(MAKECMDGOALS); \
 	fi	
 	$(BUILD_COMPLETE)
 endif	
