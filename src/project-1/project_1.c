@@ -9,9 +9,9 @@
 #include "memory.h"
 #include "project_1.h"
 
-void initialize_set_1(uint8_t *data, size_t size);
-void initialize_set_2(uint8_t *data, size_t size);
-void initialize_set_3(uint8_t *data, size_t size);
+void initialize_set_1(uint8_t *data, uint32_t size);
+void initialize_set_2(uint8_t *data, uint32_t size);
+void initialize_set_3(uint8_t *data, uint32_t size);
 void test_data1(uint8_t *data, uint32_t size);
 void test_data2(uint8_t *data, uint32_t size);
 void test_memory(uint8_t *data, uint32_t size);
@@ -24,7 +24,7 @@ void test_memory(uint8_t *data, uint32_t size);
 // initialize_set_1 and the creation of set_2 in main....? Some sort of stack
 // corruption? Can't see anything useful in the cross compiled executable when
 // running it in gdb.
-size_t const set_size = 32;
+uint32_t const set_size = 32;
 
 /*
  * void project_1_report()
@@ -56,7 +56,7 @@ void project_1_report()
  * increasing hex numbers like: 0x0123456789ABCDEF0123456789ABCDEF
  *
  */
-void initialize_set_1(uint8_t *set_1, size_t size)
+void initialize_set_1(uint8_t *set_1, uint32_t size)
 {
     // setting memory to repeating blocks of 0x0123456789abcdef is eight bytes.
     const uint32_t bytes_per_block = 8;
@@ -87,7 +87,7 @@ void initialize_set_1(uint8_t *set_1, size_t size)
  * an increasing integer count of 1 ,2, 3, 4, 5, 6, 7, 8, 9, 10, 11, ...., 31.
  *
  */
-void initialize_set_2(uint8_t *set_2, size_t size)
+void initialize_set_2(uint8_t *set_2, uint32_t size)
 {
     for (uint32_t byte = 0; byte < size; byte++) {
         *(set_2 + byte) = byte;
@@ -107,7 +107,7 @@ void initialize_set_2(uint8_t *set_2, size_t size)
  * an increasing integer count of “abcdefghijklmnopqrstuvwxyzABCDEF”
  *
  */
-void initialize_set_3(uint8_t *set_3, size_t size)
+void initialize_set_3(uint8_t *set_3, uint32_t size)
 {
     for (uint32_t byte = 0; byte < size; byte++) {
         *(set_3 + byte) = 'a' + byte;
