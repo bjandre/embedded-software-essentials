@@ -16,6 +16,16 @@ void test_data1(uint8_t *data, uint32_t size);
 void test_data2(uint8_t *data, uint32_t size);
 void test_memory(uint8_t *data, uint32_t size);
 
+// FIXME(bja, 2017-02-11) Moving the definition of set_size as a constant into
+// project_1_report results in a runtime failure when cross compiling for the
+// BBB with a debug build. Cross compiling a release build is fine. Both release
+// and native builds on the BBB are fine. The runtime failure is that the
+// constant changes value from 32 to 17 between the last C instruction of
+// initialize_set_1 and the creation of set_2 in main....? Some sort of stack
+// corruption? Can't see anything useful in the cross compiled executable when
+// running it in gdb.
+size_t const set_size = 32;
+
 /*
  * void project_1_report()
  *
@@ -25,8 +35,6 @@ void test_memory(uint8_t *data, uint32_t size);
  */
 void project_1_report()
 {
-    size_t const set_size = 32;
-
     uint8_t set_1[set_size];
     initialize_set_1(set_1, set_size);
 
