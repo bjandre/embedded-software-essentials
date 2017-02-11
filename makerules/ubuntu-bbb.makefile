@@ -31,3 +31,13 @@ LDLIBS = \
 
 SIZE = $(TOOLS_PREFIX)-size
 SIZEFLAGS = --format=sysv -x
+
+#
+# info for automatically transfering cross compiled blobs to the
+# target. SSH_HOST is the ssh config host alias or the full ssh
+# user@machine:port necessary for ssh/sft/scp to work.
+#
+
+SCP := scp
+SSH_HOST := bbb
+CX_PREFIX := x

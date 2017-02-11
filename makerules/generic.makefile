@@ -66,4 +66,12 @@ build : all
 clean : $(SUBDIRS)
 	@-$(RM) -rf $(EDITOR_FILES) $(BUILD_ARTIFACTS)
 
+# transfer cross compiled executable to the bbb. Prepend executable
+# name with $(CX_PREFIX) to indicate a cross compiled executable.
+.PHONEY : tx-bbb
+tx-bbb : $(SUBDIRS) all
+ifdef EXE
+	if [ -e ./$(EXE) ]; then $(SCP) $(EXE) $(SSH_HOST):$(CX_PREFIX)$(EXE); fi
+endif
+
 FORCE :
