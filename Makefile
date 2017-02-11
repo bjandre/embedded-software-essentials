@@ -17,4 +17,7 @@ include $(MAKERULES)/generic.makefile
 astyle : FORCE
 	astyle --options=.astylerc --recursive src/*.c src/*.h
 
+.PHONY : archive
+archive : FORCE
+	tar --exclude .git/ -c -v -f andre-ecen5013-project$(PROJECT).tgz .
 
