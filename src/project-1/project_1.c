@@ -52,8 +52,15 @@ void project_1_report()
 /*
  * void initialize_set_1()
  *
- * set_1 : Create an array of 32 bytes (unsigned). Initialize this array to
- * increasing hex numbers like: 0x0123456789ABCDEF0123456789ABCDEF
+ * Initialize an array of bytes (unsigned) using increasing hex numbers like:
+ * 0x0123456789ABCDEF0123456789ABCDEF
+ *
+ * input:
+ *
+ *   set_1 : pointer to input bytes
+ *
+ *   size : number bytes to initialize, must be a multiple of 8 for this
+ *   algorithm.
  *
  */
 void initialize_set_1(uint8_t *set_1, uint32_t size)
@@ -83,8 +90,14 @@ void initialize_set_1(uint8_t *set_1, uint32_t size)
 /*
  * void initialize_set_2()
  *
- * set_2 : Create another array of 32 bytes (unsigned). Initialize this array to
- * an increasing integer count of 1 ,2, 3, 4, 5, 6, 7, 8, 9, 10, 11, ...., 31.
+ * Initialize an array of bytes using an increasing integer count of 1 ,2, 3, 4,
+ * 5, 6, 7, 8, 9, 10, 11, ...., 31.
+ *
+ * input:
+ *
+ *   set_1 : pointer to input bytes
+ *
+ *   size : number bytes to initialize
  *
  */
 void initialize_set_2(uint8_t *set_2, uint32_t size)
@@ -103,12 +116,22 @@ void initialize_set_2(uint8_t *set_2, uint32_t size)
 /*
  * void initialize_set_3()
  *
- * set_3 : Create another array of 32 bytes (unsigned). Initialize this array to
- * an increasing integer count of “abcdefghijklmnopqrstuvwxyzABCDEF”
+ * Initialize an array of bytes using an increasing integer count of
+ * “abcdefghijklmnopqrstuvwxyzABCDEF”
+ *
+ * input:
+ *
+ *   set_1 : pointer to input bytes
+ *
+ *   size : number bytes to initialize
  *
  */
 void initialize_set_3(uint8_t *set_3, uint32_t size)
 {
+    // FIXME(bja, 2017-02) unused in project 1. Need to keep track of the number
+    // of bytes initialized. Start with a base of 'a'. If we cross 26, then need
+    // to skip back to 'A' as the base. After we cross another 26, we reset the
+    // base to 'a', etc.
     for (uint32_t byte = 0; byte < size; byte++) {
         *(set_3 + byte) = 'a' + byte;
     }
@@ -131,6 +154,12 @@ void initialize_set_3(uint8_t *set_3, uint32_t size)
  * 3. print_memory()
  * 4. little_to_big32()
  * 5. print_memory()
+ *
+ * input:
+ *
+ *   set_1 : pointer to input bytes
+ *
+ *   size : number bytes to manipulate
  *
  */
 void test_data1(uint8_t *data, uint32_t size)
@@ -161,6 +190,12 @@ void test_data1(uint8_t *data, uint32_t size)
  * 2. print_memory()
  * 3. my_atoi()
  * 4. print_memory()
+ *
+ * input:
+ *
+ *   set_1 : pointer to input bytes
+ *
+ *   size : number bytes to manipulate
  *
  */
 void test_data2(uint8_t *data, uint32_t size)
@@ -207,6 +242,12 @@ void test_data2(uint8_t *data, uint32_t size)
  *     position ([8])
  *
  * 7. print_memory(); all 32 bytes
+ *
+ * input:
+ *
+ *   set_1 : pointer to input bytes
+ *
+ *   size : number bytes to manipulate
  *
  */
 void test_memory(uint8_t *data, uint32_t size)

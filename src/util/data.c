@@ -58,27 +58,28 @@ int8_t *my_itoa(int8_t *string, int32_t data, int32_t base)
         length++;
     }
 #   ifdef DEBUG_VERBOSE
-        printf("itoa length = %" PRIu32 "   string = '%s'\n", length, string);
-        for (uint32_t i = 0; i < 32; i++) {
-            printf("<%c>", string[i]);
-        }
-        printf("\n");
+    printf("itoa length = %" PRIu32 "   string = '%s'\n", length, string);
+    for (uint32_t i = 0; i < 32; i++) {
+        printf("<%c>", string[i]);
+    }
+    printf("\n");
 #   endif
 
     my_reverse((uint8_t *)string, length);
 
 #   ifdef DEBUG_VERBOSE
-        printf("itoa string = '%s'\n", string);
-        for (uint32_t i = 0; i < 32; i++) {
-            printf("<%c>", string[i]);
-        }
-        printf("\n");
+    printf("itoa string = '%s'\n", string);
+    for (uint32_t i = 0; i < 32; i++) {
+        printf("<%c>", string[i]);
+    }
+    printf("\n");
 #   endif
 
     return string;
 }
 
-bool is_whitespace(int8_t byte) {
+bool is_whitespace(int8_t byte)
+{
     // check to see if a byte is an ascii whitespace character.
     bool is_space = false;
     switch (byte) {
@@ -130,6 +131,22 @@ int32_t my_atoi(int8_t *string)
     return sign * value;
 }
 
+/*
+ * Convert an array of integers from one endian representation to another by
+ * reversing the bypte order. The nuber of bytes is determined bye the size of
+ * the input type.
+ *
+ * input:
+ *
+ *   data : pointer to a list of integers to be converted.
+ *
+ *   length : the number of integers to be converted.
+ *
+ * returns:
+ *
+ *   EXIT_FAILURE if the conversion fails for any reason, otherwise EXIT_SUCCESS
+ *
+ */
 int8_t convert_endian32(uint32_t *data, uint32_t length)
 {
     // big endian - most significant byte is at the lowest memory location.

@@ -81,7 +81,7 @@ void compare_array_test(uint8_t *a, uint8_t *b, int length)
 {
     for (int i = 0; i < length; i++) {
 #       if DEBUG_VERBOSE
-            printf("i = %d  0x%.2x =? 0x%.2x\n", i, *(a + i), *(b + i));
+        printf("i = %d  0x%.2x =? 0x%.2x\n", i, *(a + i), *(b + i));
 #       endif
 #       ifdef NDEBUG
         if (*(a + i) != *(b + i)) {
@@ -477,7 +477,7 @@ uint8_t test_my_atoi_1(void)
     uint32_t received = my_atoi(string);
 #   ifdef NDEBUG
     if (received != expected) {
-       printf("ERROR: 0x%.2x =? 0x%.2x\n", received, expected);
+        printf("ERROR: 0x%.2x =? 0x%.2x\n", received, expected);
     }
 #   endif
     assert(expected == received);
@@ -495,7 +495,7 @@ uint8_t test_my_atoi_2(void)
     uint32_t received = my_atoi(string);
 #   ifdef NDEBUG
     if (received != expected) {
-       printf("ERROR: 0x%.2x =? 0x%.2x\n", received, expected);
+        printf("ERROR: 0x%.2x =? 0x%.2x\n", received, expected);
     }
 #   endif
     assert(expected == received);

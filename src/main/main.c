@@ -12,7 +12,7 @@ int main(int argc, char **argv)
     printf("Hello, world!\n");
 
 #   if PROJECT == 1
-        project_1_report();
+    project_1_report();
 #   endif
 
     return 0;
