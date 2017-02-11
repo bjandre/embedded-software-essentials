@@ -4,7 +4,7 @@ MAKERULES = $(WORKSPACE_PATH)/makerules
 
 include $(MAKERULES)/config.makefile
 
-EXE = main.out
+EXE = project$(PROJECT).out
 
 SRCS = \
 	main.c
