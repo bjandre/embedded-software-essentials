@@ -32,6 +32,9 @@ LDLIBS = \
 SIZE = $(TOOLS_PREFIX)-size
 SIZEFLAGS = --format=sysv -x
 
+OBJDUMP = $(TOOLS_PREFIX)-objdump
+OBJDUMP_FLAGS = --disassemble-all --line-numbers --source --full-contents --all-headers
+
 #
 # info for automatically transfering cross compiled blobs to the
 # target. SSH_HOST is the ssh config host alias or the full ssh

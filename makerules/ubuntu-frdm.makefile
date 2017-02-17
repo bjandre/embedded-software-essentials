@@ -32,3 +32,6 @@ LDLIBS = \
 
 SIZE = $(TOOLS_PREFIX)-size
 SIZEFLAGS = --format=sysv -x
+
+OBJDUMP = $(TOOLS_PREFIX)-objdump
+OBJDUMP_FLAGS = --disassemble-all --line-numbers --source --full-contents --all-headers

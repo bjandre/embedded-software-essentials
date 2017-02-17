@@ -45,6 +45,12 @@ $(DEPENDS_DIR)/%.d : ;
 .PHONY : all
 all : $(SUBDIRS) $(LIB) $(EXE)
 
+.PHONY : dump
+dump : $(SUBDIRS) $(EXE)
+ifdef EXE
+	$(OBJDUMP) $(OBJDUMP_FLAGS) $(EXE) > $(EXE:%.out=%.dump)
+endif
+
 .PHONY : test
 test : $(SUBDIRS) all $(TEST_EXE)
 ifdef TEST_EXE

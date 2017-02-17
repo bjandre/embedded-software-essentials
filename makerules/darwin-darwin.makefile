@@ -18,3 +18,6 @@ endif
 
 LD = ld
 LDFLAGS = -macosx_version_min $(VERSION_MIN) -lSystem -map $*.map
+
+OBJDUMP = otool
+OBJDUMP_FLAGS = -Vvt
