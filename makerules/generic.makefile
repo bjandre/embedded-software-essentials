@@ -40,7 +40,7 @@ endif
 $(DEPENDS_DIR)/%.d : ;
 .PRECIOUS : $(DEPENDS_DIR)/%.d
 
--include $(patsubst %, $(DEPENDS_DIR)/%.d, $(basename, $(SRCS)))
+-include $(SRCS:%.c=$(DEPENDS_DIR)/%.d)
 
 .PHONY : all
 all : $(SUBDIRS) $(LIB) $(EXE)
@@ -75,3 +75,8 @@ ifdef EXE
 endif
 
 FORCE :
+
+
+.PHONY : echo
+echo :
+	echo DEPENDS_DIR = $(DEPENDS_DIR)

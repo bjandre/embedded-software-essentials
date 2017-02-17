@@ -72,11 +72,6 @@ Project Repository
   * Changing into the relevant subdirectory and running `make XYZ.i`
   will write the preprocessed version of XYZ.c.
   
-## Known problems:
-
-  * Auto dependency generation includes dependencies on header
-    files, but changes to headers do not trigger new builds.
-  
 # References
 
   * [Auto-Dependency Generation](http://make.mad-scientist.net/papers/advanced-auto-dependency-generation/)
@@ -85,14 +80,12 @@ Project Repository
 
 ## Build system
 
-  * Fix header dependencies.
-
   * Out of source builds to allow building host and target platform
     without running `make clean` between builds.
 
-  * Try to get rid of recursize make. See:
+  * Try to get rid of recursive make. See:
   
-    * [Recursize Make Considered Harmful](http://aegis.sourceforge.net/auug97.pdf)
+    * [Recursive Make Considered Harmful](http://aegis.sourceforge.net/auug97.pdf)
 
     * [Multi-Architecture Builds](http://make.mad-scientist.net/papers/multi-architecture-builds/)
 
