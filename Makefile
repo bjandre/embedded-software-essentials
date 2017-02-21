@@ -11,6 +11,8 @@ SUBDIRS = \
 	src
 
 
+include $(MAKERULES)/3rd-party.makefile
+
 include $(MAKERULES)/generic.makefile
 
 .PHONY : astyle

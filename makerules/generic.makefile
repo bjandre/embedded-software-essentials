@@ -33,7 +33,7 @@ ifdef SUBDIRS
 $(SUBDIRS) : 
 	@if [ -d $@ ]; then \
 		$(MAKE) --no-print-directory --directory=$@ $(MAKECMDGOALS); \
-	fi	
+	fi
 	$(BUILD_COMPLETE)
 endif	
 
@@ -65,6 +65,9 @@ build : all
 .PHONY : clean
 clean : $(SUBDIRS)
 	@-$(RM) -rf $(EDITOR_FILES) $(BUILD_ARTIFACTS)
+
+.PHONY : clobber
+clobber : $(THIRD_PARTY_DIR) clean
 
 # transfer cross compiled executable to the bbb. Prepend executable
 # name with $(CX_PREFIX) to indicate a cross compiled executable.
