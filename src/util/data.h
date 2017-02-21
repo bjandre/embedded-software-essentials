@@ -3,6 +3,12 @@
 
 #include <stdint.h>
 
+typedef enum DataUtilsStatus {
+    DataStatus_SUCCESS,
+    DataStatus_ERROR_NULL, // null pointer error
+    DataStatus_ERROR_UNKNOWN, // unknown error
+} DataStatus;
+
 /*
  * my_itoa(string, data, base)
  *
@@ -59,10 +65,10 @@ int32_t my_atoi(int8_t *string);
  *
  * returns:
  *
- *   EXIT_FAILURE if the conversion fails for any reason, otherwise EXIT_SUCCESS
+ *   DataUtilsStatus indicating where the conversion succeeded or the type of error.
  *
  */
-int8_t big_to_little32(uint32_t *data, uint32_t length);
+DataStatus big_to_little32(uint32_t *data, uint32_t length);
 /*
  * little_to_big32()
  *
@@ -76,10 +82,10 @@ int8_t big_to_little32(uint32_t *data, uint32_t length);
  *
  * returns:
  *
- *   EXIT_FAILURE if the conversion fails for any reason, otherwise EXIT_SUCCESS
+ *   DataUtilsStatus indicating where the conversion succeeded or the type of error.
  *
  */
-int8_t little_to_big32(uint32_t *data, uint32_t length);
+DataStatus little_to_big32(uint32_t *data, uint32_t length);
 /*
  * print_memory()
  *

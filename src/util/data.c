@@ -7,7 +7,7 @@
 #include "data.h"
 #include "memory.h"
 
-int8_t convert_endian32(uint32_t *data, uint32_t length);
+DataStatus convert_endian32(uint32_t *data, uint32_t length);
 bool is_whitespace(int8_t byte);
 
 int8_t *my_itoa(int8_t *string, int32_t data, int32_t base)
@@ -102,7 +102,7 @@ int32_t my_atoi(int8_t *string)
     // 1002 = str = {' ', ' ', '1', '0', '0', '2', '\0'}
     // only handles decimal strings.
     if (NULL == string) {
-        return EXIT_SUCCESS;
+        return DataStatus_SUCCESS;
     }
 
     int8_t *position = string;
@@ -144,10 +144,10 @@ int32_t my_atoi(int8_t *string)
  *
  * returns:
  *
- *   EXIT_FAILURE if the conversion fails for any reason, otherwise EXIT_SUCCESS
+ *   DataStatus_FAILURE if the conversion fails for any reason, otherwise DataStatus_SUCCESS
  *
  */
-int8_t convert_endian32(uint32_t *data, uint32_t length)
+DataStatus convert_endian32(uint32_t *data, uint32_t length)
 {
     // big endian - most significant byte is at the lowest memory location.
     // little endian - most significant byte is at the lowest memory location.
@@ -155,26 +155,26 @@ int8_t convert_endian32(uint32_t *data, uint32_t length)
     // conversion from big to little and little to big is the same, just swap
     // the order of bytes within each integer....
     if (NULL == data) {
-        return EXIT_FAILURE;
+        return DataStatus_ERROR_NULL;
     }
     size_t num_bytes = sizeof(*data);
     for (uint32_t i = 0; i < length; i++) {
         // each uint32 object is a chunk of num_bytes that get reversed.
         uint8_t *object = (uint8_t *)(data + i);
-        uint8_t error = my_reverse(object, num_bytes);
-        if (EXIT_SUCCESS != error) {
-            return error;
+        MemStatus error = my_reverse(object, num_bytes);
+        if (MemStatus_SUCCESS != error) {
+            return DataStatus_ERROR_UNKNOWN;
         }
     }
-    return EXIT_SUCCESS;
+    return DataStatus_SUCCESS;
 }
 
-int8_t big_to_little32(uint32_t *data, uint32_t length)
+DataStatus big_to_little32(uint32_t *data, uint32_t length)
 {
     return convert_endian32(data, length);
 }
 
-int8_t little_to_big32(uint32_t *data, uint32_t length)
+DataStatus little_to_big32(uint32_t *data, uint32_t length)
 {
     return convert_endian32(data, length);
 }
