@@ -20,7 +20,10 @@ INCLUDES = -I../arch \
 	 -I$(CMOCKA_INCLUDE_DIR)
 
 
-TEST_SRCS = test_utils.c
+TEST_SRCS = \
+	test_memory.c \
+	test_data.c \
+	test_utils.c
 TEST_OBJS = $(TEST_SRCS:%.c=%.o)
 TEST_EXE = test_utils.out
 TEST_DEPEND_LIBS = $(CMOCKA_LIBRARY)
