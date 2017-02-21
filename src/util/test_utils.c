@@ -72,8 +72,8 @@ void test_my_memmove_1(void **state)
     uint8_t *destination = data + range;
 
     uint8_t expected[SIZE] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15};
-    uint8_t status = my_memmove(source, destination, range);
-    assert_int_equal(status, 0);
+    MemStatus status = my_memmove(source, destination, range);
+    assert_int_equal(status, MemStatus_SUCCESS);
     assert_memory_equal(data, expected, size);
 
 #undef SIZE
@@ -93,8 +93,8 @@ void test_my_memmove_2(void **state)
     uint8_t *destination = data + 2 * range;
 
     uint8_t expected[SIZE] = {0, 1, 2, 3, 4, 5, 6, 7, 2, 3, 4, 5, 12, 13, 14, 15};
-    uint8_t status = my_memmove(source, destination, range);
-    assert_int_equal(status, 0);
+    MemStatus status = my_memmove(source, destination, range);
+    assert_int_equal(status, MemStatus_SUCCESS);
     assert_memory_equal(data, expected, size);
 
 #undef SIZE
@@ -114,8 +114,8 @@ void test_my_memmove_3(void **state)
     uint8_t *destination = data + range / 2;
 
     uint8_t expected[SIZE] = {0, 1, 8, 9, 10, 11, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15};
-    uint8_t status = my_memmove(source, destination, range);
-    assert_int_equal(status, 0);
+    MemStatus status = my_memmove(source, destination, range);
+    assert_int_equal(status, MemStatus_SUCCESS);
     assert_memory_equal(data, expected, size);
 
 #undef SIZE
@@ -135,8 +135,8 @@ void test_my_memmove_4(void **state)
     uint8_t *destination = data + range / 2;
 
     uint8_t expected[SIZE] = {0, 1, 4, 5, 6, 7, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15};
-    uint8_t status = my_memmove(source, destination, range);
-    assert_int_equal(status, 0);
+    MemStatus status = my_memmove(source, destination, range);
+    assert_int_equal(status, MemStatus_SUCCESS);
     assert_memory_equal(data, expected, size);
 
 #undef SIZE
@@ -156,8 +156,8 @@ void test_my_memmove_5(void **state)
     uint8_t *destination = data + range;
 
     uint8_t expected[SIZE] = {0, 1, 2, 3, 2, 3, 4, 5, 8, 9, 10, 11, 12, 13, 14, 15};
-    uint8_t status = my_memmove(source, destination, range);
-    assert_int_equal(status, 0);
+    MemStatus status = my_memmove(source, destination, range);
+    assert_int_equal(status, MemStatus_SUCCESS);
     assert_memory_equal(data, expected, size);
 
 #undef SIZE
@@ -173,7 +173,7 @@ void test_my_memset_1(void **state)
         *(data + i) = 0 + i;
     }
     uint8_t expected = 0x23;
-    uint8_t status = my_memset(data, size, expected);
+    MemStatus status = my_memset(data, size, expected);
 
     for (size_t i = 0; i < size; i++) {
 #       ifdef NDEBUG
@@ -185,7 +185,7 @@ void test_my_memset_1(void **state)
     }
 
     status = my_memset(NULL, size, expected);
-    assert_int_not_equal(status, 0);
+    assert_int_not_equal(status, MemStatus_SUCCESS);
 
 }
 
@@ -202,8 +202,8 @@ void test_my_memset_2(void **state)
 
     uint8_t value = 0x34;
     uint8_t expected[SIZE] = {0, 1, value, value, value, value, 6, 7};
-    uint8_t status = my_memset(data + 2, range, value);
-    assert_int_equal(status, 0);
+    MemStatus status = my_memset(data + 2, range, value);
+    assert_int_equal(status, MemStatus_SUCCESS);
     assert_memory_equal(data, expected, size);
 #undef SIZE
 #undef RANGE
@@ -218,8 +218,8 @@ void test_my_memzero(void **state)
         *(data + i) = 0 + i;
     }
 
-    uint8_t status = my_memzero(data, size);
-    assert_int_equal(status, 0);
+    MemStatus status = my_memzero(data, size);
+    assert_int_equal(status, MemStatus_SUCCESS);
     uint8_t expected = 0;
     for (size_t i = 0; i < size; i++) {
 #       ifdef NDEBUG
@@ -231,7 +231,7 @@ void test_my_memzero(void **state)
     }
 
     status = my_memzero(NULL, size);
-    assert_int_not_equal(status, 0);
+    assert_int_not_equal(status, MemStatus_SUCCESS);
 
 }
 
@@ -242,8 +242,8 @@ void test_my_reverse_1(void **state)
     int length = LENGTH;
     uint8_t data[LENGTH] = {0, 1, 2, 3};
     uint8_t expected[LENGTH] = {0, 1, 2, 3};
-    uint8_t status = my_reverse(NULL, length);
-    assert_int_not_equal(status, 0);
+    MemStatus status = my_reverse(NULL, length);
+    assert_int_not_equal(status, MemStatus_SUCCESS);
     assert_memory_equal(expected, data, length);
 #undef LENGTH
 }
@@ -255,8 +255,8 @@ void test_my_reverse_2(void **state)
     int length = LENGTH;
     uint8_t data[LENGTH] = {0, 1, 2, 3};
     uint8_t expected[LENGTH] = {3, 2, 1, 0};
-    uint8_t status = my_reverse(data, length);
-    assert_int_equal(status, 0);
+    MemStatus status = my_reverse(data, length);
+    assert_int_equal(status, MemStatus_SUCCESS);
     assert_memory_equal(expected, data, length);
 #undef LENGTH
 }
@@ -268,8 +268,8 @@ void test_my_reverse_3(void **state)
     int length = LENGTH;
     uint8_t data[LENGTH] = {0, 1, 2, 3, 4};
     uint8_t expected[LENGTH] = {4, 3, 2, 1, 0};
-    uint8_t status = my_reverse(data, length);
-    assert_int_equal(status, 0);
+    MemStatus status = my_reverse(data, length);
+    assert_int_equal(status, MemStatus_SUCCESS);
     assert_memory_equal(expected, data, length);
 #undef LENGTH
 }
@@ -281,8 +281,8 @@ void test_my_reverse_4(void **state)
     int length = LENGTH;
     uint8_t data[LENGTH] = {0, 1, 2, 3, 4};
     uint8_t expected[LENGTH] = {0, 1, 2, 3, 4};
-    uint8_t status = my_reverse(data, 0);
-    assert_int_equal(status, 0);
+    MemStatus status = my_reverse(data, 0);
+    assert_int_equal(status, MemStatus_SUCCESS);
     assert_memory_equal(expected, data, length);
 #undef LENGTH
 }
@@ -294,8 +294,8 @@ void test_my_reverse_5(void **state)
     int length = LENGTH;
     uint8_t data[LENGTH] = {0, 1, 2, 3, 4};
     uint8_t expected[LENGTH] = {3, 2, 1, 0, 4};
-    uint8_t status = my_reverse(data, 4);
-    assert_int_equal(status, 0);
+    MemStatus status = my_reverse(data, 4);
+    assert_int_equal(status, MemStatus_SUCCESS);
     assert_memory_equal(expected, data, length);
 #undef LENGTH
 }
@@ -307,8 +307,8 @@ void test_my_reverse_6(void **state)
     int length = LENGTH;
     uint8_t data[LENGTH] = {0, 1, 2, 3, 4};
     uint8_t expected[LENGTH] = {0, 4, 3, 2, 1};
-    uint8_t status = my_reverse(data + 1, 4);
-    assert_int_equal(status, 0);
+    MemStatus status = my_reverse(data + 1, 4);
+    assert_int_equal(status, MemStatus_SUCCESS);
     assert_memory_equal(expected, data, length);
 #undef LENGTH
 }
@@ -324,8 +324,8 @@ void test_my_reverse_7(void **state)
         *(expected + i) = size - 1 - i;
     }
 
-    uint8_t status = my_reverse(data, size);
-    assert_int_equal(status, 0);
+    MemStatus status = my_reverse(data, size);
+    assert_int_equal(status, MemStatus_SUCCESS);
     assert_memory_equal(expected, data, size);
 
 }
@@ -339,13 +339,13 @@ void test_convert_endian32_1(void **state)
     size_t num_bytes = sizeof(data);
 
     // note: just calling the wrapper to avoid exposing convert_endian
-    uint8_t status = big_to_little32(&data, length);
-    assert_int_equal(status, 0);
+    MemStatus status = big_to_little32(&data, length);
+    assert_int_equal(status, MemStatus_SUCCESS);
     assert_memory_equal((uint8_t *)&expected, (uint8_t *)&data, length * num_bytes);
 
     uint32_t expected_orig = 0x01234567;
     status = little_to_big32(&data, length);
-    assert_int_equal(status, 0);
+    assert_int_equal(status, MemStatus_SUCCESS);
     assert_memory_equal((uint8_t *)&expected_orig, (uint8_t *)&data,
                        length * num_bytes);
 
@@ -373,12 +373,12 @@ void test_convert_endian32_2(void **state)
     }
 
     // note: just calling the wrapper to avoid exposing convert_endian
-    uint8_t status = little_to_big32(data, length);
-    assert_int_equal(status, 0);
+    MemStatus status = little_to_big32(data, length);
+    assert_int_equal(status, MemStatus_SUCCESS);
     assert_memory_equal((uint8_t *)expected, (uint8_t *)data, length * num_bytes);
 
     status = big_to_little32(data, length);
-    assert_int_equal(status, 0);
+    assert_int_equal(status, MemStatus_SUCCESS);
     assert_memory_equal((uint8_t *)expected_orig, (uint8_t *)data,
                        length * num_bytes);
 

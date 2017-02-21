@@ -3,6 +3,11 @@
 
 #include <stdint.h>
 
+typedef enum MemoryStatus {
+    MemStatus_SUCCESS,
+    MemStatus_ERROR_NULL,
+} MemStatus;
+
 /*
  * my_memove(source, destination, length)
  *
@@ -25,10 +30,10 @@
  *
  * returns:
  *
- *   EXIT_FAILURE if the conversion fails for any reason, otherwise EXIT_SUCCESS
+ *   MemStatus flag indicating success or type of error tha occured.
  *
  */
-int8_t my_memmove(uint8_t *source, uint8_t *destination, uint32_t length);
+MemStatus my_memmove(uint8_t *source, uint8_t *destination, uint32_t length);
 
 /*
  * my_memset(source, length, value)
@@ -46,10 +51,10 @@ int8_t my_memmove(uint8_t *source, uint8_t *destination, uint32_t length);
  *
  * returns:
  *
- *   EXIT_FAILURE if the conversion fails for any reason, otherwise EXIT_SUCCESS
+ *   MemStatus flag indicating success or type of error tha occured.
  *
  */
-int8_t my_memset(uint8_t *source, uint32_t length, uint8_t value);
+MemStatus my_memset(uint8_t *source, uint32_t length, uint8_t value);
 
 /*
  * my_memzero(source, length)
@@ -65,10 +70,10 @@ int8_t my_memset(uint8_t *source, uint32_t length, uint8_t value);
  *
  * returns:
  *
- *   EXIT_FAILURE if the conversion fails for any reason, otherwise EXIT_SUCCESS
+ *   MemStatus flag indicating success or type of error tha occured.
  *
  */
-int8_t my_memzero(uint8_t *source, uint32_t length);
+MemStatus my_memzero(uint8_t *source, uint32_t length);
 
 /*
  * my_reverse(source, length)
@@ -84,10 +89,10 @@ int8_t my_memzero(uint8_t *source, uint32_t length);
  *
  * returns:
  *
- *   EXIT_FAILURE if the conversion fails for any reason, otherwise EXIT_SUCCESS
+ *   MemStatus flag indicating success or type of error tha occured.
  *
  */
-int8_t my_reverse(uint8_t *source, uint32_t length);
+MemStatus my_reverse(uint8_t *source, uint32_t length);
 
 
 #endif /* ESE_UTIL_MEMORY_H_ */
