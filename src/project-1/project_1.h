@@ -1,5 +1,5 @@
-#ifndef __ESE_PROJECT_1_H__
-#define __ESE_PROJECT_1_H__
+#ifndef ESE_PROJECT1_PROJECT_1_H_
+#define ESE_PROJECT1_PROJECT_1_H_
 
 /*
  * void project_1_report()
@@ -10,4 +10,4 @@
 void project_1_report();
 
 
-#endif /* __ESE_PROJECT_1_H__ */
+#endif /* ESE_PROJECT1_PROJECT_1_H_ */

@@ -1,6 +1,6 @@
-#ifndef __ESE_BIG_LITTLE_H__
-#define __ESE_BIG_LITTLE_H__
+#ifndef ESE_PROJECT1_BIG_LITTLE_H_
+#define ESE_PROJECT1_BIG_LITTLE_H_
 
 void big_little(void);
 
-#endif // __ESE_BIG_LITTLE_H__
+#endif // ESE_PROJECT1_BIG_LITTLE_H_

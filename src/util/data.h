@@ -1,5 +1,5 @@
-#ifndef __ESE_DATA_H__
-#define __ESE_DATA_H__
+#ifndef ESE_UTIL_DATA_H_
+#define ESE_UTIL_DATA_H_
 
 #include <stdint.h>
 
@@ -94,4 +94,4 @@ int8_t little_to_big32(uint32_t *data, uint32_t length);
  */
 void print_memory(uint8_t *start, uint32_t length);
 
-#endif /* __ESE_DATA_H__ */
+#endif /* ESE_UTIL_DATA_H_ */

@@ -1,5 +1,5 @@
-#ifndef __ESE_MEMORY_H__
-#define __ESE_MEMORY_H__
+#ifndef ESE_UTIL_MEMORY_H_
+#define ESE_UTIL_MEMORY_H_
 
 #include <stdint.h>
 
@@ -90,4 +90,4 @@ int8_t my_memzero(uint8_t *source, uint32_t length);
 int8_t my_reverse(uint8_t *source, uint32_t length);
 
 
-#endif /* __ESE_MEMORY_H__ */
+#endif /* ESE_UTIL_MEMORY_H_ */
