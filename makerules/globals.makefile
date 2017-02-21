@@ -14,8 +14,15 @@ BUILD_ARTIFACTS = \
   *.out \
   *.map \
   *.i \
+  *.dump \
   $(DEPENDS_DIR) *.d *.Td
 
 EDITOR_FILES = \
   *~ \
   *.astyle.orig
+
+
+THIRD_PARTY_DIR := 3rd-party
+
+CMOCKA_INCLUDE_DIR = $(WORKSPACE_PATH)/$(THIRD_PARTY_DIR)/build-Debug/include
+CMOCKA_LIBRARY = $(WORKSPACE_PATH)/$(THIRD_PARTY_DIR)/build-Debug/lib/libcmocka.a

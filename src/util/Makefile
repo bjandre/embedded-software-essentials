@@ -16,15 +16,18 @@ SRCS = \
 
 OBJS = $(SRCS:%.c=%.o)
 
-INCLUDES = -I../arch
+INCLUDES = -I../arch \
+	 -I$(CMOCKA_INCLUDE_DIR)
+
 
 TEST_SRCS = test_utils.c
 TEST_OBJS = $(TEST_SRCS:%.c=%.o)
 TEST_EXE = test_utils.out
+TEST_DEPEND_LIBS = $(CMOCKA_LIBRARY)
 
 include $(MAKERULES)/generic.makefile
 
 $(TEST_EXE) : $(TEST_OBJS) $(OBJS)
-	$(CC) $(CFLAGS) -O0 -g -U NDEBUG -o $@ $^
+	$(CC) $(CFLAGS) $(CMOCKA_INCLUDES) -O0 -g -U NDEBUG -o $@ $^ $(TEST_DEPEND_LIBS)
 
 
