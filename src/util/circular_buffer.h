@@ -1,6 +1,8 @@
 #ifndef ESE_UTIL_CIRCULAR_BUFFER_H_
 #define ESE_UTIL_CIRCULAR_BUFFER_H_
 
+#include <stdbool.h>
+
 typedef struct CircularBuffer_t CircularBuffer_t;
 
 typedef enum CircularBufferStatus_t {
@@ -8,8 +10,10 @@ typedef enum CircularBufferStatus_t {
     CB_Full,
     CB_Empty,
     CB_Null_Pointer,
-    CB_No_Length,
-    CB_Buffer_Allocation_Failure
+    CB_No_Num_Items,
+    CB_No_Bytes_Per_Item,
+    CB_Buffer_Allocation_Failure,
+    CB_Copy_Error
 } CircularBufferStatus;
 
 /**
@@ -17,12 +21,12 @@ typedef enum CircularBufferStatus_t {
 
    Adds an item to the circular_buffer.
 
-   Param: *circ_buff - pointer to circular buffer
+   Param: *cb - pointer to circular buffer
    Param: item - to be added
 
    Returns: CircularBufferStatus corresponding to action or buffer status
  */
-CircularBufferStatus CircularBufferAddItem(CircularBuffer_t *circ_buff,
+CircularBufferStatus CircularBufferAddItem(CircularBuffer_t *cb,
         void *item);
 
 /**
@@ -30,35 +34,38 @@ CircularBufferStatus CircularBufferAddItem(CircularBuffer_t *circ_buff,
 
    Removes an item from the buffer
 
-   Param: *circ_buff - pointer to circular buffer
+   Param: *cb - pointer to circular buffer
    Param: item - removed
 
    Returns: CircularBufferStatus corresponding to action or buffer status
  */
-CircularBufferStatus CircularBufferRemoveItem(CircularBuffer_t *circ_buff);
+CircularBufferStatus CircularBufferRemoveItem(CircularBuffer_t *cb,
+    void *item);
 
 /**
-   CircularBufferFull(circular_buffer, item)
+   CircularBufferIsFull(circular_buffer, is_full)
 
    Report whether the buffer is full.
 
-   Param: *circ_buff - pointer to circular buffer
+   Param: *cb - pointer to circular buffer
+   Param: *is_full - boolean indicating if the buffer is full.
 
    Returns: CircularBufferStatus corresponding to action or buffer status
  */
-CircularBufferStatus CircularBufferFull(CircularBuffer_t *circ_buff);
+CircularBufferStatus CircularBufferIsFull(CircularBuffer_t *cb, bool *is_full);
 
 
 /**
-   CircularBufferEmpty(circular_buffer, item)
+   CircularBufferIsEmpty(circular_buffer, is_empty)
 
    Report whether the buffer is empty.
 
-   Param: *circ_buff - pointer to circular buffer
+   Param: *cb - pointer to circular buffer
+   Param: *is_empty - boolean indicating if the buffer is empty.
 
    Returns: CircularBufferStatus corresponding to action or buffer status
  */
-CircularBufferStatus CircularBufferEmpty(CircularBuffer_t *circ_buff);
+CircularBufferStatus CircularBufferIsEmpty(CircularBuffer_t *cb, bool *is_empty);
 
 
 /**
@@ -66,36 +73,39 @@ CircularBufferStatus CircularBufferEmpty(CircularBuffer_t *circ_buff);
 
    Allows you to look at the nth item
 
-   Param: *circ_buff - pointer to circular buffer
+   Param: *cb - pointer to circular buffer
    Param: index. Must be less then count and greater or equal to zero.
 
    Returns: CircularBufferStatus corresponding to action or buffer status
  */
-CircularBufferStatus CircularBufferPeakItem(CircularBuffer_t *circ_buff,
+CircularBufferStatus CircularBufferPeakItem(CircularBuffer_t *cb,
         const size_t index);
 
 /**
-   CircularBufferInit(circular_buffer, num_bytes)
+   CircularBufferNew(circular_buffer, num_items, bytes_per_item)
 
-   Allocates a circular buffer structure and the buffer portion in memory (on
-   the heap) given a number of bytes
+   Allocates a new circular buffer structure and the buffer portion in memory
+   (on the heap) given a number of bytes
 
-   Param: *circ_buff - pointer to circular buffer
-   Param: num_bytes - the number of bytes to allocate for the buffer.
+   Param: *cb - pointer to circular buffer
+   Param: num_items - number of items to store in the buffer.
+   Param: bytes_per_item - the number of bytes per item stored in the buffer.
 
    Returns: CircularBufferStatus corresponding to action or buffer status
  */
-CircularBufferStatus CircularBufferInit(CircularBuffer_t *circ_buff);
+CircularBufferStatus CircularBufferNew(CircularBuffer_t **cb,
+                                        const size_t num_items,
+                                        const size_t bytes_per_item);
 
 /**
    CircularBufferDestroy(circular_buffer)
 
    Frees the circular buffer from dynamic memory
 
-   Param: *circ_buff - pointer to circular buffer
+   Param: *cb - pointer to circular buffer
 
    Returns: CircularBufferStatus corresponding to action or buffer status
  */
-CircularBufferStatus CircularBufferDestroy(CircularBuffer_t *circ_buff);
+CircularBufferStatus CircularBufferDestroy(CircularBuffer_t **cb);
 
 #endif // ESE_UTIL_CIRCULAR_BUFFER_H_
