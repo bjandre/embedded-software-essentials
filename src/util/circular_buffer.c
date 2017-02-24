@@ -21,6 +21,16 @@ void ClearCircularBuffer(CircularBuffer_t *cb);
 CircularBufferStatus InitCircularBuffer(CircularBuffer_t *cb,
                                         const size_t num_items,
                                         const size_t bytes_per_item);
+void *NewBufferPosition(CircularBuffer_t *cb, void *current_position);
+
+void *NewBufferPosition(CircularBuffer_t *cb, void *current_position)
+{
+    void *new_position = current_position + cb->bytes_per_item;
+    if (new_position > cb->buffer_end - cb->bytes_per_item) {
+        new_position = cb->buffer;
+    }
+    return new_position;
+}
 
 CircularBufferStatus CircularBufferAddItem(CircularBuffer_t *cb,
         void *item)
@@ -31,16 +41,13 @@ CircularBufferStatus CircularBufferAddItem(CircularBuffer_t *cb,
     } else if (cb->bytes_used + cb->bytes_per_item > cb->num_bytes_allocated) {
         status = CB_Full;
     } else {
-        cb->bytes_used += cb->bytes_per_item;
-        void *new_head = cb->head + cb->bytes_per_item;
-        if (new_head > cb->buffer_end) {
-            new_head = cb->buffer;
-        }
         MemStatus memstat = my_memmove(item, cb->head, cb->bytes_per_item);
-        if (MemStatus_SUCCESS != memstat) {
+        if (MemStatus_SUCCESS == memstat) {
+            cb->head = NewBufferPosition(cb, cb->head);
+            cb->bytes_used += cb->bytes_per_item;
+        } else {
             status = CB_Copy_Error;
         }
-        cb->head = new_head;
     }
     return status;
 }
@@ -53,17 +60,13 @@ CircularBufferStatus CircularBufferRemoveItem(CircularBuffer_t *cb, void *item)
     } else if (cb->bytes_used < cb->bytes_per_item) {
         status = CB_Empty;
     } else {
-        cb->bytes_used -= cb->bytes_per_item;
-        // FIXME(bja, 2017-02) essentially copy and paste from add...
-        void *new_tail = cb->tail + cb->bytes_per_item;
-        if (new_tail > cb->buffer_end) {
-            new_tail = cb->buffer;
-        }
         MemStatus memstat = my_memmove(cb->tail, item, cb->bytes_per_item);
-        if (MemStatus_SUCCESS != memstat) {
+        if (MemStatus_SUCCESS == memstat) {
+            cb->tail = NewBufferPosition(cb, cb->tail);
+            cb->bytes_used -= cb->bytes_per_item;
+        } else {
             status = CB_Copy_Error;
         }
-        cb->tail = new_tail;
     }
     return status;
 }
@@ -111,7 +114,8 @@ CircularBufferStatus CircularBufferNew(CircularBuffer_t **cb,
     } else {
         ClearCircularBuffer(*cb);
         status = InitCircularBuffer(*cb, num_items, bytes_per_item);
-        if (CB_No_Error != status) {
+        if (CB_No_Error == status) {
+        } else {
             // free any memory that might have been allocated. Don't save the
             // status because it's meaningless and we want to report the error
             // that was returned by Init.
@@ -162,7 +166,9 @@ CircularBufferStatus InitCircularBuffer(CircularBuffer_t *cb,
 
 CircularBufferStatus CircularBufferDestroy(CircularBuffer_t **cb)
 {
-    free((*cb)->buffer);
+    if (NULL != *cb) {
+        free((*cb)->buffer);
+    }
     free(*cb);
     *cb = NULL;
     

@@ -1,5 +1,6 @@
 #include <stdint.h>
 #include <stdio.h>
+#include <stdlib.h>
 
 #include <stdarg.h>
 #include <stddef.h>
@@ -109,6 +110,10 @@ void test_cb_item_null_pointer(void **state)
     assert_int_equal(status, CB_No_Error);
     status = CircularBufferAddItem(cb, NULL);
     assert_int_equal(status, CB_Null_Pointer);
+
+    status = CircularBufferDestroy(&cb);
+    assert_int_equal(status, CB_No_Error);
+    assert_null(cb);
 }
 
 void test_cb_uninitialized_buffer(void **state)
@@ -323,14 +328,108 @@ void test_cb_wrap_add(void **state)
 {
     // test Wrap Add - Test that your buffer can wrap around the edge boundary
     // and add to the front
-    skip();
+
+    // NOTE(bja, 2017-02) create a small buffer and a bunch of data, and then
+    // add-remove stuff to wrap around a bunch of times.
+    #define SIZE 32
+    uint32_t offset = 12345;
+    CircularBuffer_t *cb = NULL;
+    size_t num_items = SIZE/8;
+    size_t bytes_per_item = sizeof(offset);
+    CircularBufferStatus status = CircularBufferNew(&cb, num_items, bytes_per_item);
+    assert_int_equal(status, CB_No_Error);
+
+    uint32_t data[SIZE];
+    uint32_t received[SIZE];
+    size_t size = SIZE;
+    for (size_t i = 0; i < size; i++) {
+        data[i] = offset + i;
+        received[i] = 0;
+    }
+
+    for (size_t i = 0; i < size; i++) {
+        status = CircularBufferAddItem(cb, data + i);
+        assert_int_equal(status, CB_No_Error);
+
+        status = CircularBufferRemoveItem(cb, received + i);
+        assert_int_equal(status, CB_No_Error);
+        if (data[i] != received[i]) {
+            printf("%zu : %d != %d\n", i, data[i], received[i]);
+        }
+        assert_int_equal(data[i], received[i]);
+    }
+
+    status = CircularBufferDestroy(&cb);
+    assert_int_equal(status, CB_No_Error);
+    assert_null(cb);
+    #undef SIZE
 }
 
 void test_cb_wrap_remove(void **state)
 {
     // test Wrap Remove - Test that your buffer can wrap around the edge
     // boundary and add to the front
-    skip();
+    // NOTE(bja, 2017-02) size is assumed to be a multiple of 4
+    #define SIZE 32
+    uint32_t offset = -12345;
+    CircularBuffer_t *cb = NULL;
+    size_t num_items = SIZE/4;
+    size_t bytes_per_item = sizeof(offset);
+    CircularBufferStatus status = CircularBufferNew(&cb, num_items, bytes_per_item);
+    assert_int_equal(status, CB_No_Error);
+
+    uint32_t data[SIZE];
+    uint32_t received[SIZE];
+    size_t size = SIZE;
+    for (size_t i = 0; i < size; i++) {
+        data[i] = offset + i;
+        received[i] = 0;
+    }
+
+    // fill the buffer
+    size_t add_begin = 0;
+    size_t add_end = num_items;
+    for (size_t i = add_begin; i < add_end; i++) {
+        status = CircularBufferAddItem(cb, data + i);
+        assert_int_equal(status, CB_No_Error);
+    }
+
+    // remove some items
+    size_t remove_begin = 0;
+    size_t remove_end = add_end / 2;
+    for (size_t i = remove_begin; i < remove_end; i++) {
+        status = CircularBufferRemoveItem(cb, received + i);
+        assert_int_equal(status, CB_No_Error);
+        if (data[i] != received[i]) {
+            printf("%zu : %d != %d\n", i, data[i], received[i]);
+        }
+        assert_int_equal(data[i], received[i]);
+    }
+
+    // add some more items
+    add_begin = add_end;
+    add_end += num_items / 2;
+    for (size_t i = add_begin; i < add_end; i++) {
+        status = CircularBufferAddItem(cb, data + i);
+        assert_int_equal(status, CB_No_Error);
+    }
+
+    // remove some items
+    remove_begin = remove_end;
+    remove_end += num_items;
+    for (size_t i = remove_begin; i < remove_end; i++) {
+        status = CircularBufferRemoveItem(cb, received + i);
+        assert_int_equal(status, CB_No_Error);
+        if (data[i] != received[i]) {
+            printf("%zu : %d != %d\n", i, data[i], received[i]);
+        }
+        assert_int_equal(data[i], received[i]);
+    }
+
+    status = CircularBufferDestroy(&cb);
+    assert_int_equal(status, CB_No_Error);
+    assert_null(cb);
+    #undef SIZE
 }
 
 void test_cb_over_fill(void **state)
@@ -381,6 +480,9 @@ void test_cb_over_empty(void **state)
         data[i] = offset + i;
         received[i] = 0;
     }
+
+    status = CircularBufferRemoveItem(cb, received);
+    assert_int_equal(status, CB_Empty);
 
     for (size_t i = 0; i < num_items; i++) {
         status = CircularBufferAddItem(cb, data + i);
