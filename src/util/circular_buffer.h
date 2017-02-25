@@ -35,7 +35,7 @@ CircularBufferStatus CircularBufferAddItem(CircularBuffer_t *cb,
    Removes an item from the buffer
 
    Param: *cb - pointer to circular buffer
-   Param: item - removed
+   Param: *item - location to store removed item. Must be at least bytes_per_item in size.
 
    Returns: CircularBufferStatus corresponding to action or buffer status
  */
@@ -74,12 +74,13 @@ CircularBufferStatus CircularBufferIsEmpty(CircularBuffer_t *cb, bool *is_empty)
    Allows you to look at the nth item
 
    Param: *cb - pointer to circular buffer
-   Param: index. Must be less then count and greater or equal to zero.
+   Param: index - index from the tail. Must be 0 <= index < num_items
+   Param: *item - space to return the item, Must be at least bytes_per_item in size.
 
    Returns: CircularBufferStatus corresponding to action or buffer status
  */
 CircularBufferStatus CircularBufferPeakItem(CircularBuffer_t *cb,
-        const size_t index);
+                                            const size_t index, void *item);
 
 /**
    CircularBufferNew(circular_buffer, num_items, bytes_per_item)

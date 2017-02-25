@@ -94,9 +94,25 @@ CircularBufferStatus CircularBufferIsEmpty(CircularBuffer_t *cb, bool *is_empty)
 
 
 CircularBufferStatus CircularBufferPeakItem(CircularBuffer_t *cb,
-        const size_t index)
+                                            const size_t index, void *item)
 {
-    return CB_Null_Pointer;
+    CircularBufferStatus status = CB_No_Error;
+    if (NULL == item || NULL == cb) {
+        status = CB_Null_Pointer;
+    } else {
+        void *position = cb->tail + cb->bytes_per_item * index;
+        if (position > cb->buffer_end - cb->bytes_per_item) {
+            ptrdiff_t wrap_length = position - cb->buffer_end;
+            position = cb->buffer + wrap_length;
+        }
+        MemStatus memstat = my_memmove(position, item, cb->bytes_per_item);
+        if (MemStatus_SUCCESS == memstat) {
+            // success!
+        } else {
+            status = CB_Copy_Error;
+        }
+    }
+    return status;
 }
 
 CircularBufferStatus CircularBufferNew(CircularBuffer_t **cb,
