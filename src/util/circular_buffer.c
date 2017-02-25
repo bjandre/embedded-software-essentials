@@ -94,7 +94,7 @@ CircularBufferStatus CircularBufferIsEmpty(CircularBuffer_t *cb, bool *is_empty)
 
 
 CircularBufferStatus CircularBufferPeakItem(CircularBuffer_t *cb,
-                                            const size_t index, void *item)
+        const size_t index, void *item)
 {
     CircularBufferStatus status = CB_No_Error;
     if (NULL == item || NULL == cb) {
@@ -143,8 +143,8 @@ CircularBufferStatus CircularBufferNew(CircularBuffer_t **cb,
 }
 
 CircularBufferStatus InitCircularBuffer(CircularBuffer_t *cb,
-                                       const size_t num_items,
-                                       const size_t bytes_per_item)
+                                        const size_t num_items,
+                                        const size_t bytes_per_item)
 {
     // NOTE: the result of malloc(0) is implementation defined, and is not
     // guarenteed to be a NULL pointer.
@@ -157,7 +157,7 @@ CircularBufferStatus InitCircularBuffer(CircularBuffer_t *cb,
     if (0 == num_items) {
         status = CB_No_Num_Items;
     }
-    
+
     if (0 == bytes_per_item) {
         status = CB_No_Bytes_Per_Item;
     }
@@ -166,8 +166,8 @@ CircularBufferStatus InitCircularBuffer(CircularBuffer_t *cb,
         cb->num_items = num_items;
         cb->bytes_per_item = bytes_per_item;
         cb->num_bytes_allocated = cb->bytes_per_item *
-            cb->num_items;
-        
+                                  cb->num_items;
+
         cb->buffer = malloc(cb->num_bytes_allocated);
         if (NULL == cb->buffer) {
             status = CB_Buffer_Allocation_Failure;
@@ -187,7 +187,7 @@ CircularBufferStatus CircularBufferDestroy(CircularBuffer_t **cb)
     }
     free(*cb);
     *cb = NULL;
-    
+
     return CB_No_Error;
 }
 

@@ -40,7 +40,7 @@ CircularBufferStatus CircularBufferAddItem(CircularBuffer_t *cb,
    Returns: CircularBufferStatus corresponding to action or buffer status
  */
 CircularBufferStatus CircularBufferRemoveItem(CircularBuffer_t *cb,
-    void *item);
+        void *item);
 
 /**
    CircularBufferIsFull(circular_buffer, is_full)
@@ -65,7 +65,8 @@ CircularBufferStatus CircularBufferIsFull(CircularBuffer_t *cb, bool *is_full);
 
    Returns: CircularBufferStatus corresponding to action or buffer status
  */
-CircularBufferStatus CircularBufferIsEmpty(CircularBuffer_t *cb, bool *is_empty);
+CircularBufferStatus CircularBufferIsEmpty(CircularBuffer_t *cb,
+        bool *is_empty);
 
 
 /**
@@ -80,7 +81,7 @@ CircularBufferStatus CircularBufferIsEmpty(CircularBuffer_t *cb, bool *is_empty)
    Returns: CircularBufferStatus corresponding to action or buffer status
  */
 CircularBufferStatus CircularBufferPeakItem(CircularBuffer_t *cb,
-                                            const size_t index, void *item);
+        const size_t index, void *item);
 
 /**
    CircularBufferNew(circular_buffer, num_items, bytes_per_item)
@@ -95,8 +96,8 @@ CircularBufferStatus CircularBufferPeakItem(CircularBuffer_t *cb,
    Returns: CircularBufferStatus corresponding to action or buffer status
  */
 CircularBufferStatus CircularBufferNew(CircularBuffer_t **cb,
-                                        const size_t num_items,
-                                        const size_t bytes_per_item);
+                                       const size_t num_items,
+                                       const size_t bytes_per_item);
 
 /**
    CircularBufferDestroy(circular_buffer)

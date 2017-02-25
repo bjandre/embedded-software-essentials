@@ -150,7 +150,7 @@ void test_cb_add_remove_n_items_sizeof1(void **state)
 {
     // test Add-Remove - Check that add and then a remove returns the same item
     // for full length of buffer
-    #define SIZE 10
+#define SIZE 10
     uint8_t offset = 123;
     CircularBuffer_t *cb = NULL;
     size_t num_items = SIZE;
@@ -182,14 +182,14 @@ void test_cb_add_remove_n_items_sizeof1(void **state)
     status = CircularBufferDestroy(&cb);
     assert_int_equal(status, CB_No_Error);
     assert_null(cb);
-    #undef SIZE
+#undef SIZE
 }
 
 void test_cb_add_remove_n_items_sizeof2(void **state)
 {
     // test Add-Remove - Check that add and then a remove returns the same item
     // for full length of buffer
-    #define SIZE 10
+#define SIZE 10
     uint16_t offset = 12345;
     CircularBuffer_t *cb = NULL;
     size_t num_items = SIZE;
@@ -221,14 +221,14 @@ void test_cb_add_remove_n_items_sizeof2(void **state)
     status = CircularBufferDestroy(&cb);
     assert_int_equal(status, CB_No_Error);
     assert_null(cb);
-    #undef SIZE
+#undef SIZE
 }
 
 void test_cb_add_remove_n_items_sizeof4(void **state)
 {
     // test Add-Remove - Check that add and then a remove returns the same item
     // for full length of buffer
-    #define SIZE 10
+#define SIZE 10
     uint32_t offset = -12345;
     CircularBuffer_t *cb = NULL;
     size_t num_items = SIZE;
@@ -260,13 +260,13 @@ void test_cb_add_remove_n_items_sizeof4(void **state)
     status = CircularBufferDestroy(&cb);
     assert_int_equal(status, CB_No_Error);
     assert_null(cb);
-    #undef SIZE
+#undef SIZE
 }
 
 void test_cb_buffer_full(void **state)
 {
     // test Buffer Full - Check buffer reports true for full
-    #define SIZE 10
+#define SIZE 10
     uint32_t offset = -12345;
     CircularBuffer_t *cb = NULL;
     size_t num_items = SIZE;
@@ -296,7 +296,7 @@ void test_cb_buffer_full(void **state)
     status = CircularBufferDestroy(&cb);
     assert_int_equal(status, CB_No_Error);
     assert_null(cb);
-    #undef SIZE
+#undef SIZE
 }
 
 void test_cb_buffer_empty(void **state)
@@ -333,10 +333,10 @@ void test_cb_wrap_add(void **state)
 
     // NOTE(bja, 2017-02) create a small buffer and a bunch of data, and then
     // add-remove stuff to wrap around a bunch of times.
-    #define SIZE 32
+#define SIZE 32
     uint32_t offset = 12345;
     CircularBuffer_t *cb = NULL;
-    size_t num_items = SIZE/8;
+    size_t num_items = SIZE / 8;
     size_t bytes_per_item = sizeof(offset);
     CircularBufferStatus status = CircularBufferNew(&cb, num_items, bytes_per_item);
     assert_int_equal(status, CB_No_Error);
@@ -364,7 +364,7 @@ void test_cb_wrap_add(void **state)
     status = CircularBufferDestroy(&cb);
     assert_int_equal(status, CB_No_Error);
     assert_null(cb);
-    #undef SIZE
+#undef SIZE
 }
 
 void test_cb_wrap_remove(void **state)
@@ -372,10 +372,10 @@ void test_cb_wrap_remove(void **state)
     // test Wrap Remove - Test that your buffer can wrap around the edge
     // boundary and add to the front
     // NOTE(bja, 2017-02) size is assumed to be a multiple of 4
-    #define SIZE 32
+#define SIZE 32
     uint32_t offset = -12345;
     CircularBuffer_t *cb = NULL;
-    size_t num_items = SIZE/4;
+    size_t num_items = SIZE / 4;
     size_t bytes_per_item = sizeof(offset);
     CircularBufferStatus status = CircularBufferNew(&cb, num_items, bytes_per_item);
     assert_int_equal(status, CB_No_Error);
@@ -431,14 +431,14 @@ void test_cb_wrap_remove(void **state)
     status = CircularBufferDestroy(&cb);
     assert_int_equal(status, CB_No_Error);
     assert_null(cb);
-    #undef SIZE
+#undef SIZE
 }
 
 void test_cb_over_fill(void **state)
 {
     // test Over Fill - Test that your buffer fails when too many items are
     // added
-    #define SIZE 5
+#define SIZE 5
     uint16_t offset = 12345;
     CircularBuffer_t *cb = NULL;
     size_t num_items = SIZE;
@@ -446,7 +446,7 @@ void test_cb_over_fill(void **state)
     CircularBufferStatus status = CircularBufferNew(&cb, num_items, bytes_per_item);
     assert_int_equal(status, CB_No_Error);
 
-    uint16_t data[SIZE+1];
+    uint16_t data[SIZE + 1];
     for (size_t i = 0; i < num_items; i++) {
         data[i] = offset + i;
     }
@@ -461,14 +461,14 @@ void test_cb_over_fill(void **state)
     status = CircularBufferDestroy(&cb);
     assert_int_equal(status, CB_No_Error);
     assert_null(cb);
-    #undef SIZE
+#undef SIZE
 }
 
 void test_cb_over_empty(void **state)
 {
     // test Over Empty - Test that your buffer fails to remove an item when
     // empty
-    #define SIZE 5
+#define SIZE 5
     uint16_t offset = 12345;
     CircularBuffer_t *cb = NULL;
     size_t num_items = SIZE;
@@ -502,17 +502,17 @@ void test_cb_over_empty(void **state)
     status = CircularBufferDestroy(&cb);
     assert_int_equal(status, CB_No_Error);
     assert_null(cb);
-    #undef SIZE
+#undef SIZE
 }
 
 void test_cb_peak(void **state)
 {
     // test peaking into the buffer copies out the correct item, but does not
     // remove it.
-    #define SIZE 32
+#define SIZE 32
     uint32_t offset = 12345;
     CircularBuffer_t *cb = NULL;
-    size_t num_items = SIZE/4;
+    size_t num_items = SIZE / 4;
     size_t bytes_per_item = sizeof(offset);
     CircularBufferStatus status = CircularBufferNew(&cb, num_items, bytes_per_item);
     assert_int_equal(status, CB_No_Error);
@@ -579,6 +579,6 @@ void test_cb_peak(void **state)
     status = CircularBufferDestroy(&cb);
     assert_int_equal(status, CB_No_Error);
     assert_null(cb);
-    #undef SIZE
+#undef SIZE
 }
 
