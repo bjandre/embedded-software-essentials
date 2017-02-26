@@ -4,6 +4,14 @@ MAKERULES = $(abspath $(WORKSPACE_PATH)/makerules)
 
 include $(MAKERULES)/config.makefile
 
+LIB = \
+	libarch.a
+
+SRCS = frdm-kl25z.c
+
+OBJS = $(SRCS:%.c=%.o)
+
+
 # subdirectories that will be built.
 SUBDIRS = 
 #	beagle-bone-black \
