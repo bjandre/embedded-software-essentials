@@ -5,6 +5,8 @@
 ARCH := armv6-m
 CPU := cortex-m0plus
 
+BARE_METAL := 1
+
 TOOLS_PREFIX := arm-none-eabi
 
 CC = $(TOOLS_PREFIX)-gcc
@@ -39,3 +41,6 @@ SIZEFLAGS = --format=sysv -x
 
 OBJDUMP = $(TOOLS_PREFIX)-objdump
 OBJDUMP_FLAGS = --disassemble-all --line-numbers --source --full-contents --all-headers
+
+OBJCOPY = $(TOOLS_PREFIX)-objcopy
+OBJCOPY_FLAGS = -O srec

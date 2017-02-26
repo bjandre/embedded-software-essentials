@@ -1,5 +1,10 @@
 # define some convenience variables 
 
+EXE_BASE = project
+
+EXE_EXTENSION = out
+SREC_EXTENSION = srec
+DUMP_EXTENSION = dump
 
 DEPENDS_DIR := _depends
 POSTCOMPILE = mv -f $(DEPENDS_DIR)/$*.Td $(DEPENDS_DIR)/$*.d
@@ -11,10 +16,11 @@ BUILD_ARTIFACTS = \
   *.o \
   *.asm \
   *.a \
-  *.out \
+  *.$(EXE_EXTENSION) \
   *.map \
   *.i \
-  *.dump \
+  *.$(DUMP_EXTENSION) \
+  *.$(SREC_EXTENSION) \
   $(DEPENDS_DIR) *.d *.Td
 
 EDITOR_FILES = \

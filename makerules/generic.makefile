@@ -24,7 +24,6 @@ $(EXE) : $(OBJS) $(DEPEND_LIBS)
 #	file $@
 #	ldd $@
 
-
 #
 # macro for executing TARGET in all SUBDIRS
 #
@@ -45,11 +44,15 @@ $(DEPENDS_DIR)/%.d : ;
 .PHONY : all
 all : $(SUBDIRS) $(LIB) $(EXE)
 
+.PHONY : srec
+srec : $(SUBDIRS) $(EXE)
+
 .PHONY : dump
 dump : $(SUBDIRS) $(EXE)
 ifdef EXE
-	$(OBJDUMP) $(OBJDUMP_FLAGS) $(EXE) > $(EXE:%.out=%.dump)
+	$(OBJDUMP) $(OBJDUMP_FLAGS) $(EXE) > $(EXE:%.$(EXE_EXTENSION)=%.$(DUMP_EXTENSION))
 endif
+
 
 .PHONY : test
 test : $(SUBDIRS) all $(TEST_EXE)
