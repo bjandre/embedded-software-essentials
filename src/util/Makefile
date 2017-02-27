@@ -13,7 +13,8 @@ LIB = \
 SRCS = \
 	memory.c \
 	data.c \
-	circular_buffer.c
+	circular_buffer.c \
+	bit-operations.c
 
 OBJS = $(SRCS:%.c=%.o)
 
@@ -24,8 +25,9 @@ INCLUDES = -I../arch \
 TEST_SRCS = \
 	test_memory.c \
 	test_data.c \
-	test_utils.c \
-	test_circular_buffer.c
+	test_circular_buffer.c \
+	test_bit-operations.c \
+	test_utils.c
 
 TEST_OBJS = $(TEST_SRCS:%.c=%.o)
 TEST_EXE = test_utils.out
