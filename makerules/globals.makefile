@@ -1,10 +1,10 @@
 # define some convenience variables 
 
-EXE_BASE = project
+EXE_BASE := project
 
-EXE_EXTENSION = out
-SREC_EXTENSION = srec
-DUMP_EXTENSION = dump
+EXE_EXTENSION := out
+BIN_EXTENSION := srec
+DUMP_EXTENSION := dump
 
 DEPENDS_DIR := _depends
 POSTCOMPILE = mv -f $(DEPENDS_DIR)/$*.Td $(DEPENDS_DIR)/$*.d

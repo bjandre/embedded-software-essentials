@@ -44,8 +44,8 @@ $(DEPENDS_DIR)/%.d : ;
 .PHONY : all
 all : $(SUBDIRS) $(LIB) $(EXE)
 
-.PHONY : srec
-srec : $(SUBDIRS) $(EXE)
+.PHONY : bin
+bin : $(SUBDIRS) $(EXE)
 
 .PHONY : dump
 dump : $(SUBDIRS) $(EXE)

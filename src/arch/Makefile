@@ -11,6 +11,8 @@ SRCS = frdm-kl25z.c
 
 OBJS = $(SRCS:%.c=%.o)
 
+INCLUDES = -I../util
+
 
 # subdirectories that will be built.
 SUBDIRS = 

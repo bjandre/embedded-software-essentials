@@ -9,6 +9,8 @@
 *.a
 *.out
 *.srec
+*.ihex
+*.bin
 *.i
 *.map
 _depends

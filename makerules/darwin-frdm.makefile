@@ -9,9 +9,11 @@ BARE_METAL := 1
 
 TOOLS_PREFIX := arm-none-eabi
 
+DEFINE_CPU := CPU_MKL25Z128VLK4
+
 CC = $(TOOLS_PREFIX)-gcc
 CFLAGS = -march=$(ARCH) -mtune=$(CPU) -mthumb \
-  -Wl,--print-output-format
+	-D$(DEFINE_CPU)
 
 AR = $(TOOLS_PREFIX)-ar
 
@@ -42,5 +44,15 @@ SIZEFLAGS = --format=sysv -x
 OBJDUMP = $(TOOLS_PREFIX)-objdump
 OBJDUMP_FLAGS = --disassemble-all --line-numbers --source --full-contents --all-headers
 
+ifeq ($(BIN_EXTENSION), srec)
+  OBJFORMAT = $(BIN_EXTENSION)
+else ifeq ($(BIN_EXTENSION), bin)
+  OBJFORMAT = binary
+else ifeq ($(BIN_EXTENSION), ihex)
+  OBJFORMAT = $(BIN_EXTENSION)
+else
+  $(error Unsupported binary extension for objcopy : $(BIN_EXTENSION))
+endif
+
 OBJCOPY = $(TOOLS_PREFIX)-objcopy
-OBJCOPY_FLAGS = -O srec
+OBJCOPY_FLAGS = -O $(OBJFORMAT)
