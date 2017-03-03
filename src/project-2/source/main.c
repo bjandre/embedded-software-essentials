@@ -87,7 +87,7 @@ int main(void) {
   // set baud rate
   uint32_t baud_rate = 19200U;
   //uint32_t over_sampling_rate = (uint32_t)(UART0->C4 & UART0_C4_OSR_MASK);
-  uint32_t over_sampling_rate = 3;
+  uint32_t over_sampling_rate = 7;
   uint32_t br_clock = SystemCoreClock;
   // baud rate is 13 bit field in registers
   uint16_t baud_rate_reg = br_clock / ((over_sampling_rate + 1) * baud_rate);
@@ -109,10 +109,11 @@ int main(void) {
 
   // set parity
   UART0->C1 &= ~UART0_C1_PE(0); // no parity
-  //UART0->C1 = 0x00u;
+
   UART0->C3 = 0x00u;
   UART0->S2 = 0x00u;
-  //UART0->C5 |= UART0_C5_BOTHEDGE(1);
+
+  UART0->C5 |= UART0_C5_BOTHEDGE(1);
 
   // enable the transmitter and receiver
   UART0->C2 |= UART0_C2_TE(1);
@@ -129,6 +130,6 @@ int main(void) {
       }
       GPIOB->PTOR |= (1 << led_pin); // toggle led pin
       while ((UART0->S1 & UART0_S1_TDRE_MASK) == 0);
-      UART0->D = 0x55; // send a character
+      UART0->D = 0xAA; // send a character
   }
 }
