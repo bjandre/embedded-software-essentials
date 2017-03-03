@@ -31,13 +31,17 @@
 /**
  * This is template for main module created by New Kinetis SDK 2.x Project Wizard. Enjoy!
  **/
+#include <assert.h>
 
 #include "board.h"
 #include "pin_mux.h"
 #include "clock_config.h"
 
+#include "frdm-kl25z-uart.h"
+
 #include "MKL25Z4.h"
 #include "system_MKL25Z4.h"
+
 
 /*!
  * @brief Application entry point.
@@ -61,63 +65,12 @@ int main(void) {
   // initial state of pin is on
   GPIOB->PDOR |= (1 << led_pin);
 
-
-  // UART0
-  //   PTA1 - Port A, Pin 1, Alternate function 2, UART0_RX
-  //   PTA2 - Port A, Pin 2, Alternate function 2, UART0_TX
-
-  // enable the clock for porta pins
-  SIM->SCGC5 |= SIM_SCGC5_PORTA(1);
-  SIM->SCGC4 |= SIM_SCGC4_UART0(1);  // enable uart0
-
-  SIM->SOPT2 |= SIM_SOPT2_UART0SRC(1); // use the MGC FLL or PLL/2
-
-  // set the rx tx source to be the pins on port 1
-  PORTA->PCR[1] |= PORT_PCR_MUX(2);
-  PORTA->PCR[2] |= PORT_PCR_MUX(2);
-  SIM->SOPT5 &= ~SIM_SOPT5_UART0TXSRC(0);
-  SIM->SOPT5 &= ~SIM_SOPT5_UART0RXSRC(0);
-
-  // make sure the transmitter and receiver are disabled so we can change the config.
-  UART0->C2 |= UART0_C2_TE(1);
-  UART0->C2 |= UART0_C2_RE(1);
-
-  // NOTE(bja, 2017-02) uart registers are 8 bit!
-
-  // set baud rate
-  uint32_t baud_rate = 19200U;
-  //uint32_t over_sampling_rate = (uint32_t)(UART0->C4 & UART0_C4_OSR_MASK);
-  uint32_t over_sampling_rate = 7;
-  uint32_t br_clock = SystemCoreClock;
-  // baud rate is 13 bit field in registers
-  uint16_t baud_rate_reg = br_clock / ((over_sampling_rate + 1) * baud_rate);
-  // shift off the lowest byte and mask off the 5 bits
-  uint8_t high_mask = ((baud_rate_reg >> 8) & UART0_BDH_SBR_MASK);
-  UART0->BDH |= high_mask; // set ones
-  UART0->BDH &= ~high_mask; // set zeros
-  // just mask off the lowest byte. since we want all eight bits, just assign it all.
-  uint8_t low_mask = (baud_rate_reg & UART0_BDL_SBR_MASK);
-  UART0->BDL = low_mask;
-  UART0->C4 |= UART0_C4_OSR(over_sampling_rate);
-  UART0->C4 &= ~UART0_C4_OSR(over_sampling_rate);
-
-  // set 1 stop bit
-  UART0->BDH &= ~UART0_BDH_SBNS(0);
-
-  // set number of data bits
-  UART0->C1 &= ~UART0_C1_M(0); // 8 bit
-
-  // set parity
-  UART0->C1 &= ~UART0_C1_PE(0); // no parity
-
-  UART0->C3 = 0x00u;
-  UART0->S2 = 0x00u;
-
-  UART0->C5 |= UART0_C5_BOTHEDGE(1);
-
-  // enable the transmitter and receiver
-  UART0->C2 |= UART0_C2_TE(1);
-  UART0->C2 |= UART0_C2_RE(1);
+  // setup the uart debugging interface
+  uint32_t baud = 115200u;
+  UartStatus status = frdm_kl25z_uart_initialize(baud);
+  if (status != UART_Status_OK) {
+      // assert and die? infinite loop?
+  }
 
   BOARD_InitDebugConsole();
 
@@ -129,7 +82,14 @@ int main(void) {
           // do nothing for a while.
       }
       GPIOB->PTOR |= (1 << led_pin); // toggle led pin
-      while ((UART0->S1 & UART0_S1_TDRE_MASK) == 0);
-      UART0->D = 0xAA; // send a character
+      frdm_kl25z_uart_transmit_byte((uint8_t)0x55);
+      frdm_kl25z_uart_transmit_byte((uint8_t)0xDE);
+      frdm_kl25z_uart_transmit_byte((uint8_t)0xAD);
+      frdm_kl25z_uart_transmit_byte((uint8_t)0xBE);
+      frdm_kl25z_uart_transmit_byte((uint8_t)0xEF);
+      frdm_kl25z_uart_transmit_byte((uint8_t)0xAA);
+      uint32_t data = 0x01234567U;
+      frdm_kl25z_uart_transmit_n_bytes(sizeof(uint32_t), (uint8_t*)(&data));
+      assert(1);
   }
 }
