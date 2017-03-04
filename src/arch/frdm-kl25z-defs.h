@@ -62,8 +62,13 @@
 //
 
 // SOPT - System Options Register
-// MCG - Multipurpose Clock Generator
-// OSC - System Oscillator
+// Section 5.4 Clock definitions
+//   MCG - Multipurpose Clock Generator
+//       MCGIRCLK - internal reference clock, slow or fast
+//       MCGFLLCLK - frequency loop lock
+//       MCGPLLCLK - phase loop lock
+//   OSC - System Oscillator
+//       OSCERCLK - external reference clock
 
 // Section 12.2.1 - System Options Register 1 (SIM_SOPT1)
 #define SIM_SOPT1 (uint32_t*)0x40047000
@@ -74,11 +79,10 @@
 // Section 12.2.2 - System Options Register 2 (SIM_SOPT2)
 #define SIM_SOPT2 (uint32_t*)0x40048004
 #define SIM_SOPT2_SRC_DISABLED // 00 - disable clock
-#define SIM_SOPT2_SRC_MCGFLLCLK // 01 - disable clock
-#define SIM_SOPT2_SRC_OSCERCLK // 10 - disable clock
-#define SIM_SOPT2_SRC_MCGIRCLK // 11 - disable clock
-#define SIM_SOPT2_SHIFT_UART0SRC 26 // clock source select for uart0
-#define SIM_SOPT2_UART0SRC
+#define SIM_SOPT2_SRC_MCGFLLCLK // 01 - mcg internal reference clock
+#define SIM_SOPT2_SRC_OSCERCLK // 10 - external referenc clock
+#define SIM_SOPT2_SRC_MCGIRCLK // 11 - mcg internal clock
+#define SIM_SOPT2_UART0SRC_SHIFT 26 // clock source select for uart0
 #define SIM_SOPT2_UART0SRC_DISABLED_MASK ~(3 << SIM_SOPT2_UART0SRC_SHIFT)
 #define SIM_SOPT2_UART0SRC_MCGFLLCLK_MASK (1 << SIM_SOPT2_UART0SRC_SHIFT)
 #define SIM_SOPT2_UART0SRC_OSCERCLK_MASK (2 << SIM_SOPT2_UART0SRC_SHIFT)
@@ -88,8 +92,14 @@
 
 // 12.2.5 System Options Register 5 (SIM_SOPT5)
 #define SIM_SOPT5 (uint32_t*)0x40048010
-#define SIM_SOPT5_UART0TXSRC
-#define SIM_SOPT5_UART0RXSRC
+#define SIM_SOPT5_UART0TXSRC_SHIFT 0
+#define SIM_SOPT5_UART0TXSRC_UART0_TX_pin 0  // 00
+#define SIM_SOPT5_UART0TXSRC_UART0_TX_pin_TPM1 1 // 01
+#define SIM_SOPT5_UART0TXSRC_UART0_TX_pin_TPM2 2 // 10
+#define SIM_SOPT5_UART0TXSRC_Reserved 11
+#define SIM_SOPT5_UART0RXSRC_SHIFT 2
+#define SIM_SOPT5_UART0RXSRC_UART0_RX_pin 0
+#define SIM_SOPT5_UART0RXSRC_CMP0_output 1
 #define SIM_SOPT5_UART1TXSRC
 #define SIM_SOPT5_UART1RXSRC
 #define SIM_SOPT5_UART0ODE
@@ -184,6 +194,13 @@
 // Chapter 24 - Multipurpose Clock Generator (MCG)
 //
 
+// NOTE control registers are 8 bits!
+#define MCG_C1 (uint8_t*) 0x40064000
+#define MCG_C1_IRCLKEN_SHIFT 0 // internal reference clock, 0=disable, 1=enabled, 
+
+#define MCG_C2 (uint8_t*) 0x40064001
+#define MCG_C2_IRCS_SHIFT 0 // internal reference clock select, 0=slow 32 kHz IRC, 1=fast (4 MHz IRC)
+
 //
 // Chapter 25 - Oscillator (OSC)
 //
@@ -244,7 +261,7 @@
 // Chapter 39 - Universal Asynchronous Receiver/Transmitter (UART0)
 //
 
-// 8 bit registers!
+// All UART registers are 8 bit!
 #define UART0_BDH (uint8_t*) 0x4006A000 // UART Baud Rate Register High
 #define UART0_BDH_LBKDIE_SHIFT 7 // LIN break detect interrupt enable, 0 = disabled, 1 = enabled
 #define UART0_BDH_RXEDGIE_SHIFT 6 // RX Input Active Edge Interrupt Enable (for RXEDGIF), 0 = disabled, 1 = enabled
@@ -304,7 +321,11 @@
 #define UART0_D (uint8_t*) 0x4006A007 // UART Data Register, two separate buffers, contents of the read only receive buffer , or contents of the write only transmit buffer.
 #define UART0_MA1 (uint8_t*) 0x4006A008 // UART Match Address Registers 1
 #define UART0_MA2 (uint8_t*) 0x4006A009 // UART Match Address Registers 2
+
 #define UART0_C4 (uint8_t*) 0x4006A00A // UART Control Register 4
+// Over Sampling Ratio bits 4-0 4x-32x. 4x=(00011), 32=(11111), default 16=(01111)
+#define UART0_C4_OSR_SHIFT 0
+
 #define UART0_C5 (uint8_t*) 0x4006A00B // UART Control Register 5
 
 //

@@ -67,9 +67,52 @@ typedef struct board_t {
     volatile gpio_registers_t *gpio_e;
 } board_t;
 
+/**
+   BoardInitialize(**board)
 
+   Allocate a board structure and set pointers to port registers, gpio registers,
+   etc.
+
+   param: **board - pointer to the board structure to be allocated
+ */
 BoardStatus BoardInitialize(void **board);
+
+/**
+   BoardInitializePort(board, portname)
+
+   Common initialization tasks for a port.
+
+   * Turn on clocking for the port.
+
+   param: *board - pointer to the board structure containing ports
+
+   return: board status
+ */
 BoardStatus BoardInitializePort(void *board, PortNames portname);
+
+/**
+   BoardInitializeGPIO(board, portname)
+
+   Common tasks to initialize GPIO for a port.
+
+   * Turn on clocking for the port.
+
+   param: *board - pointer to the board structure containing ports
+
+   return: board status
+ */
 BoardStatus BoardInitializeGPIO(void *board, PortNames portname);
 
+/**
+   InitializeLoggingInterface(board)
+
+   Initialize the UART logging interface.
+
+   Currently hard coded to UART0.
+
+   param: *board - pointer to the board structure containing ports
+
+   return: board status
+ */
+BoardStatus InitializeLoggingInterface(void *board);
 #endif // ESE_ARCH_FRDM_KL25Z_H_

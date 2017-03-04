@@ -26,6 +26,7 @@
 int main(int argc, char **argv)
 {
 
+#if 0
     PRINTF("Hello, from Emebbed Software Essentials Project!\n");
 
 #if PROJECT == 1
@@ -47,13 +48,11 @@ int main(int argc, char **argv)
         PRINTF("Error initializing circular buffer!\n");
     }
 
-
     board_t *board = NULL;
     BoardStatus board_status = BoardInitialize((void **)(&board));
 
-
-    board_status = BoardInitializePort(board, Port_A_Name);
-    board_status = BoardInitializePort(board, Port_B_Name);
+    board_status = InitializeDebugInterface(board)
+                   board_status = BoardInitializePort(board, Port_B_Name);
     board_status = BoardInitializeGPIO(board, Port_B_Name);
     if (Board_OK != board_status) {
     }
@@ -72,6 +71,11 @@ int main(int argc, char **argv)
             // do nothing for a while.
         }
         board->gpio_b->ptor |= (1 << 18);
+    }
+#endif
+    uint32_t i = 0;
+    while (1) {
+        i++;
     }
     return 0;
 }
