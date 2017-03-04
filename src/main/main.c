@@ -9,9 +9,7 @@
 #include <stdlib.h>
 
 #include "circular_buffer.h"
-
-//#include "ese-platform.h"
-//#include "platform-generics.h"
+#include "uart.h"
 
 #if PROJECT == 0
 #    // NOTE(bja, 2017-02): Building main with no project code.
@@ -26,13 +24,12 @@
 int main(int argc, char **argv)
 {
 
-#if 0
     PRINTF("Hello, from Emebbed Software Essentials Project!\n");
 
 #if PROJECT == 1
     project_1_report();
 #elif PROJECT == 2
-#define junk
+#
 #endif
 
     size_t bytes_per_item = 1;
@@ -48,34 +45,62 @@ int main(int argc, char **argv)
         PRINTF("Error initializing circular buffer!\n");
     }
 
-    board_t *board = NULL;
-    BoardStatus board_status = BoardInitialize((void **)(&board));
-
-    board_status = InitializeDebugInterface(board)
-                   board_status = BoardInitializePort(board, Port_B_Name);
-    board_status = BoardInitializeGPIO(board, Port_B_Name);
-    if (Board_OK != board_status) {
+    UartStatus uart_status = CreateUART();
+    if (UART_Status_Error == uart_status) {
+        PRINTF("Error creating UART!\n");
     }
-    // set clock
-    // set port
-    // Enable the PortB clock
-    // Configure Mode PB.18 to GPIO use
-    board->port_b->pcr[18] = (1 << 3);
-    // Set Direction PB.18 to output
-    board->gpio_b->pddr |= (1 << 18);
-    // Start Pin LED to On Output
-    board->gpio_b->pdor |= (1 << 18);
 
-    while (1) {
-        for (size_t i = 0; i < 100000; i++) {
+    uint32_t baud = 115200u;
+    uart_status = uart.initialize(baud);
+    if (UART_Status_Error == uart_status) {
+        PRINTF("Error initializing UART!\n");
+    } else {
+        PRINTF("UART initialized!\n");
+    }
+
+    uint8_t *buffer = malloc(sizeof(uint8_t) * 32);
+    uint32_t data1 = 0xEFBEADDEu;
+    uint32_t data2 = 0xDEC0ADDEu;
+    uint32_t data3 = 0x5555AAAAu;
+    /* Add your code here */
+    uint8_t tx_or_rx = 0;
+
+    while (1) { /* Infinite loop to avoid leaving the main function */
+        __asm("NOP"); /* something to use as a breakpoint stop while looping */
+        for (uint32_t i = 0; i < 200000; i++) {
             // do nothing for a while.
         }
-        board->gpio_b->ptor |= (1 << 18);
+
+        if (tx_or_rx) {
+            uart.transmit_byte((uint8_t)0x55);
+            uart.transmit_n_bytes(sizeof(uint32_t), (uint8_t *)(&data1));
+            uart.transmit_byte((uint8_t)0xAA);
+            uart.transmit_n_bytes(sizeof(uint32_t), (uint8_t *)(&data2));
+        } else {
+            uint8_t byte;
+            uart.receive_byte(&byte);
+            switch (byte) {
+            case '1':
+                uart.transmit_n_bytes(sizeof(uint32_t), (uint8_t *)(&data1));
+                break;
+            case '2':
+                uart.transmit_n_bytes(sizeof(uint32_t), (uint8_t *)(&data2));
+                break;
+            case '3':
+                uart.transmit_n_bytes(sizeof(uint32_t), (uint8_t *)(&data3));
+                break;
+            case 'a':
+                uart.receive_byte(&byte);
+                size_t num_bytes = byte - '0';
+                uart.receive_n_bytes(num_bytes, buffer);
+                uart.transmit_byte(num_bytes);
+                uart.transmit_n_bytes(num_bytes, buffer);
+                break;
+            default:
+                uart.transmit_byte(byte);
+            }
+        }
     }
-#endif
-    uint32_t i = 0;
-    while (1) {
-        i++;
-    }
+    free(buffer);
     return 0;
 }

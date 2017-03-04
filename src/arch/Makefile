@@ -4,12 +4,19 @@ MAKERULES = $(abspath $(WORKSPACE_PATH)/makerules)
 
 include $(MAKERULES)/config.makefile
 
-#LIB = \
-#	libarch.a
+LIB = \
+	libarch.a
 
-#SRCS = frdm-kl25z.c
+SRCS = \
+	uart.c
 
-#OBJS = $(SRCS:%.c=%.o)
+ifeq ($(PLATFORM), host)
+  SRCS += uart-host.c
+else ifeq ($(PLATFORM), frdm)
+  SRCS += uart-frdm-kl25z.c
+endif
+
+OBJS = $(SRCS:%.c=%.o)
 
 INCLUDES = -I../util
 

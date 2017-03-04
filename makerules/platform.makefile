@@ -31,10 +31,13 @@ strip_platform = $(strip $(platform))
 ifeq ($(strip_platform), $(filter $(PLATFORM_HOST) unset '', $(strip_platform)))
   # not specified, default to host
   TARGET_SYSTEM = $(HOST_SYSTEM)
+  PLATFORM = $(PLATFORM_HOST)
 else ifeq ($(platform), $(PLATFORM_BBB))
   TARGET_SYSTEM = $(PLATFORM_BBB)
+  PLATFORM = $(PLATFORM_BBB)
 else ifeq ($(platform), $(PLATFORM_FRDM))
   TARGET_SYSTEM = $(PLATFORM_FRDM)
+  PLATFORM = $(PLATFORM_FRDM)
 else
   $(error Can not identify target system!)
 endif
@@ -93,7 +96,7 @@ endif
 # Defines is used elsewhere, e.g. adding the PROJECT macro. But could
 # alse be amended here.
 
-#DEFINES +=
+DEFINES += -DPLATFORM=$(PLATFORM)
 
 GENERAL_CFLAGS = --std=c99 -Wall -Werror
 
