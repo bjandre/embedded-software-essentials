@@ -78,25 +78,40 @@ UartStatus frdm_kl25z_uart_initialize(const uint32_t baud)
 
 UartStatus frdm_kl25z_uart_transmit_byte(const uint8_t byte)
 {
-    //const uint8_t TX_ACTIVE = 0;
     const uint8_t TX_BUFFER_FULL = 0;
     UartStatus status = UART_Status_OK;
     // FIXME(bja, 2017-02) is uart0->d shared between transmit and receive?
-
-    while ((UART0->S1 & UART0_S1_TDRE_MASK) == TX_BUFFER_FULL); // ensure the transmit data register is empty
     UART0->D = byte; // send a character
-    for (size_t w = 0; w < 1000; w++);
     while ((UART0->S1 & UART0_S1_TDRE_MASK) == TX_BUFFER_FULL); // ensure the transmit data register is empty
-    //while((UART0->S1 & UART0_S1_TC_MASK) == TX_ACTIVE);
     return status;
 }
 
 UartStatus frdm_kl25z_uart_transmit_n_bytes(const size_t num_bytes, uint8_t *bytes)
 {
     UartStatus status = UART_Status_OK;
-    frdm_kl25z_uart_transmit_byte((uint8_t)0x04u);
     for (size_t n = 0; n < num_bytes; n++) {
         frdm_kl25z_uart_transmit_byte(*(bytes + n));
+    }
+    return status;
+}
+
+UartStatus frdm_kl25z_uart_receive_byte(uint8_t *byte)
+{
+    const uint8_t RX_BUFFER_EMPTY = 0;
+    //const uint8_t RX_BUFFER_FULL = 1;
+    UartStatus status = UART_Status_OK;
+    // FIXME(bja, 2017-02) is uart0->d shared between transmit and receive?
+    while ((UART0->S1 & UART0_S1_RDRF_MASK) == RX_BUFFER_EMPTY); // ensure the receive data register is empty
+    *byte = UART0->D; // receive a character
+    //while ((UART0->S1 & UART0_S1_RDRF_MASK) == RX_BUFFER_FULL); // ensure the receive data register is empty
+    return status;
+}
+
+UartStatus frdm_kl25z_uart_receive_n_bytes(const size_t num_bytes, uint8_t *bytes)
+{
+    UartStatus status = UART_Status_OK;
+    for (size_t n = 0; n < num_bytes; n++) {
+        frdm_kl25z_uart_receive_byte(bytes + n);
     }
     return status;
 }

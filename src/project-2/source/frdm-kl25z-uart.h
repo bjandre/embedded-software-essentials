@@ -19,8 +19,10 @@ typedef enum UartStatus_t {
 	UART_Status_Error,
 } UartStatus;
 
-UartStatus frdm_kl25z_uart_initialize(const uint32_t baud_rate);
+UartStatus frdm_kl25z_uart_initialize(const uint32_t baud);
 UartStatus frdm_kl25z_uart_transmit_byte(const uint8_t byte);
 UartStatus frdm_kl25z_uart_transmit_n_bytes(const size_t num_bytes, uint8_t *bytes);
+UartStatus frdm_kl25z_uart_receive_byte(uint8_t *byte);
+UartStatus frdm_kl25z_uart_receive_n_bytes(const size_t num_bytes, uint8_t *bytes);
 
 #endif /* SOURCE_FRDM_KL25Z_UART_H_ */
