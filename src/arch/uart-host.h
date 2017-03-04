@@ -9,9 +9,7 @@
 
 UartStatus host_uart_initialize(const uint32_t baud);
 UartStatus host_uart_transmit_byte(const uint8_t byte);
-UartStatus host_uart_transmit_n_bytes(const size_t num_bytes, uint8_t *bytes);
 UartStatus host_uart_receive_byte(uint8_t *byte);
-UartStatus host_uart_receive_n_bytes(const size_t num_bytes, uint8_t *bytes);
 
 
 

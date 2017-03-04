@@ -6,17 +6,17 @@
 
 #include "uart-common.h"
 
-typedef struct {
+typedef struct uart_t uart_t;
+
+struct uart_t {
     UartStatus (*initialize)(const uint32_t baud);
     UartStatus (*transmit_byte)(const uint8_t byte);
-    UartStatus (*transmit_n_bytes)(const size_t num_bytes, uint8_t *bytes);
+    UartStatus (*transmit_n_bytes)(uart_t *uart, const size_t num_bytes, uint8_t *bytes);
     UartStatus (*receive_byte)(uint8_t *byte);
-    UartStatus (*receive_n_bytes)(const size_t num_bytes, uint8_t *bytes);
-} uart_t;
+    UartStatus (*receive_n_bytes)(uart_t *uart, const size_t num_bytes, uint8_t *bytes);
+};
 
-extern uart_t uart;
-
-UartStatus CreateUART();
+UartStatus CreateUART(uart_t *uart, UartFunction uart_func);
 
 
 

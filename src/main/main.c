@@ -8,8 +8,7 @@
 #include <stdint.h>
 #include <stdlib.h>
 
-#include "circular_buffer.h"
-#include "uart.h"
+#include "logger.h"
 
 #if PROJECT == 0
 #    // NOTE(bja, 2017-02): Building main with no project code.
@@ -32,33 +31,11 @@ int main(int argc, char **argv)
 #
 #endif
 
-    size_t bytes_per_item = 1;
-    size_t num_items = 32;
-
-    CircularBuffer_t *cb_1byte = NULL;
-    CircularBufferStatus status = CircularBufferNew(&cb_1byte, num_items,
-                                  bytes_per_item);
-    if (CB_No_Error == status) {
-        // FIXME(bja, 2017-02) convert to logging infrastructure.
-        PRINTF("Circular buffer initialized!\n");
-    } else {
-        PRINTF("Error initializing circular buffer!\n");
-    }
-
-    UartStatus uart_status = CreateUART();
-    if (UART_Status_Error == uart_status) {
-        PRINTF("Error creating UART!\n");
-    }
-
-    uint32_t baud = 115200u;
-    uart_status = uart.initialize(baud);
-    if (UART_Status_Error == uart_status) {
-        PRINTF("Error initializing UART!\n");
-    } else {
-        PRINTF("UART initialized!\n");
-    }
+    BinaryLoggerStatus logger_status = BinaryLogger_OK;
+ logger_status = BinaryLoggerInitialize(32);
 
     uint8_t *buffer = malloc(sizeof(uint8_t) * 32);
+    uint8_t byte;
     uint32_t data1 = 0xEFBEADDEu;
     uint32_t data2 = 0xDEC0ADDEu;
     uint32_t data3 = 0x5555AAAAu;
@@ -72,32 +49,33 @@ int main(int argc, char **argv)
         }
 
         if (tx_or_rx) {
-            uart.transmit_byte((uint8_t)0x55);
-            uart.transmit_n_bytes(sizeof(uint32_t), (uint8_t *)(&data1));
-            uart.transmit_byte((uint8_t)0xAA);
-            uart.transmit_n_bytes(sizeof(uint32_t), (uint8_t *)(&data2));
+            byte = 0x55u;
+            log_data(sizeof(uint8_t), &byte);
+            log_data(sizeof(data1), (uint8_t *)(&data1));
+            byte = 0xAAu;
+            log_data(sizeof(uint8_t), &byte);
+            log_data(sizeof(data2), (uint8_t *)(&data2));
         } else {
-            uint8_t byte;
-            uart.receive_byte(&byte);
+            log_receive_data(sizeof(byte), &byte);
             switch (byte) {
             case '1':
-                uart.transmit_n_bytes(sizeof(uint32_t), (uint8_t *)(&data1));
+                log_data(sizeof(data1), (uint8_t *)(&data1));
                 break;
             case '2':
-                uart.transmit_n_bytes(sizeof(uint32_t), (uint8_t *)(&data2));
+                log_data(sizeof(data2), (uint8_t *)(&data2));
                 break;
             case '3':
-                uart.transmit_n_bytes(sizeof(uint32_t), (uint8_t *)(&data3));
+                log_data(sizeof(data3), (uint8_t *)(&data3));
                 break;
             case 'a':
-                uart.receive_byte(&byte);
-                size_t num_bytes = byte - '0';
-                uart.receive_n_bytes(num_bytes, buffer);
-                uart.transmit_byte(num_bytes);
-                uart.transmit_n_bytes(num_bytes, buffer);
+                log_receive_data(sizeof(byte), &byte);
+                uint8_t num_bytes = byte - '0';
+                log_receive_data((size_t)num_bytes, buffer);
+                log_data(sizeof(num_bytes), (uint8_t *)(&num_bytes));
+                log_data(num_bytes, buffer);
                 break;
             default:
-                uart.transmit_byte(byte);
+                log_data(sizeof(byte), &byte);
             }
         }
     }

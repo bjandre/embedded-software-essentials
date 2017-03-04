@@ -26,6 +26,10 @@ UartStatus host_uart_receive_byte(uint8_t *byte)
     *byte = fgetc(stdin);
     // fgetc reads a single character. Terminal input will contain an extra
     // character for the newline. Need to remove it with another fgetc.
-    fgetc(stdin);
+    if ('\n' == *byte) {
+        // user input just a newline, do nothing
+    } else {
+        fgetc(stdin);
+    }
     return status;
 }

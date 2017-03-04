@@ -8,7 +8,8 @@ LIB = \
 	libarch.a
 
 SRCS = \
-	uart.c
+	uart.c \
+	logger.c
 
 ifeq ($(PLATFORM), host)
   SRCS += uart-host.c
