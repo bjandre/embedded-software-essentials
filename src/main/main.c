@@ -10,8 +10,8 @@
 
 #include "circular_buffer.h"
 
-#include "ese-platform.h"
-#include "platform-generics.h"
+//#include "ese-platform.h"
+//#include "platform-generics.h"
 
 #if PROJECT == 0
 #    // NOTE(bja, 2017-02): Building main with no project code.

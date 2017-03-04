@@ -4,12 +4,12 @@ MAKERULES = $(abspath $(WORKSPACE_PATH)/makerules)
 
 include $(MAKERULES)/config.makefile
 
-LIB = \
-	libarch.a
+#LIB = \
+#	libarch.a
 
-SRCS = frdm-kl25z.c
+#SRCS = frdm-kl25z.c
 
-OBJS = $(SRCS:%.c=%.o)
+#OBJS = $(SRCS:%.c=%.o)
 
 INCLUDES = -I../util
 

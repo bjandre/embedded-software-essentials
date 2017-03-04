@@ -14,13 +14,15 @@ SRCS = \
 OBJS = $(SRCS:%.c=%.o)
 
 LIBS = \
-	-L../util -lutil \
-	-L../arch -larch
+	-L../util -lutil 
+#	-L../arch -larch
 
 DEPEND_LIBS = \
 	../project-1/libproject1.a \
-	../util/libutil.a \
-	../arch/libarch.a
+	../util/libutil.a
+
+#	../arch/libarch.a
+
 
 INCLUDES = \
 	-I../arch \
