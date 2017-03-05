@@ -8,6 +8,7 @@
 #include <stdint.h>
 #include <stdlib.h>
 
+#include "platform-defs.h"
 #include "logger.h"
 
 #if PROJECT == 0
@@ -18,6 +19,11 @@
 #
 #else
 #    error "Unsupported project number in PROJECT macro. Valid values: 0, 1"
+#endif
+
+#if (PLATFORM == PLATFORM_FRDM)
+#include "MKL25Z4.h"
+void initialize_led_pin(uint8_t led_pin);
 #endif
 
 int main(int argc, char **argv)
@@ -37,6 +43,18 @@ int main(int argc, char **argv)
         abort();
     }
 
+#if (PLATFORM == PLATFORM_FRDM)
+    // enable clock for gpio led pins.
+    SIM->SCGC5 |= SIM_SCGC5_PORTB(1);
+
+    const uint32_t led_red_pin = 18;
+    const uint32_t led_green_pin = 19;
+    initialize_led_pin(led_red_pin);
+    initialize_led_pin(led_green_pin);
+    // toggle led pins
+    GPIOB->PTOR |= (1 << led_green_pin);
+#endif
+
     uint8_t *buffer = malloc(sizeof(uint8_t) * 32);
     uint8_t byte;
     uint32_t data1 = 0xEFBEADDEu;
@@ -47,10 +65,14 @@ int main(int argc, char **argv)
 
     while (1) { /* Infinite loop to avoid leaving the main function */
         __asm("NOP"); /* something to use as a breakpoint stop while looping */
+#if (PLATFORM == PLATFORM_FRDM)
         for (uint32_t i = 0; i < 200000; i++) {
             // do nothing for a while.
         }
-
+        // toggle led pins
+        GPIOB->PTOR |= (1 << led_red_pin);
+        GPIOB->PTOR |= (1 << led_green_pin);
+#endif
         if (tx_or_rx) {
             byte = 0x55u;
             log_data(sizeof(uint8_t), &byte);
@@ -85,3 +107,15 @@ int main(int argc, char **argv)
     free(buffer);
     return 0;
 }
+
+#if (PLATFORM == PLATFORM_FRDM)
+void initialize_led_pin(uint8_t led_pin)
+{
+    // Initialize the gpio pin for the led
+    PORTB->PCR[led_pin] = PORT_PCR_MUX(1);
+    // set pin to output
+    GPIOB->PDDR |= (1 << led_pin);
+    // initial state of pin is on
+    GPIOB->PDOR |= (1 << led_pin);
+}
+#endif
