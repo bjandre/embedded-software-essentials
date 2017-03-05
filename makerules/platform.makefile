@@ -101,10 +101,10 @@ endif
 # compile unoptimized debug by default. specific release flags will be
 # added depending on the host and target architectures
 ifeq ($(release), $(filter unset 0 '', $(release)))
-  RELEASE_CFLAGS = -g -O0 -UNDEBUG
+  RELEASE_CFLAGS = -g -O0 -UNDEBUG -DLOGGING_ENABLED
 #  RELEASE_CFLAGS = -DNDEBUG
 else
-  RELEASE_CFLAGS = -Os -DNDEBUG
+  RELEASE_CFLAGS = -Os -DNDEBUG -ULOGGING_ENABLED
 endif
 
 # Defines used elsewhere, e.g. adding the PROJECT macro. But could

@@ -10,6 +10,7 @@
 #include "uart.h"
 #include "logger.h"
 
+#ifdef LOGGING_ENABLED
 static const uint32_t debugger_baud = 115200u;
 static const size_t num_buffer_items = 64;
 static const size_t bytes_per_item = sizeof(uint8_t);
@@ -165,3 +166,43 @@ BinaryLoggerStatus log_receive_data(size_t num_bytes, uint8_t *buffer)
     }
     return status;
 }
+
+#else
+BinaryLoggerStatus BinaryLoggerInitialize(size_t num_bytes)
+{
+    (void)num_bytes;
+    return BinaryLogger_OK;
+}
+
+BinaryLoggerStatus log_data(size_t num_bytes, uint8_t *buffer)
+{
+    (void)num_bytes;
+    (void)buffer;
+    return BinaryLogger_OK;
+}
+
+BinaryLoggerStatus log_string(uint8_t *string)
+{
+    (void)string;
+    return BinaryLogger_OK;
+}
+
+BinaryLoggerStatus log_integer(int32_t integer)
+{
+    (void)integer;
+    return BinaryLogger_OK;
+}
+
+BinaryLoggerStatus log_flush(void)
+{
+    return BinaryLogger_OK;
+}
+
+BinaryLoggerStatus log_receive_data(size_t num_bytes, uint8_t *buffer)
+{
+    (void)num_bytes;
+    (void)buffer;
+    return BinaryLogger_OK;
+}
+
+#endif
