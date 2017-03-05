@@ -3,6 +3,7 @@
 #include <stdint.h>
 #include <stdlib.h>
 
+#include "platform-defs.h"
 #include "circular_buffer.h"
 #include "uart.h"
 #include "logger.h"
@@ -38,9 +39,6 @@ BinaryLoggerStatus BinaryLoggerInitialize(size_t num_bytes)
         abort();
     }
     logger.uart.initialize(debugger_baud);
-
-    uint32_t baud = 115200u;
-    uart_status = logger.uart.initialize(baud);
     if (UART_Status_OK != uart_status) {
         abort();
     }
@@ -63,7 +61,7 @@ BinaryLoggerStatus log_data(size_t num_bytes, uint8_t *buffer)
             abort();
         }
     }
-#if PLATFORM == frdm
+#if (PLATFORM == PLATFORM_FRDM)
     // eventually handled by interrupts
     bool is_empty;
     cb_status = CircularBufferIsEmpty(logger.transmit_buffer, &is_empty);

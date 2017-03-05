@@ -5,9 +5,9 @@
 #include "uart.h"
 #include "platform-defs.h"
 
-#if PLATFORM == PLATFORM_HOST || PLATFORM == PLATFORM_BBB
+#if (PLATFORM == PLATFORM_HOST) || (PLATFORM == PLATFORM_BBB)
 #include "uart-host.h"
-#elif PLATFORM == PLATFORM_FRDM
+#elif (PLATFORM == PLATFORM_FRDM)
 #include "uart-frdm-kl25z.h"
 #endif
 
