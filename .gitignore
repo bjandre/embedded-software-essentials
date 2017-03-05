@@ -31,3 +31,4 @@ _depends
 
 # 3rd party library builds
 3rd-party/build-*
+/Debug/
