@@ -14,12 +14,18 @@ $(shell mkdir -p $(DEPENDS_DIR))
 %.asm : %.c
 	$(CC) $(C_ASM_FLAGS) $(CFLAGS) $(INCLUDES) -c -o $*.asm $<
 
+%.o : %.S
+	$(AS) $(ASMFLAGS) $(INCLUDES) -c -o $@ $<
+
 $(LIB) : $(OBJS)
 	$(AR) $(ARFLAGS) $@ $(OBJS)
 
-$(EXE) : $(OBJS) $(DEPEND_LIBS)
-#	$(CC) $(CFLAGS) -o $@ $^ -v
-	$(LD) $(LDFLAGS) -o $@ $^ $(LDLIBS)
+$(STARTUP_LIB) : $(STARTUP_OBJS) $(ASM_OBJS)
+	$(AR) $(ARFLAGS) $@ $(ASM_OBJS) $(STARTUP_OBJS)
+
+$(EXE) : $(DEPEND_STARTUP) $(OBJS) $(DEPEND_LIBS)
+	$(CC) $(CFLAGS) $(CC_SPECS) -v -o $@ $^ $(DEPEND_STARTUP)
+#	$(LD) $(LDFLAGS) -o $@ $(LDLIBS_PRE) $^ $(LDLIBS_POST)
 	$(SIZE) $(SIZEFLAGS) $@
 #	file $@
 #	ldd $@
@@ -42,7 +48,7 @@ $(DEPENDS_DIR)/%.d : ;
 -include $(SRCS:%.c=$(DEPENDS_DIR)/%.d)
 
 .PHONY : all
-all : $(SUBDIRS) $(LIB) $(EXE)
+all : $(SUBDIRS) $(LIB) $(STARTUP_LIB) $(EXE)
 
 .PHONY : bin
 bin : $(SUBDIRS) $(EXE)

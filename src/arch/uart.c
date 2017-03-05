@@ -3,10 +3,11 @@
 #include <stdlib.h>
 
 #include "uart.h"
+#include "platform-defs.h"
 
-#if PLATFORM == host
+#if PLATFORM == PLATFORM_HOST || PLATFORM == PLATFORM_BBB
 #include "uart-host.h"
-#elif PLATFORM == frdm
+#elif PLATFORM == PLATFORM_FRDM
 #include "uart-frdm-kl25z.h"
 #endif
 
@@ -56,11 +57,11 @@ UartStatus CreateUART(uart_t *uart, UartFunction uart_function)
 UartStatus uartSetupDebugger(uart_t *uart)
 {
     UartStatus status = UART_Status_OK;
-#if PLATFORM == host || PLATFORM == bbb
+#if (PLATFORM == PLATFORM_HOST) || (PLATFORM == PLATFORM_BBB)
     uart->initialize = &host_uart_initialize;
     uart->transmit_byte = &host_uart_transmit_byte;
     uart->receive_byte = &host_uart_receive_byte;
-#elif PLATFORM == frdm
+#elif PLATFORM == PLATFORM_FRDM
     uart->initialize = &frdm_kl25z_uart_initialize;
     uart->transmit_byte = &frdm_kl25z_uart_transmit_byte;
     uart->receive_byte = &frdm_kl25z_uart_receive_byte;

@@ -3,9 +3,7 @@
 
 #include <stdint.h>
 
-#include <stddef.h>
-#include <stdint.h>
-
+#include "uart-common.h"
 
 UartStatus host_uart_initialize(const uint32_t baud);
 UartStatus host_uart_transmit_byte(const uint8_t byte);

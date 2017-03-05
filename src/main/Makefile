@@ -22,12 +22,14 @@ DEPEND_LIBS = \
 	../project-1/libproject1.a \
 	../util/libutil.a
 
-
-
 INCLUDES = \
 	-I../arch \
 	-I../util \
 	-I../project-1
+
+ifeq ($(PLATFORM), $(PLATFORM_ENUM_FRDM))
+  DEPEND_STARTUP = ../arch/libfrdm.a
+endif
 
 TEST_EXE = $(EXE)
 

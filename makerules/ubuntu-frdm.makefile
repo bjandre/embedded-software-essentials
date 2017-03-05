@@ -2,20 +2,12 @@
 # configuration for ubuntu 16.04 - Freedom KL25z development board cross compiling
 # with arm-none-eabi tool chain
 #
-ARCH := armv6-m
-CPU := cortex-m0plus
 
-TOOLS_PREFIX := arm-none-eabi
+include $(MAKERULES)/gcc-frdm.makefile
 
-CC = $(TOOLS_PREFIX)-gcc
-CFLAGS = -march=$(ARCH) -mtune=$(CPU) -mthumb \
-  -Wl,--print-output-format
-
-AR = $(TOOLS_PREFIX)-ar
-
-LD = $(TOOLS_PREFIX)-ld
 LDFLAGS = \
-  --print-output-format \
+	-T "../arch/MKL25Z128xxx4_flash.ld" \
+	--print-output-format \
 	-L/usr/lib/gcc/arm-none-eabi/4.9.3/armv6-m \
 	-L/usr/lib/gcc/arm-none-eabi/4.9.3/../../../arm-none-eabi/lib/armv6-m \
 	-L/usr/lib/gcc/arm-none-eabi/4.9.3 \
@@ -30,8 +22,3 @@ LDLIBS = \
 	/usr/lib/gcc/arm-none-eabi/4.9.3/armv6-m/crtn.o
 
 
-SIZE = $(TOOLS_PREFIX)-size
-SIZEFLAGS = --format=sysv -x
-
-OBJDUMP = $(TOOLS_PREFIX)-objdump
-OBJDUMP_FLAGS = --disassemble-all --line-numbers --source --full-contents --all-headers

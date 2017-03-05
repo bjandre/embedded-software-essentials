@@ -1,0 +1,8 @@
+#ifndef ESE_ARCH_PLATFORM_DEFS_H_
+#define ESE_ARCH_PLATFORM_DEFS_H_
+
+#define PLATFORM_HOST (0)
+#define PLATFORM_BBB (1)
+#define PLATFORM_FRDM (2)
+
+#endif /* ESE_ARCH_PLATFORM_DEFS_H_ */

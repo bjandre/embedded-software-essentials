@@ -32,7 +32,10 @@ int main(int argc, char **argv)
 #endif
 
     BinaryLoggerStatus logger_status = BinaryLogger_OK;
- logger_status = BinaryLoggerInitialize(32);
+    logger_status = BinaryLoggerInitialize(32);
+    if (BinaryLogger_OK != logger_status) {
+        abort();
+    }
 
     uint8_t *buffer = malloc(sizeof(uint8_t) * 32);
     uint8_t byte;

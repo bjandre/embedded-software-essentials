@@ -9,6 +9,11 @@ PLATFORM_HOST := host
 PLATFORM_BBB := bbb
 PLATFORM_FRDM := frdm
 
+PLATFORM_ENUM_HOST := 0
+PLATFORM_ENUM_BBB := 1
+PLATFORM_ENUM_FRDM := 2
+
+
 #
 # figure out what type of host system we are building on
 #
@@ -31,13 +36,13 @@ strip_platform = $(strip $(platform))
 ifeq ($(strip_platform), $(filter $(PLATFORM_HOST) unset '', $(strip_platform)))
   # not specified, default to host
   TARGET_SYSTEM = $(HOST_SYSTEM)
-  PLATFORM = $(PLATFORM_HOST)
+  PLATFORM = $(PLATFORM_ENUM_HOST)
 else ifeq ($(platform), $(PLATFORM_BBB))
   TARGET_SYSTEM = $(PLATFORM_BBB)
-  PLATFORM = $(PLATFORM_BBB)
+  PLATFORM = $(PLATFORM_ENUM_BBB)
 else ifeq ($(platform), $(PLATFORM_FRDM))
   TARGET_SYSTEM = $(PLATFORM_FRDM)
-  PLATFORM = $(PLATFORM_FRDM)
+  PLATFORM = $(PLATFORM_ENUM_FRDM)
 else
   $(error Can not identify target system!)
 endif
@@ -98,9 +103,15 @@ endif
 
 DEFINES += -DPLATFORM=$(PLATFORM)
 
-GENERAL_CFLAGS = --std=c99 -Wall -Werror
+STD_FLAGS = --std=c99
+
+WARN_FLAGS = -Wall -Werror
+
+GENERAL_CFLAGS = $(STD_FLAGS) $(WARN_FLAGS)
 
 CFLAGS += $(RELEASE_CFLAGS) $(DEFINES) $(GENERAL_CFLAGS)
+
+ASMFLAGS += --warn --fatal-warnings $(RELEASE_FLAGS)
 
 # flags for generating assembly files from c.
 C_ASM_FLAGS = -S
