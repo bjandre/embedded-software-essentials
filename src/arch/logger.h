@@ -34,14 +34,15 @@ typedef struct BinaryLoggerData {
 
 BinaryLoggerStatus BinaryLoggerInitialize(size_t num_bytes);
 
-BinaryLoggerStatus log_data(size_t num_bytes, uint8_t* buffer);
+BinaryLoggerStatus log_data(size_t num_bytes, uint8_t *buffer);
 BinaryLoggerStatus log_string(char *string);
 BinaryLoggerStatus log_integer(uint32_t integer);
 BinaryLoggerStatus log_flush(void);
 
-BinaryLoggerStatus log_receive_data(size_t num_bytes, uint8_t* buffer);
+BinaryLoggerStatus log_receive_data(size_t num_bytes, uint8_t *buffer);
 
-BinaryLoggerStatus create_log_item(log_data_t *log_data, BinaryLoggerID id, size_t num_bytes, void *payload);
+BinaryLoggerStatus create_log_item(log_data_t *log_data, BinaryLoggerID id,
+                                   size_t num_bytes, void *payload);
 
 BinaryLoggerStatus log_item(log_data_t *log_data);
 

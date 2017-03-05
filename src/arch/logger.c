@@ -23,11 +23,13 @@ BinaryLoggerStatus BinaryLoggerInitialize(size_t num_bytes)
 {
     BinaryLoggerStatus status = BinaryLogger_OK;
     CircularBufferStatus cb_status;
-    cb_status = CircularBufferNew(&(logger.transmit_buffer), num_buffer_items, bytes_per_item);
+    cb_status = CircularBufferNew(&(logger.transmit_buffer), num_buffer_items,
+                                  bytes_per_item);
     if (CB_No_Error != cb_status) {
         return BinaryLogger_Error;
     }
-    cb_status = CircularBufferNew(&(logger.receive_buffer), num_buffer_items, bytes_per_item);
+    cb_status = CircularBufferNew(&(logger.receive_buffer), num_buffer_items,
+                                  bytes_per_item);
     if (CB_No_Error != cb_status) {
         return BinaryLogger_Error;
     }
@@ -69,9 +71,9 @@ BinaryLoggerStatus log_data(size_t num_bytes, uint8_t *buffer)
         uint8_t byte;
         cb_status = CircularBufferRemoveItem(logger.transmit_buffer, &byte);
         uart_status = logger.uart.transmit_byte(byte);
-        
-        cb_status = CircularBufferIsEmpty(logger.transmit_buffer, &is_empty);     
-    }  
+
+        cb_status = CircularBufferIsEmpty(logger.transmit_buffer, &is_empty);
+    }
 #else // PLATFORM == host || PLATFORM == bbb
     // no interrupts, just write all available data
     bool is_empty;
@@ -80,8 +82,8 @@ BinaryLoggerStatus log_data(size_t num_bytes, uint8_t *buffer)
         uint8_t byte;
         cb_status = CircularBufferRemoveItem(logger.transmit_buffer, &byte);
         uart_status = logger.uart.transmit_byte(byte);
-        
-        cb_status = CircularBufferIsEmpty(logger.transmit_buffer, &is_empty);        
+
+        cb_status = CircularBufferIsEmpty(logger.transmit_buffer, &is_empty);
     }
 #endif
     if (UART_Status_OK != uart_status) {
@@ -133,9 +135,9 @@ BinaryLoggerStatus log_receive_data(size_t num_bytes, uint8_t *buffer)
     // extract from circular buffer and pack into user buffer.
     for (int n = 0; n < num_bytes; n++) {
         uint8_t byte;
-        cb_status = CircularBufferRemoveItem(logger.receive_buffer, (void*)(&byte));
+        cb_status = CircularBufferRemoveItem(logger.receive_buffer, (void *)(&byte));
         if (CB_No_Error == cb_status) {
-            *(buffer + n) = byte; 
+            *(buffer + n) = byte;
         } else {
             abort();
         }

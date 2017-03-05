@@ -27,7 +27,8 @@ UartStatus uart_transmit_n_bytes(uart_t *uart,
     return status;
 }
 
-UartStatus uart_receive_n_bytes(uart_t *uart, const size_t num_bytes, uint8_t *bytes)
+UartStatus uart_receive_n_bytes(uart_t *uart, const size_t num_bytes,
+                                uint8_t *bytes)
 {
     UartStatus status = UART_Status_OK;
     for (size_t n = 0; n < num_bytes; n++) {
