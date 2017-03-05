@@ -5,6 +5,7 @@ SYS_LINUX := Linux
 SYS_DARWIN := Darwin
 SYS_UBUNTU := Ubuntu 16.04.1 LTS
 SYS_WHEEZY := Debian GNU/Linux 7.9 (wheezy)
+SYS_FEDORA := "Fedora release 24 (Twenty Four)"
 PLATFORM_HOST := host
 PLATFORM_BBB := bbb
 PLATFORM_FRDM := frdm
@@ -59,6 +60,8 @@ ifeq ($(HOST_SYSTEM), $(TARGET_SYSTEM))
     include $(MAKERULES)/darwin-darwin.makefile
   else ifeq ("$(HOST_SYSTEM)", "$(SYS_UBUNTU)")
     include $(MAKERULES)/ubuntu-ubuntu.makefile
+  else ifeq ("$(HOST_SYSTEM)", "$(SYS_FEDORA)")
+    include $(MAKERULES)/fedora-fedora.makefile
   else ifeq ("$(HOST_SYSTEM)", "$(SYS_WHEEZY)")
     include $(MAKERULES)/bbb-bbb.makefile
   else

@@ -15,7 +15,7 @@ UartStatus host_uart_initialize(const uint32_t baud)
 UartStatus host_uart_transmit_byte(const uint8_t byte)
 {
     UartStatus status = UART_Status_OK;
-    fprintf(stdout, "%0.2x", byte);
+    fprintf(stdout, "%.2x", byte);
     //putc(byte, stdout);
     return status;
 }
