@@ -4,6 +4,8 @@
 #include <stdlib.h>
 
 #include "platform-defs.h"
+#include "memory.h"
+#include "data.h"
 #include "circular_buffer.h"
 #include "uart.h"
 #include "logger.h"
@@ -90,21 +92,42 @@ BinaryLoggerStatus log_data(size_t num_bytes, uint8_t *buffer)
     return status;
 }
 
-BinaryLoggerStatus log_string(char *string)
+BinaryLoggerStatus log_string(uint8_t *string)
 {
     BinaryLoggerStatus status = BinaryLogger_Error;
+    size_t string_length = 0;
+    while (*(string + string_length) != '\0') {
+        string_length++;
+    }
+    log_data(string_length, (uint8_t*)string);
     return status;
 }
 
-BinaryLoggerStatus log_integer(uint32_t integer)
+BinaryLoggerStatus log_integer(int32_t integer)
 {
-    BinaryLoggerStatus status = BinaryLogger_Error;
+    BinaryLoggerStatus status = BinaryLogger_OK;
+    const size_t max_digits = 32;
+    char string[max_digits];
+    my_memset((uint8_t*)string, max_digits, '\0');
+    uint32_t decimal_base = 10;
+    my_itoa((int8_t*)string, integer, decimal_base);
+    log_string((uint8_t*)string);
     return status;
 }
 
 BinaryLoggerStatus log_flush(void)
 {
-    BinaryLoggerStatus status = BinaryLogger_Error;
+    BinaryLoggerStatus status = BinaryLogger_OK;
+    CircularBufferStatus cb_status;
+
+    bool is_empty = false;
+    do {
+        cb_status = CircularBufferIsEmpty(logger.transmit_buffer, &is_empty);
+        if (CB_No_Error != cb_status) {
+            status = BinaryLogger_Error;
+            break;
+        }
+    } while (!is_empty);
     return status;
 }
 

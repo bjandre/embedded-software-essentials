@@ -35,8 +35,8 @@ typedef struct BinaryLoggerData {
 BinaryLoggerStatus BinaryLoggerInitialize(size_t num_bytes);
 
 BinaryLoggerStatus log_data(size_t num_bytes, uint8_t *buffer);
-BinaryLoggerStatus log_string(char *string);
-BinaryLoggerStatus log_integer(uint32_t integer);
+BinaryLoggerStatus log_string(uint8_t *string);
+BinaryLoggerStatus log_integer(int32_t integer);
 BinaryLoggerStatus log_flush(void);
 
 BinaryLoggerStatus log_receive_data(size_t num_bytes, uint8_t *buffer);

@@ -28,7 +28,6 @@ void initialize_led_pin(uint8_t led_pin);
 
 int main(int argc, char **argv)
 {
-
     PRINTF("Hello, from Emebbed Software Essentials Project!\n");
 
 #if PROJECT == 1
@@ -56,7 +55,7 @@ int main(int argc, char **argv)
 #endif
 
     uint8_t *buffer = malloc(sizeof(uint8_t) * 32);
-    uint8_t byte;
+    uint8_t byte = 0x55u;
     uint32_t data1 = 0xEFBEADDEu;
     uint32_t data2 = 0xDEC0ADDEu;
     uint32_t data3 = 0x5555AAAAu;
@@ -98,6 +97,16 @@ int main(int argc, char **argv)
                 log_receive_data((size_t)num_bytes, buffer);
                 log_data(sizeof(num_bytes), (uint8_t *)(&num_bytes));
                 log_data(num_bytes, buffer);
+                break;
+            case 's':
+                byte = 0x55;
+                log_data(sizeof(uint8_t), &byte);
+                log_string((uint8_t*)"Hello, from Emebbed Software Essentials Project!\n");
+                log_data(sizeof(uint8_t), &byte);
+                log_integer(-4577);
+                log_data(sizeof(uint8_t), &byte);
+                log_string((uint8_t*)"\n");
+                log_data(sizeof(uint8_t), &byte);
                 break;
             default:
                 log_data(sizeof(byte), &byte);
