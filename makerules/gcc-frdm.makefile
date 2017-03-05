@@ -15,9 +15,9 @@ CC = $(TOOLS_PREFIX)-gcc
 
 CFLAGS = $(ARCH_FLAGS) -D$(DEFINE_CPU) -flto
 
-AS = $(TOOLS_PREFIX)-as
+AS = $(TOOLS_PREFIX)-gcc
 
-ASMFLAGS = $(ARCH_FLAGS)
+ASMFLAGS = $(ARCH_FLAGS) -x assembler-with-cpp
 
 AR = $(TOOLS_PREFIX)-gcc-ar
 
@@ -26,7 +26,14 @@ LD = $(TOOLS_PREFIX)-ld
 LDFLAGS = \
 	-T "../arch/MKL25Z128xxx4_flash.ld" \
 	--gc-sections -z muldefs \
-	--print-output-format \
+	--print-output-format
+
+CC_LDFLAGS = \
+	-T "../arch/MKL25Z128xxx4_flash.ld" \
+	-Xlinker --gc-sections -Xlinker -z -Xlinker muldefs \
+	-Xlinker --print-output-format \
+	$(CC_SPECS)
+
 
 
 # NOTE(bja, 2017-03) LDFLAGS is appened to for platform specific library paths.

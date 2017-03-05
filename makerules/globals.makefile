@@ -3,7 +3,7 @@
 EXE_BASE := project
 
 EXE_EXTENSION := out
-BIN_EXTENSION := srec
+BIN_EXTENSION := bin
 DUMP_EXTENSION := dump
 
 DEPENDS_DIR := _depends

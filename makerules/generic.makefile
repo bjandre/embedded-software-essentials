@@ -23,8 +23,12 @@ $(LIB) : $(OBJS)
 $(STARTUP_LIB) : $(STARTUP_OBJS) $(ASM_OBJS)
 	$(AR) $(ARFLAGS) $@ $(ASM_OBJS) $(STARTUP_OBJS)
 
+# debugging flag to turn on verbose output and see gcc wrapper link info
+#DEBUG_CC_LINK := -v
+DEBUG_CC_LINK :=
+
 $(EXE) : $(DEPEND_STARTUP) $(OBJS) $(DEPEND_LIBS)
-	$(CC) $(CFLAGS) $(CC_SPECS) -v -o $@ $^ $(DEPEND_STARTUP)
+	$(CC) $(CFLAGS) $(CC_LDFLAGS) $(DEBUG_CC_LINK) -o $@ $^ $(DEPEND_STARTUP)
 #	$(LD) $(LDFLAGS) -o $@ $(LDLIBS_PRE) $^ $(LDLIBS_POST)
 	$(SIZE) $(SIZEFLAGS) $@
 #	file $@
@@ -48,7 +52,7 @@ $(DEPENDS_DIR)/%.d : ;
 -include $(SRCS:%.c=$(DEPENDS_DIR)/%.d)
 
 .PHONY : all
-all : $(SUBDIRS) $(LIB) $(STARTUP_LIB) $(EXE)
+all : $(SUBDIRS) $(LIB) $(STARTUP_LIB) $(EXE) $(BIN)
 
 .PHONY : bin
 bin : $(SUBDIRS) $(EXE)

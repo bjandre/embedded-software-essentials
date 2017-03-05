@@ -75,6 +75,12 @@ else
     else
       $(error Unsupported darwin cross compile : "$(TARGET_SYSTEM)")
     endif
+  else ifeq ($(HOST_SYSTEM), $(SYS_FEDORA))
+    ifeq ($(TARGET_SYSTEM), $(PLATFORM_FRDM))
+      include $(MAKERULES)/fedora-frdm.makefile
+    else
+      $(error Unsupported darwin cross compile : "$(TARGET_SYSTEM)")
+    endif
   else ifeq ($(HOST_SYSTEM), $(SYS_UBUNTU))
     ifeq ($(TARGET_SYSTEM), $(PLATFORM_BBB))
       include $(MAKERULES)/ubuntu-bbb.makefile
@@ -101,7 +107,7 @@ else
   RELEASE_CFLAGS = -Os -DNDEBUG
 endif
 
-# Defines is used elsewhere, e.g. adding the PROJECT macro. But could
+# Defines used elsewhere, e.g. adding the PROJECT macro. But could
 # alse be amended here.
 
 DEFINES += -DPLATFORM=$(PLATFORM)
@@ -114,7 +120,12 @@ GENERAL_CFLAGS = $(STD_FLAGS) $(WARN_FLAGS)
 
 CFLAGS += $(RELEASE_CFLAGS) $(DEFINES) $(GENERAL_CFLAGS)
 
-ASMFLAGS += --warn --fatal-warnings $(RELEASE_FLAGS)
+# NOTE(bja, 2017-03) --warn and --fatal-warnings are only used when calling as
+# directly, not when calling with the gcc wrapper.
+
+#ASMFLAGS += --warn --fatal-warnings $(RELEASE_FLAGS)
+ASMFLAGS += $(RELEASE_FLAGS)
+
 
 # flags for generating assembly files from c.
 C_ASM_FLAGS = -S

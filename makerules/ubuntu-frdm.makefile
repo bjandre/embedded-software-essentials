@@ -5,7 +5,7 @@
 
 include $(MAKERULES)/gcc-frdm.makefile
 
-LDFLAGS = \
+LDFLAGS += \
 	-T "../arch/MKL25Z128xxx4_flash.ld" \
 	--print-output-format \
 	-L/usr/lib/gcc/arm-none-eabi/4.9.3/armv6-m \
