@@ -13,12 +13,12 @@
 #include "logger.h"
 
 #ifdef LOGGING_ENABLED
+
+extern BinaryLogger_t logger;
+
 static const uint32_t debugger_baud = 115200u;
 static const size_t num_buffer_items = 64;
 static const size_t bytes_per_item = sizeof(uint8_t);
-
-// NOTE(bja, 2017-03) global, accessed by uart-frdm-kl25z.c!
-BinaryLogger_t logger;
 
 BinaryLoggerStatus BinaryLoggerInitialize(size_t num_bytes)
 {

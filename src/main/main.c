@@ -11,6 +11,8 @@
 #include "platform-defs.h"
 #include "logger.h"
 
+BinaryLogger_t logger;
+
 #if PROJECT == 0
 #    // NOTE(bja, 2017-02): Building main with no project code.
 #elif PROJECT == 1
@@ -153,4 +155,35 @@ void initialize_led_pin(uint8_t led_pin)
     // initial state of pin is on
     GPIOB->PDOR |= (1 << led_pin);
 }
+
+
+extern void UART0_IRQHandler(void)
+{
+    CircularBufferStatus cb_status = CB_No_Error;
+    uint8_t byte;
+    // What triggered the interrupt...
+    if (UART0->S1 & UART0_S1_RDRF_MASK) {
+        // received data register full
+        byte = UART0->D;
+        cb_status = CircularBufferAddItem(logger.receive_buffer, &byte);
+        if (CB_No_Error == cb_status) {
+            // do nothing? status flag is automatically reset
+        } else {
+            // error handling?
+        }
+    } else if (UART0->S1 & UART0_S1_TDRE_MASK) {
+        // transmit data register empty
+        cb_status = CircularBufferRemoveItem(logger.transmit_buffer, &byte);
+        if (CB_No_Error == cb_status) {
+            // successfully removed item.
+            UART0->D = byte;
+        } else {
+            // nothing else to send
+            UART0->C2 &= ~UART0_C2_TIE(1);
+        }
+    } else {
+        // other interrupts to handle?
+    }
+}
+
 #endif
