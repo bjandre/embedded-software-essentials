@@ -51,6 +51,9 @@ CircularBufferStatus CircularBufferRemoveItem(CircularBuffer_t *cb,
    Param: *is_full - boolean indicating if the buffer is full.
 
    Returns: CircularBufferStatus corresponding to action or buffer status
+            Note:
+            this returns CB_No_Error or CB_Null. CB_Full only returned when
+            trying to add an item to a full buffer.
  */
 CircularBufferStatus CircularBufferIsFull(CircularBuffer_t *cb, bool *is_full);
 
@@ -64,6 +67,9 @@ CircularBufferStatus CircularBufferIsFull(CircularBuffer_t *cb, bool *is_full);
    Param: *is_empty - boolean indicating if the buffer is empty.
 
    Returns: CircularBufferStatus corresponding to action or buffer status
+            Note:
+            this returns CB_No_Error or CB_Null. CB_Empyt only returned when
+            trying to remove an item from an empty buffer.
  */
 CircularBufferStatus CircularBufferIsEmpty(CircularBuffer_t *cb,
         bool *is_empty);

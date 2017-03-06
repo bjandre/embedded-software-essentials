@@ -74,9 +74,13 @@ CircularBufferStatus CircularBufferRemoveItem(CircularBuffer_t *cb, void *item)
 CircularBufferStatus CircularBufferIsFull(CircularBuffer_t *cb, bool *is_full)
 {
     CircularBufferStatus status = CB_No_Error;
-    *is_full = false;
-    if (cb->bytes_used > cb->num_bytes_allocated - cb->bytes_per_item) {
-        *is_full = true;
+    if (NULL == cb || NULL == is_full) {
+        status = CB_Null_Pointer;
+    } else {
+        *is_full = false;
+        if (cb->bytes_used > cb->num_bytes_allocated - cb->bytes_per_item) {
+            *is_full = true;
+        }
     }
     return status;
 }
@@ -85,9 +89,13 @@ CircularBufferStatus CircularBufferIsFull(CircularBuffer_t *cb, bool *is_full)
 CircularBufferStatus CircularBufferIsEmpty(CircularBuffer_t *cb, bool *is_empty)
 {
     CircularBufferStatus status = CB_No_Error;
-    *is_empty = false;
-    if (cb->bytes_used < cb->bytes_per_item) {
-        *is_empty = true;
+    if (NULL == cb || NULL == is_empty) {
+        status = CB_Null_Pointer;
+    } else {
+        *is_empty = false;
+        if (cb->bytes_used < cb->bytes_per_item) {
+            *is_empty = true;
+        }
     }
     return status;
 }
