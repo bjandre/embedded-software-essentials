@@ -13,6 +13,40 @@
 
 #include "uart-frdm-kl25z.h"
 
+#include "circular_buffer.h"
+#include "logger.h"
+
+extern BinaryLogger_t logger;
+
+extern void UART0_IRQHandler(void)
+{
+    CircularBufferStatus cb_status = CB_No_Error;
+    uint8_t byte;
+    // What triggered the interrupt...
+    if (UART0->S1 & UART0_S1_RDRF_MASK) {
+        // received data register full
+        byte = UART0->D;
+        cb_status = CircularBufferAddItem(logger.receive_buffer, &byte);
+        if (CB_No_Error == cb_status) {
+            // do nothing? status flag is automatically reset
+        } else {
+            // error handling?
+        }
+    } else if (UART0->S1 & UART0_S1_TDRE_MASK) {
+        // transmit data register empty
+        cb_status = CircularBufferRemoveItem(logger.transmit_buffer, &byte);
+        if (CB_No_Error == cb_status) {
+            // successfully removed item.
+            UART0->D = byte;
+        } else {
+            // nothing else to send
+            UART0->C2 &= ~UART0_C2_TIE(1);
+        }
+    } else {
+        // other interrupts to handle?
+    }
+}
+
 UartStatus frdm_kl25z_uart_initialize(const uint32_t baud)
 {
     // UART0

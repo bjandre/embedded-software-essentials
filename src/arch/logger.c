@@ -3,6 +3,8 @@
 #include <stdint.h>
 #include <stdlib.h>
 
+#include "MKL25Z4.h"
+
 #include "platform-defs.h"
 #include "memory.h"
 #include "data.h"
@@ -15,13 +17,8 @@ static const uint32_t debugger_baud = 115200u;
 static const size_t num_buffer_items = 64;
 static const size_t bytes_per_item = sizeof(uint8_t);
 
-typedef struct BinaryLogger {
-    CircularBuffer_t *transmit_buffer;
-    CircularBuffer_t *receive_buffer;
-    uart_t uart;
-} BinaryLogger_t;
-
-static BinaryLogger_t logger;
+// NOTE(bja, 2017-03) global, accessed by uart-frdm-kl25z.c!
+BinaryLogger_t logger;
 
 BinaryLoggerStatus BinaryLoggerInitialize(size_t num_bytes)
 {
@@ -67,7 +64,7 @@ BinaryLoggerStatus BinaryLoggerInitialize(size_t num_bytes)
 BinaryLoggerStatus log_data(size_t num_bytes, uint8_t *buffer)
 {
     BinaryLoggerStatus status = BinaryLogger_OK;
-    UartStatus uart_status;
+    UartStatus uart_status = UART_Status_OK;
     CircularBufferStatus cb_status;
     for (size_t n = 0; n < num_bytes; n++) {
         bool is_full;
@@ -80,17 +77,12 @@ BinaryLoggerStatus log_data(size_t num_bytes, uint8_t *buffer)
             abort();
         }
     }
-#if (PLATFORM == PLATFORM_FRDM)
-    // eventually handled by interrupts
-    bool is_empty;
-    cb_status = CircularBufferIsEmpty(logger.transmit_buffer, &is_empty);
-    while (!is_empty) {
-        uint8_t byte;
-        cb_status = CircularBufferRemoveItem(logger.transmit_buffer, &byte);
-        uart_status = logger.uart.transmit_byte(byte);
 
-        cb_status = CircularBufferIsEmpty(logger.transmit_buffer, &is_empty);
-    }
+    //FIXME(bja, 2017-03) should this based on an interrupt vs polling flag
+    //instead of the platform so we can run polling on frdm...?
+#if (PLATFORM == PLATFORM_FRDM)
+    // make sure transmit buffer empty interrupt is on
+    UART0->C2 |= UART0_C2_TIE(1);
 #else // PLATFORM == host || PLATFORM == bbb
     // no interrupts, just write all available data
     bool is_empty;
@@ -153,11 +145,16 @@ BinaryLoggerStatus log_receive_data(size_t num_bytes, uint8_t *buffer)
     // FIXME(bja, 2017-03) need to figure out how to do this with
     // interrupts.... Poll circular buffer until number of bytes are present...?
     BinaryLoggerStatus status = BinaryLogger_OK;
-    UartStatus uart_status;
+    UartStatus uart_status = UART_Status_OK;
     CircularBufferStatus cb_status = CB_No_Error;
 
     // extract from uart and pack into the circular buffer. This code goes into
     // the interrupts....
+#if (PLATFORM == PLATFORM_FRDM)
+    // make sure receive buffer full interrupt is on
+    UART0->C2 |= UART0_C2_RIE(1);
+    (void)uart_status;
+#else // PLATFORM == host || PLATFORM == bbb
     for (int n = 0; n < num_bytes; n++) {
         uint8_t byte;
         uart_status = logger.uart.receive_byte(&byte);
@@ -169,7 +166,7 @@ BinaryLoggerStatus log_receive_data(size_t num_bytes, uint8_t *buffer)
             abort();
         }
     }
-
+#endif
     // extract from circular buffer and pack into user buffer.
     for (int n = 0; n < num_bytes; n++) {
         uint8_t byte;

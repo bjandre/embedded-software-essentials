@@ -4,6 +4,15 @@
 #include <stddef.h>
 #include <stdint.h>
 
+#include "circular_buffer.h"
+#include "uart.h"
+
+typedef struct BinaryLogger {
+    CircularBuffer_t *transmit_buffer;
+    CircularBuffer_t *receive_buffer;
+    uart_t uart;
+} BinaryLogger_t;
+
 typedef enum BinaryLoggerStatus {
     BinaryLogger_OK,
     BinaryLogger_Error,
