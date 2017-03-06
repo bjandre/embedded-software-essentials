@@ -7,6 +7,8 @@
 typedef enum BinaryLoggerStatus {
     BinaryLogger_OK,
     BinaryLogger_Error,
+    BinaryLogger_ItemAllocationError,
+    BinaryLogger_ItemNULL,
 } BinaryLoggerStatus;
 
 typedef enum BinaryLoggerID {
@@ -30,7 +32,7 @@ typedef struct BinaryLoggerData {
     BinaryLoggerID id;
     size_t payload_num_bytes;
     void *payload;
-} log_data_t;
+} log_item_t;
 
 BinaryLoggerStatus BinaryLoggerInitialize(size_t num_bytes);
 
@@ -41,11 +43,10 @@ BinaryLoggerStatus log_flush(void);
 
 BinaryLoggerStatus log_receive_data(size_t num_bytes, uint8_t *buffer);
 
-BinaryLoggerStatus create_log_item(log_data_t *log_data, BinaryLoggerID id,
-                                   size_t num_bytes, void *payload);
+BinaryLoggerStatus CreateLogItem(log_item_t **item, BinaryLoggerID id,
+                                 size_t num_bytes, void *payload);
+BinaryLoggerStatus DestroyLogItem(log_item_t **item);
+BinaryLoggerStatus log_item(log_item_t *item);
 
-BinaryLoggerStatus log_item(log_data_t *log_data);
-
-BinaryLoggerStatus destroy_log_item(log_data_t *log_data);
 
 #endif // ESE_ARCH_LOGGER_H_

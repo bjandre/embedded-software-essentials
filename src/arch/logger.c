@@ -45,6 +45,22 @@ BinaryLoggerStatus BinaryLoggerInitialize(size_t num_bytes)
     if (UART_Status_OK != uart_status) {
         abort();
     }
+    // Now we need to send four bytes to make the logger self describing.
+    //
+    // 1. two bytes - magic number 0x4477 in hex. Allows us to tell if we have
+    // one of our files, and whether we have big or little endian data.
+    //
+    // 2. one byte - the number of bytes in the log_item_t id.
+    //
+    // 3. one byte - the second is the number of bytes in the log_item_t
+    // payload_num_bytes.
+    //
+    uint16_t magic_number = 0x4477u;
+    log_data(sizeof(magic_number), (uint8_t *)(&magic_number));
+    uint8_t data = sizeof(BinaryLoggerID);
+    log_data(sizeof(data), (uint8_t *)(&data));
+    data = sizeof(size_t);
+    log_data(sizeof(data), (uint8_t *)(&data));
     return status;
 }
 
@@ -100,7 +116,7 @@ BinaryLoggerStatus log_string(uint8_t *string)
     while (*(string + string_length) != '\0') {
         string_length++;
     }
-    log_data(string_length, (uint8_t*)string);
+    log_data(string_length, (uint8_t *)string);
     return status;
 }
 
@@ -109,10 +125,10 @@ BinaryLoggerStatus log_integer(int32_t integer)
     BinaryLoggerStatus status = BinaryLogger_OK;
     const size_t max_digits = 32;
     char string[max_digits];
-    my_memset((uint8_t*)string, max_digits, '\0');
+    my_memset((uint8_t *)string, max_digits, '\0');
     uint32_t decimal_base = 10;
-    my_itoa((int8_t*)string, integer, decimal_base);
-    log_string((uint8_t*)string);
+    my_itoa((int8_t *)string, integer, decimal_base);
+    log_string((uint8_t *)string);
     return status;
 }
 
@@ -167,6 +183,65 @@ BinaryLoggerStatus log_receive_data(size_t num_bytes, uint8_t *buffer)
     return status;
 }
 
+BinaryLoggerStatus CreateLogItem(log_item_t **item, BinaryLoggerID id,
+                                 size_t num_bytes, void *payload)
+{
+    BinaryLoggerStatus status = BinaryLogger_OK;
+    *item = malloc(sizeof(log_item_t));
+    if (NULL == *item) {
+        status = BinaryLogger_ItemAllocationError;
+    } else {
+        (*item)->id = id;
+        (*item)->payload_num_bytes = num_bytes;
+        if (0 == (*item)->payload_num_bytes) {
+            (*item)->payload = NULL;
+        } else {
+            (*item)->payload = malloc(num_bytes);
+            if (NULL == (*item)->payload) {
+                status = BinaryLogger_ItemAllocationError;
+            } else {
+                MemStatus mem_stat = my_memmove((uint8_t *)payload, (*item)->payload,
+                                                num_bytes);
+                if (MemStatus_SUCCESS != mem_stat) {
+                    status = BinaryLogger_ItemAllocationError;
+                }
+            }
+        }
+    }
+    if (BinaryLogger_OK != status) {
+        DestroyLogItem(item);
+    }
+    return status;
+}
+
+BinaryLoggerStatus log_item(log_item_t *item)
+{
+    BinaryLoggerStatus status = BinaryLogger_OK;
+    if (NULL == item) {
+        status = BinaryLogger_ItemNULL;
+    } else {
+        log_data(sizeof(item->id), (uint8_t *)(&item->id));
+        log_data(sizeof(item->payload_num_bytes),
+                 (uint8_t *)(&item->payload_num_bytes));
+        if (item->payload_num_bytes > 0) {
+            log_data(item->payload_num_bytes, item->payload);
+        }
+    }
+
+    return status;
+}
+
+BinaryLoggerStatus DestroyLogItem(log_item_t **item)
+{
+    BinaryLoggerStatus status = BinaryLogger_OK;
+    if (NULL != *item) {
+        free((*item)->payload);
+    }
+    free(*item);
+    *item = NULL;
+    return status;
+}
+
 #else
 BinaryLoggerStatus BinaryLoggerInitialize(size_t num_bytes)
 {
@@ -202,6 +277,25 @@ BinaryLoggerStatus log_receive_data(size_t num_bytes, uint8_t *buffer)
 {
     (void)num_bytes;
     (void)buffer;
+    return BinaryLogger_OK;
+}
+
+BinaryLoggerStatus CreateLogItem(log_item_t **item, BinaryLoggerID id,
+                                 size_t num_bytes, void *payload)
+{
+    (void)item;
+    (void)num_bytes;
+    (void)payload;
+    return BinaryLogger_OK;
+}
+BinaryLoggerStatus DestroyLogItem(log_item_t **item)
+{
+    (void)item;
+    return BinaryLogger_OK;
+}
+BinaryLoggerStatus log_item(log_item_t *item)
+{
+    (void)item;
     return BinaryLogger_OK;
 }
 

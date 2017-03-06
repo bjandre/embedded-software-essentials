@@ -41,6 +41,13 @@ int main(int argc, char **argv)
     if (BinaryLogger_OK != logger_status) {
         abort();
     }
+    log_item_t *item;
+    logger_status = CreateLogItem(&item, LOGGER_INITIALIZED, 0, NULL);
+    if (BinaryLogger_OK != logger_status) {
+        abort();
+    }
+    log_item(item);
+    logger_status = DestroyLogItem(&item);
 
 #if (PLATFORM == PLATFORM_FRDM)
     // enable clock for gpio led pins.
@@ -52,7 +59,28 @@ int main(int argc, char **argv)
     initialize_led_pin(led_green_pin);
     // toggle led pins
     GPIOB->PTOR |= (1 << led_green_pin);
+    logger_status = CreateLogItem(&item, GPIO_INITIALIZED, 0, NULL);
+    if (BinaryLogger_OK != logger_status) {
+        abort();
+    }
+    log_item(item);
+    logger_status = DestroyLogItem(&item);
 #endif
+
+    logger_status = CreateLogItem(&item, SYSTEM_INITIALIZED, 0, NULL);
+    if (BinaryLogger_OK != logger_status) {
+        abort();
+    }
+    log_item(item);
+    logger_status = DestroyLogItem(&item);
+    char hello[] = "Hello, from Emebbed Software Essentials Project!\n";
+    logger_status = CreateLogItem(&item, INFO, sizeof(hello), &hello);
+    if (BinaryLogger_OK != logger_status) {
+        abort();
+    }
+    log_item(item);
+    logger_status = DestroyLogItem(&item);
+
 
     uint8_t *buffer = malloc(sizeof(uint8_t) * 32);
     uint8_t byte = 0x55u;
@@ -101,11 +129,9 @@ int main(int argc, char **argv)
             case 's':
                 byte = 0x55;
                 log_data(sizeof(uint8_t), &byte);
-                log_string((uint8_t*)"Hello, from Emebbed Software Essentials Project!\n");
-                log_data(sizeof(uint8_t), &byte);
                 log_integer(-4577);
                 log_data(sizeof(uint8_t), &byte);
-                log_string((uint8_t*)"\n");
+                log_string((uint8_t *)"\n");
                 log_data(sizeof(uint8_t), &byte);
                 break;
             default:
