@@ -82,7 +82,11 @@ BinaryLoggerStatus log_data(size_t num_bytes, uint8_t *buffer)
     //instead of the platform so we can run polling on frdm...?
 #if (PLATFORM == PLATFORM_FRDM)
     // make sure transmit buffer empty interrupt is on
-    UART0->C2 |= UART0_C2_TIE(1);
+    //UART0->C2 |= UART0_C2_TIE(1);
+    if (UART0->S1 & UART0_S1_TDRE_MASK) {
+    	// transmit buffer empty, turn on interrupts
+    	UART0->C2 |= UART0_C2_TIE(1);
+    }
 #else // PLATFORM == host || PLATFORM == bbb
     // no interrupts, just write all available data
     bool is_empty;
@@ -152,7 +156,6 @@ BinaryLoggerStatus log_receive_data(size_t num_bytes, uint8_t *buffer)
     // the interrupts....
 #if (PLATFORM == PLATFORM_FRDM)
     // make sure receive buffer full interrupt is on
-    UART0->C2 |= UART0_C2_RIE(1);
     (void)uart_status;
 #else // PLATFORM == host || PLATFORM == bbb
     for (int n = 0; n < num_bytes; n++) {
@@ -168,14 +171,18 @@ BinaryLoggerStatus log_receive_data(size_t num_bytes, uint8_t *buffer)
     }
 #endif
     // extract from circular buffer and pack into user buffer.
-    for (int n = 0; n < num_bytes; n++) {
+    int num_received = 0;
+    int num_polled = 0;
+    int max_polled = 10 * num_bytes;
+    while (num_received < num_bytes && num_polled < max_polled) {
         uint8_t byte;
         cb_status = CircularBufferRemoveItem(logger.receive_buffer, (void *)(&byte));
         if (CB_No_Error == cb_status) {
-            *(buffer + n) = byte;
-        } else {
-            abort();
+            *(buffer + num_received) = byte;
+            num_received++;
         }
+        num_polled++;
+        // FIXME(bja, 2017-03) error handling if we didn't get our desired number of bytes? just return what we got...
     }
     return status;
 }

@@ -38,6 +38,9 @@ int main(int argc, char **argv)
 #
 #endif
 
+#if (PLATFORM == PLATFORM_FRDM)
+    NVIC_EnableIRQ(UART0_IRQn);
+#endif
     BinaryLoggerStatus logger_status = BinaryLogger_OK;
     logger_status = BinaryLoggerInitialize(32);
     if (BinaryLogger_OK != logger_status) {
@@ -137,8 +140,10 @@ int main(int argc, char **argv)
                 log_data(sizeof(uint8_t), &byte);
                 break;
             default:
-                log_data(sizeof(byte), &byte);
+                //log_data(sizeof(byte), &byte);
+            	break;
             }
+            byte = 0x00;
         }
     }
     free(buffer);

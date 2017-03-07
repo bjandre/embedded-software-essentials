@@ -71,6 +71,10 @@ UartStatus frdm_kl25z_uart_initialize(const uint32_t baud)
 
     UART0->C5 |= UART0_C5_BOTHEDGE(1);
 
+    // enable interrupts for the transmitter and receiver
+    UART0->C2 |= UART0_C2_RIE(1);
+    //UART0->C2 |= UART0_C2_TIE(1);
+
     // enable the transmitter and receiver
     UART0->C2 |= UART0_C2_TE(1);
     UART0->C2 |= UART0_C2_RE(1);
