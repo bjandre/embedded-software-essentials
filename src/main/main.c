@@ -11,36 +11,114 @@
 #include "platform-defs.h"
 #include "logger.h"
 
+#include "debug-uart-data.h"
+
+// Global, asynchronously accessed logger instance
 volatile BinaryLogger_t logger;
 
-#if PROJECT == 0
-#    // NOTE(bja, 2017-02): Building main with no project code.
-#elif PROJECT == 1
-#    include "project_1.h"
-#elif PROJECT == 2
-#
-#else
-#    error "Unsupported project number in PROJECT macro. Valid values: 0, 1"
-#endif
+// define the pins for the leds. FIXME(bja, 2017-03) Should be platform
+// dependent!
+typedef enum GPIO_PINS {
+    LED_PIN_RED = 18,
+    LED_PIN_GREEN = 19,
+} GPIO_PINS;
+
+/*
+  initialize_gpio()
+
+  Generic routine to initialize GPIO.
+
+  Wrapper around platform specific code.
+
+  Parameters: none
+
+  Return: none
+ */
+void initialize_gpio(void);
+
+/*
+  initialize_led_pin()
+
+  Generic routine to initialize an led pin.
+
+  Wrapper around platform specific code.
+
+  Parameters: led pin enumeration
+
+  Return: none
+ */
+void initialize_led_pin(GPIO_PINS led_pin);
+
+/*
+  update_leds()
+
+  Generic routine to update led status.
+
+  Wrapper around platform specific code.
+
+  Parameters: none
+
+  Return: none
+ */
+void update_leds(void);
+
+/*
+  hello_logger()
+
+  Output hello through the binary logger.
+
+  Parameters: none
+
+  Return: none
+ */
+void hello_logger(void);
 
 #if (PLATFORM == PLATFORM_FRDM)
 #include "MKL25Z4.h"
-void initialize_led_pin(uint8_t led_pin);
+
+/*
+  frdm_kl25z_initialize_gpio()
+
+  Platform specific code to initialize GPIO.
+
+  Parameters: none
+
+  Return: none
+ */
+void frdm_kl25z_initialize_gpio(void);
+
+/*
+  frdm_kl25z_initialize_leds()
+
+  Platform specific code to initialize leds.
+
+  Parameters: gpio pin for the led
+
+  Return: none
+ */
+void frdm_kl25z_initialize_led_pin(GPIO_PINS led_pin);
+
+/*
+  frdm_kl25z_update_leds()
+
+  Platform specific code to update led state
+
+  Parameters: none
+
+  Return: none
+ */
+void frdm_kl25z_update_leds(void);
 #endif
+
 
 int main(int argc, char **argv)
 {
-    PRINTF("Hello, from Emebbed Software Essentials Project!\n");
-
-#if PROJECT == 1
-    project_1_report();
-#elif PROJECT == 2
-#
-#endif
+    PRINTF("Hello from Emebbed Software Essentials Project!\n");
 
 #if (PLATFORM == PLATFORM_FRDM)
     NVIC_EnableIRQ(UART0_IRQn);
 #endif
+
     BinaryLoggerStatus logger_status = BinaryLogger_OK;
     logger_status = BinaryLoggerInitialize(32);
     if (BinaryLogger_OK != logger_status) {
@@ -54,23 +132,7 @@ int main(int argc, char **argv)
     log_item(item);
     logger_status = DestroyLogItem(&item);
 
-#if (PLATFORM == PLATFORM_FRDM)
-    // enable clock for gpio led pins.
-    SIM->SCGC5 |= SIM_SCGC5_PORTB(1);
-
-    const uint32_t led_red_pin = 18;
-    const uint32_t led_green_pin = 19;
-    initialize_led_pin(led_red_pin);
-    initialize_led_pin(led_green_pin);
-    // toggle led pins
-    GPIOB->PTOR |= (1 << led_green_pin);
-    logger_status = CreateLogItem(&item, GPIO_INITIALIZED, 0, NULL);
-    if (BinaryLogger_OK != logger_status) {
-        abort();
-    }
-    log_item(item);
-    logger_status = DestroyLogItem(&item);
-#endif
+    initialize_gpio();
 
     logger_status = CreateLogItem(&item, SYSTEM_INITIALIZED, 0, NULL);
     if (BinaryLogger_OK != logger_status) {
@@ -78,80 +140,88 @@ int main(int argc, char **argv)
     }
     log_item(item);
     logger_status = DestroyLogItem(&item);
-    char hello[] = "Hello, from Emebbed Software Essentials Project!\n";
+
+    if (0) {
+        hello_logger();
+    }
+
+    size_t const buffer_size = 32 * sizeof(uint8_t);
+    uint8_t *buffer = malloc(buffer_size);
+    /* Add your code here */
+
+    while (1) { /* main event loop */
+        __asm("NOP"); /* breakpoint to stop while looping */
+        update_leds();
+#define DEBUG_UART
+#ifdef DEBUG_UART
+        uint8_t tx_or_rx = 0;
+        debug_uart(tx_or_rx, buffer, buffer_size);
+#endif
+    }
+    free(buffer);
+    return 0;
+}
+
+void hello_logger(void)
+{
+    log_item_t *item;
+    BinaryLoggerStatus logger_status = BinaryLogger_OK;
+    char hello[] = "Hello from Emebbed Software Essentials Project!\n";
     logger_status = CreateLogItem(&item, INFO, sizeof(hello), &hello);
     if (BinaryLogger_OK != logger_status) {
         abort();
     }
     log_item(item);
     logger_status = DestroyLogItem(&item);
+}
 
-
-    uint8_t *buffer = malloc(sizeof(uint8_t) * 32);
-    uint8_t byte = 0x55u;
-    uint32_t data1 = 0xEFBEADDEu;
-    uint32_t data2 = 0xDEC0ADDEu;
-    uint32_t data3 = 0x5555AAAAu;
-    /* Add your code here */
-    uint8_t tx_or_rx = 0;
-
-    while (1) { /* Infinite loop to avoid leaving the main function */
-        __asm("NOP"); /* something to use as a breakpoint stop while looping */
+void initialize_gpio(void)
+{
 #if (PLATFORM == PLATFORM_FRDM)
-        for (uint32_t i = 0; i < 200000; i++) {
-            // do nothing for a while.
-        }
-        // toggle led pins
-        GPIOB->PTOR |= (1 << led_red_pin);
-        GPIOB->PTOR |= (1 << led_green_pin);
+    frdm_kl25z_initialize_gpio();
 #endif
-        if (tx_or_rx) {
-            byte = 0x55u;
-            log_data(sizeof(uint8_t), &byte);
-            log_data(sizeof(data1), (uint8_t *)(&data1));
-            byte = 0xAAu;
-            log_data(sizeof(uint8_t), &byte);
-            log_data(sizeof(data2), (uint8_t *)(&data2));
-        } else {
-            log_receive_data(sizeof(byte), &byte);
-            switch (byte) {
-            case '1':
-                log_data(sizeof(data1), (uint8_t *)(&data1));
-                break;
-            case '2':
-                log_data(sizeof(data2), (uint8_t *)(&data2));
-                break;
-            case '3':
-                log_data(sizeof(data3), (uint8_t *)(&data3));
-                break;
-            case 'a':
-                log_receive_data(sizeof(byte), &byte);
-                uint8_t num_bytes = byte - '0';
-                log_receive_data((size_t)num_bytes, buffer);
-                log_data(sizeof(num_bytes), (uint8_t *)(&num_bytes));
-                log_data(num_bytes, buffer);
-                break;
-            case 's':
-                byte = 0x55;
-                log_data(sizeof(uint8_t), &byte);
-                log_integer(-4577);
-                log_data(sizeof(uint8_t), &byte);
-                log_string((uint8_t *)"\n");
-                log_data(sizeof(uint8_t), &byte);
-                break;
-            default:
-                //log_data(sizeof(byte), &byte);
-                break;
-            }
-            byte = 0x00;
-        }
-    }
-    free(buffer);
-    return 0;
+}
+void initialize_led_pin(GPIO_PINS led_pin)
+{
+#if (PLATFORM == PLATFORM_FRDM)
+    frdm_kl25z_initialize_led_pin(led_pin);
+#else
+    (void)led_pin;
+#endif
+}
+
+void update_leds(void)
+{
+#if (PLATFORM == PLATFORM_FRDM)
+    frdm_kl25z_update_leds();
+#endif
 }
 
 #if (PLATFORM == PLATFORM_FRDM)
-void initialize_led_pin(uint8_t led_pin)
+//
+// platform specific code for the frdm-kl25z
+//
+void frdm_kl25z_initialize_gpio(void)
+{
+    // enable clock for gpio led pins.
+    SIM->SCGC5 |= SIM_SCGC5_PORTB(1);
+
+    initialize_led_pin(LED_PIN_RED);
+    initialize_led_pin(LED_PIN_GREEN);
+    // toggle led pins
+    GPIOB->PTOR |= (1 << LED_PIN_GREEN);
+
+    log_item_t *item;
+    BinaryLoggerStatus logger_status = BinaryLogger_OK;
+    logger_status = CreateLogItem(&item, GPIO_INITIALIZED, 0, NULL);
+    if (BinaryLogger_OK != logger_status) {
+        abort();
+    }
+    log_item(item);
+    logger_status = DestroyLogItem(&item);
+}
+
+void frdm_kl25z_initialize_led_pin(GPIO_PINS led_pin)
 {
     // Initialize the gpio pin for the led
     PORTB->PCR[led_pin] = PORT_PCR_MUX(1);
@@ -161,6 +231,15 @@ void initialize_led_pin(uint8_t led_pin)
     GPIOB->PDOR |= (1 << led_pin);
 }
 
+void frdm_kl25z_update_leds(void)
+{
+    for (uint32_t i = 0; i < 200000; i++) {
+        // do nothing for a while.
+    }
+    // toggle led pins
+    GPIOB->PTOR |= (1 << LED_PIN_RED);
+    GPIOB->PTOR |= (1 << LED_PIN_GREEN);
+}
 
 extern void UART0_IRQHandler(void)
 {

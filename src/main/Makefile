@@ -9,7 +9,8 @@ EXE = $(EXE_BASE)$(PROJECT).$(EXE_EXTENSION)
 BIN = $(EXE:%.$(EXE_EXTENSION)=%.$(BIN_EXTENSION))
 
 SRCS = \
-	main.c
+	main.c \
+	debug-uart-data.c
 
 OBJS = $(SRCS:%.c=%.o)
 
