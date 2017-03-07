@@ -13,7 +13,8 @@ CC_SPECS := --specs=nano.specs --specs=nosys.specs
 
 CC = $(TOOLS_PREFIX)-gcc
 
-CFLAGS = $(ARCH_FLAGS) -D$(DEFINE_CPU) -flto
+CFLAGS = $(ARCH_FLAGS) -D$(DEFINE_CPU) -flto \
+	$(DEFINE_LOGGER_ALGORITHM)=$(LOGGER_INTERRUPTS)
 
 AS = $(TOOLS_PREFIX)-gcc
 

@@ -2,11 +2,14 @@
 # configuration options for native macOS
 #
 CC = cc
-CFLAGS = 
+CFLAGS = $(DEFINE_LOGGER_ALGORITHM)=$(LOGGER_POLLING)
 
 CPPFLAGS = -E
 
 AR = ar
+
+LD = ld
+LDFLAGS = -macosx_version_min $(VERSION_MIN) -lSystem -map $*.map
 
 SIZE = size
 SIZEFLAGS = -m -l -x
@@ -20,6 +23,4 @@ endif
 OBJDUMP = otool
 OBJDUMP_FLAGS = -Vvt
 
-LD = ld
-LDFLAGS = -macosx_version_min $(VERSION_MIN) -lSystem -map $*.map
 

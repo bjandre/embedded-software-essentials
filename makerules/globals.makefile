@@ -1,5 +1,9 @@
 # define some convenience variables 
 
+LOGGER_POLLING := 0
+LOGGER_INTERRUPTS := 1
+DEFINE_LOGGER_ALGORITHM := -DLOGGER_ALGORITHM
+
 EXE_BASE := project
 
 EXE_EXTENSION := out

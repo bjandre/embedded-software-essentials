@@ -1,21 +1,8 @@
 #
 # configuration for native ubuntu builds
 #
+include gcc-linux.makefile
 
-CC = cc
-CFLAGS = 
-
-CPPFLAGS = -E
-
-AR = ar
-
-SIZE = size
-SIZEFLAGS = --format=sysv -x
-
-OBJDUMP = objdump
-OBJDUMP_FLAGS = --disassemble-all --line-numbers --source --full-contents --all-headers
-
-LD = ld
 LDFLAGS = \
 	-L/usr/lib/gcc/x86_64-linux-gnu/5 \
 	-L/usr/lib/gcc/x86_64-linux-gnu/5/../../../x86_64-linux-gnu \

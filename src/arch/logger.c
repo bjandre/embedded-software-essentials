@@ -80,14 +80,14 @@ BinaryLoggerStatus log_data(size_t num_bytes, uint8_t *buffer)
 
     //FIXME(bja, 2017-03) should this based on an interrupt vs polling flag
     //instead of the platform so we can run polling on frdm...?
-#if (PLATFORM == PLATFORM_FRDM)
+#if (PLATFORM == PLATFORM_FRDM) && (LOGGER_ALGORITHM == LOGGER_INTERRUPTS)
     // make sure transmit buffer empty interrupt is on
     //UART0->C2 |= UART0_C2_TIE(1);
     if (UART0->S1 & UART0_S1_TDRE_MASK) {
         // transmit buffer empty, turn on interrupts
         UART0->C2 |= UART0_C2_TIE(1);
     }
-#else // PLATFORM == host || PLATFORM == bbb
+#else // LOGGER_ALGORITHM == LOGGER_POLLING
     // no interrupts, just write all available data
     bool is_empty;
     cb_status = CircularBufferIsEmpty(logger.transmit_buffer, &is_empty);
@@ -154,10 +154,10 @@ BinaryLoggerStatus log_receive_data(size_t num_bytes, uint8_t *buffer)
 
     // extract from uart and pack into the circular buffer. This code goes into
     // the interrupts....
-#if (PLATFORM == PLATFORM_FRDM)
+#if (PLATFORM == PLATFORM_FRDM) && (LOGGER_ALGORITHM == LOGGER_INTERRUPTS)
     // make sure receive buffer full interrupt is on
     (void)uart_status;
-#else // PLATFORM == host || PLATFORM == bbb
+#else // LOGGER_ALGORITHM == LOGGER_POLLING
     for (int n = 0; n < num_bytes; n++) {
         uint8_t byte;
         uart_status = logger.uart.receive_byte(&byte);
