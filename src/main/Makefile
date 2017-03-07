@@ -13,23 +13,42 @@ SRCS = \
 
 OBJS = $(SRCS:%.c=%.o)
 
-LIBS = \
-	-L../util -lutil \
-	-L../arch -larch
-
-DEPEND_LIBS = \
-	../arch/libarch.a \
-	../project-1/libproject1.a \
-	../util/libutil.a
-
 INCLUDES = \
 	-I../arch \
 	-I../util \
 	-I../project-1
 
+DEPEND_LIBS += \
+	../project-1/libproject1.a \
+	../arch/libarch.a
+
+LIBS += \
+	-L../project-1 -lproject1 \
+	-L../arch -larch
+
 ifeq ($(PLATFORM), $(PLATFORM_ENUM_FRDM))
-  DEPEND_STARTUP = ../arch/libfrdm.a
+  INCLUDES += \
+	-I../arch/frdm-kl25z
+  DEPEND_STARTUP += \
+	../arch/frdm-kl25z/libfrdm_startup.a
+  DEPEND_LIBS += \
+	../arch/frdm-kl25z/libesefrdm.a 
+  LIBS += \
+	-L../arch/frdm-kl25z -lesefrdm
+else ifeq ($(PLATFORM), $(PLATFORM_ENUM_HOST))
+  INCLUDES += \
+	-I../arch/host
+  DEPEND_LIBS += \
+	../arch/host/libesehost.a
+  LIBS += \
+	-L../arch/host -lesehost
 endif
+
+LIBS += \
+	-L../util -lutil
+
+DEPEND_LIBS += \
+	../util/libutil.a
 
 TEST_EXE = $(EXE)
 

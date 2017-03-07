@@ -17,29 +17,25 @@ SRCS_HOST = \
 SRCS_FRDM = \
 	uart-frdm-kl25z.c
 
+INCLUDES = -I. -I../util
+
 ifeq ($(PLATFORM), $(PLATFORM_ENUM_HOST))
-  SRCS += $(SRCS_HOST)
+  INCLUDES += -Ihost
 else ifeq ($(PLATFORM), $(PLATFORM_ENUM_BBB))
-  SRCS += $(SRCS_HOST)
+  INCLUDES += -Ihost
 else ifeq ($(PLATFORM), $(PLATFORM_ENUM_FRDM))
-  SRCS += $(SRCS_FRDM)
-  STARTUP_LIB = libfrdm.a
-  STARTUP_SRCS = system_MKL25Z4.c
-  STARTUP_OBJS = $(STARTUP_SRCS:%.c=%.o)
-  ASM_SRCS = startup_MKL25Z4.S
-  ASM_OBJS = $(ASM_SRCS:%.S=%.o)
+  INCLUDES += -Ifrdm-kl25z
 endif
 
 OBJS = $(SRCS:%.c=%.o)
 
-INCLUDES = -I../util
 
 
 # subdirectories that will be built.
-SUBDIRS = 
+SUBDIRS = \
+	host \
+	frdm-kl25z
 #	beagle-bone-black \
-#	freedom \
-#	host
 
 #
 # macro for executing TARGET in all SUBDIRS

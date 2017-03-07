@@ -3,9 +3,11 @@
 #include <stdint.h>
 #include <stdlib.h>
 
-#include "MKL25Z4.h"
-
 #include "platform-defs.h"
+#if (PLATFORM == PLATFORM_FRDM)
+#include "MKL25Z4.h"
+#endif
+
 #include "memory.h"
 #include "data.h"
 #include "circular_buffer.h"

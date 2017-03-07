@@ -25,12 +25,12 @@ AR = $(TOOLS_PREFIX)-gcc-ar
 LD = $(TOOLS_PREFIX)-ld
 
 LDFLAGS = \
-	-T "../arch/MKL25Z128xxx4_flash.ld" \
+	-T "../arch/frdm-kl25z/MKL25Z128xxx4_flash.ld" \
 	--gc-sections -z muldefs \
 	--print-output-format
 
 CC_LDFLAGS = \
-	-T "../arch/MKL25Z128xxx4_flash.ld" \
+	-T "../arch/frdm-kl25z/MKL25Z128xxx4_flash.ld" \
 	-Xlinker --gc-sections -Xlinker -z -Xlinker muldefs \
 	-Xlinker --print-output-format \
 	$(CC_SPECS)

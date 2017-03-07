@@ -1,18 +1,27 @@
 # -*- mode: Makefile -*-
-
 WORKSPACE_PATH := $(shell expr $(PWD) : '\(.*\)/src.*' \| $(PWD))
 MAKERULES = $(abspath $(WORKSPACE_PATH)/makerules)
 
 include $(MAKERULES)/config.makefile
 
-# subdirectories that will be built in order.
-SUBDIRS = \
-	util \
-	arch \
-	project-1 \
-	main
+ifeq ($(PLATFORM), $(PLATFORM_ENUM_HOST))
+LIB = \
+	libesehost.a
 
+SRCS = \
+	uart-host.c
+
+OBJS = $(SRCS:%.c=%.o)
+
+INCLUDES = \
+	-I../util \
+	-I..
+
+
+endif
 
 include $(MAKERULES)/generic.makefile
+
+
 
 
