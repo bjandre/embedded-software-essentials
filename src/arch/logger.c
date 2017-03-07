@@ -14,7 +14,7 @@
 
 #ifdef LOGGING_ENABLED
 
-extern BinaryLogger_t logger;
+extern BinaryLogger_t volatile logger;
 
 static const uint32_t debugger_baud = 115200u;
 static const size_t num_buffer_items = 64;
@@ -84,8 +84,8 @@ BinaryLoggerStatus log_data(size_t num_bytes, uint8_t *buffer)
     // make sure transmit buffer empty interrupt is on
     //UART0->C2 |= UART0_C2_TIE(1);
     if (UART0->S1 & UART0_S1_TDRE_MASK) {
-    	// transmit buffer empty, turn on interrupts
-    	UART0->C2 |= UART0_C2_TIE(1);
+        // transmit buffer empty, turn on interrupts
+        UART0->C2 |= UART0_C2_TIE(1);
     }
 #else // PLATFORM == host || PLATFORM == bbb
     // no interrupts, just write all available data

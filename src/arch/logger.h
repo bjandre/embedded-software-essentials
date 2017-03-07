@@ -1,6 +1,16 @@
 #ifndef ESE_ARCH_LOGGER_H_
 #define ESE_ARCH_LOGGER_H_
 
+/**
+
+   Binary Logger implemenation. Implementation is flexible and works on a
+   generic 'uart', which can be hardware uart or software (printf/getc).
+
+   The logger is global and accessed in critical regions, e.g. interrupts.  All
+   instances must be volatile.
+
+ */
+
 #include <stddef.h>
 #include <stdint.h>
 
@@ -8,8 +18,8 @@
 #include "uart.h"
 
 typedef struct BinaryLogger {
-    CircularBuffer_t *transmit_buffer;
-    CircularBuffer_t *receive_buffer;
+    CircularBuffer_t volatile *transmit_buffer;
+    CircularBuffer_t volatile *receive_buffer;
     uart_t uart;
 } BinaryLogger_t;
 

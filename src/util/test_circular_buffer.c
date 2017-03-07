@@ -57,7 +57,7 @@ void test_cb_allocate_free(void **state)
 {
     // test Allocate-Free - Checks that a new dynamic buffer can be created on the
     // heap
-    CircularBuffer_t *cb = NULL;
+    CircularBuffer_t volatile *cb = NULL;
     size_t num_items = 1;
     size_t bytes_per_item = 1;
     CircularBufferStatus status = CircularBufferNew(&cb, num_items, bytes_per_item);
@@ -72,7 +72,7 @@ void test_cb_allocate_free(void **state)
 void test_cb_new_size_error(void **state)
 {
     // test new returns an error when bytes_per_item is 0
-    CircularBuffer_t *cb = NULL;
+    CircularBuffer_t volatile *cb = NULL;
     size_t num_items = 1;
     size_t bytes_per_item = 0;
     CircularBufferStatus status = CircularBufferNew(&cb, num_items, bytes_per_item);
@@ -85,7 +85,7 @@ void test_cb_new_length_error(void **state)
     // test Allocate-Free - Checks that a new dynamic buffer can be created on the
     // heap
     // test new returns an error when bytes_per_item is 0
-    CircularBuffer_t *cb = NULL;
+    CircularBuffer_t volatile *cb = NULL;
     size_t num_items = 0;
     size_t bytes_per_item = 1;
     CircularBufferStatus status = CircularBufferNew(&cb, num_items, bytes_per_item);
@@ -97,7 +97,7 @@ void test_cb_buffer_null_pointer(void **state)
 {
     // test Invalid Pointer - Check that buffer pointer is valid
     uint32_t data = 12345;
-    CircularBuffer_t *cb = NULL;
+    CircularBuffer_t volatile *cb = NULL;
     CircularBufferStatus status = CircularBufferAddItem(cb, &data);
     assert_int_equal(status, CB_Null_Pointer);
 }
@@ -105,7 +105,7 @@ void test_cb_buffer_null_pointer(void **state)
 void test_cb_item_null_pointer(void **state)
 {
     // test Invalid Pointer - Check that item pointer is valid
-    CircularBuffer_t *cb = NULL;
+    CircularBuffer_t volatile *cb = NULL;
     size_t num_items = 2;
     size_t bytes_per_item = sizeof(num_items);
     CircularBufferStatus status = CircularBufferNew(&cb, num_items, bytes_per_item);
@@ -134,7 +134,7 @@ void test_cb_add_remove_one_item(void **state)
     // test Add-Remove - Check that add and then a remove returns the same item
     // for full length of buffer
     uint32_t data = 12345;
-    CircularBuffer_t *cb = NULL;
+    CircularBuffer_t volatile *cb = NULL;
     size_t num_items = 1;
     size_t bytes_per_item = sizeof(data);
     CircularBufferStatus status = CircularBufferNew(&cb, num_items, bytes_per_item);
@@ -157,7 +157,7 @@ void test_cb_add_remove_n_items_sizeof1(void **state)
     // for full length of buffer
 #define SIZE 10
     uint8_t offset = 123;
-    CircularBuffer_t *cb = NULL;
+    CircularBuffer_t volatile *cb = NULL;
     size_t num_items = SIZE;
     size_t bytes_per_item = sizeof(offset);
     CircularBufferStatus status = CircularBufferNew(&cb, num_items, bytes_per_item);
@@ -196,7 +196,7 @@ void test_cb_add_remove_n_items_sizeof2(void **state)
     // for full length of buffer
 #define SIZE 10
     uint16_t offset = 12345;
-    CircularBuffer_t *cb = NULL;
+    CircularBuffer_t volatile *cb = NULL;
     size_t num_items = SIZE;
     size_t bytes_per_item = sizeof(offset);
     CircularBufferStatus status = CircularBufferNew(&cb, num_items, bytes_per_item);
@@ -235,7 +235,7 @@ void test_cb_add_remove_n_items_sizeof4(void **state)
     // for full length of buffer
 #define SIZE 10
     uint32_t offset = -12345;
-    CircularBuffer_t *cb = NULL;
+    CircularBuffer_t volatile *cb = NULL;
     size_t num_items = SIZE;
     size_t bytes_per_item = sizeof(offset);
     CircularBufferStatus status = CircularBufferNew(&cb, num_items, bytes_per_item);
@@ -273,7 +273,7 @@ void test_cb_buffer_full(void **state)
     // test Buffer Full - Check buffer reports true for full
 #define SIZE 10
     uint32_t offset = -12345;
-    CircularBuffer_t *cb = NULL;
+    CircularBuffer_t volatile *cb = NULL;
     size_t num_items = SIZE;
     size_t bytes_per_item = sizeof(offset);
     CircularBufferStatus status = CircularBufferNew(&cb, num_items, bytes_per_item);
@@ -308,7 +308,7 @@ void test_cb_buffer_empty(void **state)
 {
     // test Buffer Empty - Check buffer reports true for empty
     uint32_t data = 12345;
-    CircularBuffer_t *cb = NULL;
+    CircularBuffer_t volatile *cb = NULL;
     size_t num_items = 1;
     size_t bytes_per_item = sizeof(data);
     CircularBufferStatus status = CircularBufferNew(&cb, num_items, bytes_per_item);
@@ -340,7 +340,7 @@ void test_cb_wrap_add(void **state)
     // add-remove stuff to wrap around a bunch of times.
 #define SIZE 32
     uint32_t offset = 12345;
-    CircularBuffer_t *cb = NULL;
+    CircularBuffer_t volatile *cb = NULL;
     size_t num_items = SIZE / 8;
     size_t bytes_per_item = sizeof(offset);
     CircularBufferStatus status = CircularBufferNew(&cb, num_items, bytes_per_item);
@@ -379,7 +379,7 @@ void test_cb_wrap_remove(void **state)
     // NOTE(bja, 2017-02) size is assumed to be a multiple of 4
 #define SIZE 32
     uint32_t offset = -12345;
-    CircularBuffer_t *cb = NULL;
+    CircularBuffer_t volatile *cb = NULL;
     size_t num_items = SIZE / 4;
     size_t bytes_per_item = sizeof(offset);
     CircularBufferStatus status = CircularBufferNew(&cb, num_items, bytes_per_item);
@@ -445,7 +445,7 @@ void test_cb_over_fill(void **state)
     // added
 #define SIZE 5
     uint16_t offset = 12345;
-    CircularBuffer_t *cb = NULL;
+    CircularBuffer_t volatile *cb = NULL;
     size_t num_items = SIZE;
     size_t bytes_per_item = sizeof(offset);
     CircularBufferStatus status = CircularBufferNew(&cb, num_items, bytes_per_item);
@@ -475,7 +475,7 @@ void test_cb_over_empty(void **state)
     // empty
 #define SIZE 5
     uint16_t offset = 12345;
-    CircularBuffer_t *cb = NULL;
+    CircularBuffer_t volatile *cb = NULL;
     size_t num_items = SIZE;
     size_t bytes_per_item = sizeof(offset);
     CircularBufferStatus status = CircularBufferNew(&cb, num_items, bytes_per_item);
@@ -516,7 +516,7 @@ void test_cb_peak(void **state)
     // remove it.
 #define SIZE 32
     uint32_t offset = 12345;
-    CircularBuffer_t *cb = NULL;
+    CircularBuffer_t volatile *cb = NULL;
     size_t num_items = SIZE / 4;
     size_t bytes_per_item = sizeof(offset);
     CircularBufferStatus status = CircularBufferNew(&cb, num_items, bytes_per_item);

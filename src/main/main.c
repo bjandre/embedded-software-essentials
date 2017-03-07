@@ -11,7 +11,7 @@
 #include "platform-defs.h"
 #include "logger.h"
 
-BinaryLogger_t logger;
+volatile BinaryLogger_t logger;
 
 #if PROJECT == 0
 #    // NOTE(bja, 2017-02): Building main with no project code.
@@ -141,7 +141,7 @@ int main(int argc, char **argv)
                 break;
             default:
                 //log_data(sizeof(byte), &byte);
-            	break;
+                break;
             }
             byte = 0x00;
         }

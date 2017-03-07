@@ -18,7 +18,7 @@ struct uart_t {
                                   uint8_t *bytes);
 };
 
-UartStatus CreateUART(uart_t *uart, UartFunction uart_func);
+UartStatus CreateUART(uart_t volatile *uart, UartFunction uart_func);
 
 
 

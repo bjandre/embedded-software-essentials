@@ -15,7 +15,9 @@ UartStatus uart_transmit_n_bytes(uart_t *uart,
                                  const size_t num_bytes, uint8_t *bytes);
 UartStatus uart_receive_n_bytes(uart_t *uart,
                                 const size_t num_bytes, uint8_t *bytes);
-UartStatus uartSetupDebugger(uart_t *uart);
+UartStatus uartSetupDebugger(uart_t volatile *uart);
+
+
 
 UartStatus uart_transmit_n_bytes(uart_t *uart,
                                  const size_t num_bytes, uint8_t *bytes)
@@ -38,7 +40,7 @@ UartStatus uart_receive_n_bytes(uart_t *uart, const size_t num_bytes,
 }
 
 
-UartStatus CreateUART(uart_t *uart, UartFunction uart_function)
+UartStatus CreateUART(uart_t volatile *uart, UartFunction uart_function)
 {
     UartStatus status = UART_Status_OK;
 
@@ -55,7 +57,7 @@ UartStatus CreateUART(uart_t *uart, UartFunction uart_function)
     return status;
 }
 
-UartStatus uartSetupDebugger(uart_t *uart)
+UartStatus uartSetupDebugger(uart_t volatile *uart)
 {
     UartStatus status = UART_Status_OK;
 #if (PLATFORM == PLATFORM_HOST) || (PLATFORM == PLATFORM_BBB)

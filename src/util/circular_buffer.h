@@ -2,6 +2,25 @@
 #define ESE_UTIL_CIRCULAR_BUFFER_H_
 
 #include <stdbool.h>
+/**
+
+   FIFO - circular buffer implementation.
+
+   It is assumed that the primary use of the circular buffer is to move data
+   into and out of critical regions of the code, e.g. between the main theread
+   and interrupts. As a consequence, all circular buffer instances are required
+   to be volatile.
+
+   FIXME(bja, 2017-03) The project 2 API doesn't consider the use case of adding
+   N items. If the user needs to add N items, but the available space is less
+   than N, the user won't find out about it until after they have already added
+   items to the buffer. If it doesn't make sense to add a partial block, then
+   there is no way to remove the partial data (FIFO). So the user is stuck
+   polling until it can add all the data.
+
+
+
+*/
 
 typedef struct CircularBuffer_t CircularBuffer_t;
 
@@ -26,7 +45,7 @@ typedef enum CircularBufferStatus_t {
 
    Returns: CircularBufferStatus corresponding to action or buffer status
  */
-CircularBufferStatus CircularBufferAddItem(CircularBuffer_t *cb,
+CircularBufferStatus CircularBufferAddItem(CircularBuffer_t volatile *cb,
         void *item);
 
 /**
@@ -39,7 +58,7 @@ CircularBufferStatus CircularBufferAddItem(CircularBuffer_t *cb,
 
    Returns: CircularBufferStatus corresponding to action or buffer status
  */
-CircularBufferStatus CircularBufferRemoveItem(CircularBuffer_t *cb,
+CircularBufferStatus CircularBufferRemoveItem(CircularBuffer_t volatile *cb,
         void *item);
 
 /**
@@ -55,7 +74,8 @@ CircularBufferStatus CircularBufferRemoveItem(CircularBuffer_t *cb,
             this returns CB_No_Error or CB_Null. CB_Full only returned when
             trying to add an item to a full buffer.
  */
-CircularBufferStatus CircularBufferIsFull(CircularBuffer_t *cb, bool *is_full);
+CircularBufferStatus CircularBufferIsFull(CircularBuffer_t volatile *cb,
+        bool *is_full);
 
 
 /**
@@ -71,7 +91,7 @@ CircularBufferStatus CircularBufferIsFull(CircularBuffer_t *cb, bool *is_full);
             this returns CB_No_Error or CB_Null. CB_Empyt only returned when
             trying to remove an item from an empty buffer.
  */
-CircularBufferStatus CircularBufferIsEmpty(CircularBuffer_t *cb,
+CircularBufferStatus CircularBufferIsEmpty(CircularBuffer_t volatile *cb,
         bool *is_empty);
 
 
@@ -86,7 +106,7 @@ CircularBufferStatus CircularBufferIsEmpty(CircularBuffer_t *cb,
 
    Returns: CircularBufferStatus corresponding to action or buffer status
  */
-CircularBufferStatus CircularBufferPeakItem(CircularBuffer_t *cb,
+CircularBufferStatus CircularBufferPeakItem(CircularBuffer_t volatile *cb,
         const size_t index, void *item);
 
 /**
@@ -101,7 +121,7 @@ CircularBufferStatus CircularBufferPeakItem(CircularBuffer_t *cb,
 
    Returns: CircularBufferStatus corresponding to action or buffer status
  */
-CircularBufferStatus CircularBufferNew(CircularBuffer_t **cb,
+CircularBufferStatus CircularBufferNew(volatile CircularBuffer_t *volatile *cb,
                                        const size_t num_items,
                                        const size_t bytes_per_item);
 
@@ -114,6 +134,7 @@ CircularBufferStatus CircularBufferNew(CircularBuffer_t **cb,
 
    Returns: CircularBufferStatus corresponding to action or buffer status
  */
-CircularBufferStatus CircularBufferDestroy(CircularBuffer_t **cb);
+CircularBufferStatus CircularBufferDestroy(volatile CircularBuffer_t *volatile
+        *cb);
 
 #endif // ESE_UTIL_CIRCULAR_BUFFER_H_

@@ -17,13 +17,13 @@ struct CircularBuffer_t {
     void *buffer_end; // End of the allocated buffer.
 };
 
-void ClearCircularBuffer(CircularBuffer_t *cb);
-CircularBufferStatus InitCircularBuffer(CircularBuffer_t *cb,
+void ClearCircularBuffer(CircularBuffer_t volatile *cb);
+CircularBufferStatus InitCircularBuffer(CircularBuffer_t volatile *cb,
                                         const size_t num_items,
                                         const size_t bytes_per_item);
-void *NewBufferPosition(CircularBuffer_t *cb, void *current_position);
+void *NewBufferPosition(CircularBuffer_t volatile *cb, void *current_position);
 
-void *NewBufferPosition(CircularBuffer_t *cb, void *current_position)
+void *NewBufferPosition(CircularBuffer_t volatile *cb, void *current_position)
 {
     void *new_position = current_position + cb->bytes_per_item;
     if (new_position > cb->buffer_end - cb->bytes_per_item) {
@@ -32,7 +32,7 @@ void *NewBufferPosition(CircularBuffer_t *cb, void *current_position)
     return new_position;
 }
 
-CircularBufferStatus CircularBufferAddItem(CircularBuffer_t *cb,
+CircularBufferStatus CircularBufferAddItem(CircularBuffer_t volatile *cb,
         void *item)
 {
     CircularBufferStatus status = CB_No_Error;
@@ -52,7 +52,8 @@ CircularBufferStatus CircularBufferAddItem(CircularBuffer_t *cb,
     return status;
 }
 
-CircularBufferStatus CircularBufferRemoveItem(CircularBuffer_t *cb, void *item)
+CircularBufferStatus CircularBufferRemoveItem(CircularBuffer_t volatile *cb,
+        void *item)
 {
     CircularBufferStatus status = CB_No_Error;
     if (NULL == item || NULL == cb) {
@@ -71,7 +72,8 @@ CircularBufferStatus CircularBufferRemoveItem(CircularBuffer_t *cb, void *item)
     return status;
 }
 
-CircularBufferStatus CircularBufferIsFull(CircularBuffer_t *cb, bool *is_full)
+CircularBufferStatus CircularBufferIsFull(CircularBuffer_t volatile *cb,
+        bool *is_full)
 {
     CircularBufferStatus status = CB_No_Error;
     if (NULL == cb || NULL == is_full) {
@@ -86,7 +88,8 @@ CircularBufferStatus CircularBufferIsFull(CircularBuffer_t *cb, bool *is_full)
 }
 
 
-CircularBufferStatus CircularBufferIsEmpty(CircularBuffer_t *cb, bool *is_empty)
+CircularBufferStatus CircularBufferIsEmpty(CircularBuffer_t volatile *cb,
+        bool *is_empty)
 {
     CircularBufferStatus status = CB_No_Error;
     if (NULL == cb || NULL == is_empty) {
@@ -101,7 +104,7 @@ CircularBufferStatus CircularBufferIsEmpty(CircularBuffer_t *cb, bool *is_empty)
 }
 
 
-CircularBufferStatus CircularBufferPeakItem(CircularBuffer_t *cb,
+CircularBufferStatus CircularBufferPeakItem(CircularBuffer_t volatile *cb,
         const size_t index, void *item)
 {
     CircularBufferStatus status = CB_No_Error;
@@ -123,7 +126,7 @@ CircularBufferStatus CircularBufferPeakItem(CircularBuffer_t *cb,
     return status;
 }
 
-CircularBufferStatus CircularBufferNew(CircularBuffer_t **cb,
+CircularBufferStatus CircularBufferNew(volatile CircularBuffer_t *volatile *cb,
                                        const size_t num_items,
                                        const size_t bytes_per_item)
 {
@@ -150,7 +153,7 @@ CircularBufferStatus CircularBufferNew(CircularBuffer_t **cb,
     return status;
 }
 
-CircularBufferStatus InitCircularBuffer(CircularBuffer_t *cb,
+CircularBufferStatus InitCircularBuffer(CircularBuffer_t volatile *cb,
                                         const size_t num_items,
                                         const size_t bytes_per_item)
 {
@@ -188,18 +191,19 @@ CircularBufferStatus InitCircularBuffer(CircularBuffer_t *cb,
     return status;
 }
 
-CircularBufferStatus CircularBufferDestroy(CircularBuffer_t **cb)
+CircularBufferStatus CircularBufferDestroy(volatile CircularBuffer_t *volatile
+        *cb)
 {
     if (NULL != *cb) {
         free((*cb)->buffer);
     }
-    free(*cb);
+    free((void *)*cb);
     *cb = NULL;
 
     return CB_No_Error;
 }
 
-void ClearCircularBuffer(CircularBuffer_t *cb)
+void ClearCircularBuffer(CircularBuffer_t volatile *cb)
 {
     cb->buffer = NULL;
     cb->head = NULL;
