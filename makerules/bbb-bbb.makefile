@@ -1,7 +1,7 @@
 #
 # configuration for native BeagleBone Black builds
 #
-include gcc-linux.makefile
+include $(MAKERULES)/gcc-linux.makefile
 
 LDFLAGS = \
 	-L/usr/lib/gcc/arm-linux-gnueabihf/4.6 \

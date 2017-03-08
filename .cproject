@@ -133,7 +133,7 @@
 						</toolChain>
 					</folderInfo>
 					<sourceEntries>
-						<entry excluding="src/arch/uart-host.c|3rd-party|src/hw3|src/project-2|src/util/test_utils.c|src/util/test_memory.c|src/util/test_data.c|src/util/test_circular_buffer.c|src/util/test_bit-operations.c" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
+						<entry excluding="src/arch/host|src/arch/uart-host.c|3rd-party|src/hw3|src/project-2|src/util/test_utils.c|src/util/test_memory.c|src/util/test_data.c|src/util/test_circular_buffer.c|src/util/test_bit-operations.c" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>
@@ -189,8 +189,20 @@
 								<option id="ilg.gnuarmeclipse.managedbuild.cross.option.c.compiler.std.193010360" name="Language standard" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.c.compiler.std" useByScannerDiscovery="true" value="ilg.gnuarmeclipse.managedbuild.cross.option.c.compiler.std.c99" valueType="enumerated"/>
 								<option id="ilg.gnuarmeclipse.managedbuild.cross.option.c.compiler.defs.318227116" name="Defined symbols (-D)" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.c.compiler.defs" useByScannerDiscovery="false" valueType="definedSymbols">
 									<listOptionValue builtIn="false" value="CPU_MKL25Z128VLK4"/>
+									<listOptionValue builtIn="false" value="BARE_METAL"/>
+									<listOptionValue builtIn="false" value="LOGGER_ALGORITHM=1"/>
 									<listOptionValue builtIn="false" value="LOGGING_ENABLED"/>
 									<listOptionValue builtIn="false" value="PLATFORM=2"/>
+								</option>
+								<option id="ilg.gnuarmeclipse.managedbuild.cross.option.c.compiler.include.paths.1105610241" name="Include paths (-I)" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.c.compiler.include.paths" useByScannerDiscovery="false" valueType="includePath">
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src/util}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src/arch}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src/arch/frdm-kl25z}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src/arch/host}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src/main}&quot;"/>
+								</option>
+								<option id="ilg.gnuarmeclipse.managedbuild.cross.option.c.compiler.undef.497446588" name="Undefined symbols (-U)" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.c.compiler.undef" useByScannerDiscovery="false" valueType="undefDefinedSymbols">
+									<listOptionValue builtIn="false" value="MOCK_RECEIVE_DATA_INTERRUPT"/>
 								</option>
 								<inputType id="ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler.input.1359102643" superClass="ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler.input"/>
 							</tool>
@@ -199,7 +211,7 @@
 								<option id="ilg.gnuarmeclipse.managedbuild.cross.option.c.linker.gcsections.2129298683" name="Remove unused sections (-Xlinker --gc-sections)" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.c.linker.gcsections" value="true" valueType="boolean"/>
 								<option id="ilg.gnuarmeclipse.managedbuild.cross.option.c.linker.usenewlibnano.2145851717" name="Use newlib-nano (--specs=nano.specs)" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.c.linker.usenewlibnano" value="true" valueType="boolean"/>
 								<option id="ilg.gnuarmeclipse.managedbuild.cross.option.c.linker.scriptfile.1944845472" name="Script files (-T)" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.c.linker.scriptfile" valueType="stringList">
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src/arch/MKL25Z128xxx4_flash.ld}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src/arch/frdm-kl25z/MKL25Z128xxx4_flash.ld}&quot;"/>
 								</option>
 								<option id="ilg.gnuarmeclipse.managedbuild.cross.option.c.linker.other.332311367" name="Other linker flags" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.c.linker.other" value="--specs=nosys.specs" valueType="string"/>
 								<inputType id="ilg.gnuarmeclipse.managedbuild.cross.tool.c.linker.input.410588015" superClass="ilg.gnuarmeclipse.managedbuild.cross.tool.c.linker.input">
@@ -259,6 +271,9 @@
 							<tool id="ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler.1288547811" name="Cross ARM C Compiler" superClass="ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler.1226851946">
 								<option id="ilg.gnuarmeclipse.managedbuild.cross.option.c.compiler.include.paths.367479223" name="Include paths (-I)" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.c.compiler.include.paths" valueType="includePath">
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src/util}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src/arch}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src/arch/host}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src/arch/frdm-kl25z}&quot;"/>
 								</option>
 								<inputType id="ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler.input.997102516" superClass="ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler.input"/>
 							</tool>
@@ -269,6 +284,52 @@
 							<tool id="ilg.gnuarmeclipse.managedbuild.cross.tool.createflash.1035092105" name="Cross ARM GNU Create Flash Image" superClass="ilg.gnuarmeclipse.managedbuild.cross.tool.createflash.1757046242"/>
 							<tool id="ilg.gnuarmeclipse.managedbuild.cross.tool.createlisting.353269141" name="Cross ARM GNU Create Listing" superClass="ilg.gnuarmeclipse.managedbuild.cross.tool.createlisting.1252135196"/>
 							<tool id="ilg.gnuarmeclipse.managedbuild.cross.tool.printsize.1489352131" name="Cross ARM GNU Print Size" superClass="ilg.gnuarmeclipse.managedbuild.cross.tool.printsize.1658314293"/>
+						</toolChain>
+					</folderInfo>
+					<folderInfo id="ilg.gnuarmeclipse.managedbuild.cross.config.elf.debug.159798083.2064686778" name="/" resourcePath="src/arch/frdm-kl25z">
+						<toolChain id="ilg.gnuarmeclipse.managedbuild.cross.toolchain.elf.debug.1235983760" name="Cross ARM GCC" superClass="ilg.gnuarmeclipse.managedbuild.cross.toolchain.elf.debug" unusedChildren="">
+							<option id="ilg.gnuarmeclipse.managedbuild.cross.option.optimization.level.1923492211.1503401904.744805022" name="Optimization Level" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.optimization.level.1923492211.1503401904"/>
+							<option id="ilg.gnuarmeclipse.managedbuild.cross.option.optimization.messagelength.1769770196.239126726.620091039" name="Message length (-fmessage-length=0)" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.optimization.messagelength.1769770196.239126726"/>
+							<option id="ilg.gnuarmeclipse.managedbuild.cross.option.optimization.signedchar.821504264.1561444435.2061710954" name="'char' is signed (-fsigned-char)" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.optimization.signedchar.821504264.1561444435"/>
+							<option id="ilg.gnuarmeclipse.managedbuild.cross.option.optimization.functionsections.190017876.1637130737.189508070" name="Function sections (-ffunction-sections)" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.optimization.functionsections.190017876.1637130737"/>
+							<option id="ilg.gnuarmeclipse.managedbuild.cross.option.optimization.datasections.1632619945.38719567.1316809476" name="Data sections (-fdata-sections)" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.optimization.datasections.1632619945.38719567"/>
+							<option id="ilg.gnuarmeclipse.managedbuild.cross.option.debugging.level.1481204457.1020280444.1941688637" name="Debug level" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.debugging.level.1481204457.1020280444"/>
+							<option id="ilg.gnuarmeclipse.managedbuild.cross.option.debugging.format.135075314.367760858.274931235" name="Debug format" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.debugging.format.135075314.367760858"/>
+							<option id="ilg.gnuarmeclipse.managedbuild.cross.option.toolchain.name.1749057049.1601821311.474243438" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.toolchain.name.1749057049.1601821311"/>
+							<option id="ilg.gnuarmeclipse.managedbuild.cross.option.architecture.502981792.745629525.1665538012" name="Architecture" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.architecture.502981792.745629525"/>
+							<option id="ilg.gnuarmeclipse.managedbuild.cross.option.arm.target.family.848178300.2118946133.552774976" name="ARM family" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.arm.target.family.848178300.2118946133"/>
+							<option id="ilg.gnuarmeclipse.managedbuild.cross.option.arm.target.instructionset.1063816851.1442402692.1920871213" name="Instruction set" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.arm.target.instructionset.1063816851.1442402692"/>
+							<option id="ilg.gnuarmeclipse.managedbuild.cross.option.command.prefix.1038377261.1786291597.1882616152" name="Prefix" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.command.prefix.1038377261.1786291597"/>
+							<option id="ilg.gnuarmeclipse.managedbuild.cross.option.command.c.729336989.1443098653.415207903" name="C compiler" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.command.c.729336989.1443098653"/>
+							<option id="ilg.gnuarmeclipse.managedbuild.cross.option.command.cpp.734672576.893368874.412934729" name="C++ compiler" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.command.cpp.734672576.893368874"/>
+							<option id="ilg.gnuarmeclipse.managedbuild.cross.option.command.ar.681757599.335810688.2070790451" name="Archiver" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.command.ar.681757599.335810688"/>
+							<option id="ilg.gnuarmeclipse.managedbuild.cross.option.command.objcopy.1318765066.1540417621.1643839660" name="Hex/Bin converter" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.command.objcopy.1318765066.1540417621"/>
+							<option id="ilg.gnuarmeclipse.managedbuild.cross.option.command.objdump.1153664014.1917871649.724912534" name="Listing generator" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.command.objdump.1153664014.1917871649"/>
+							<option id="ilg.gnuarmeclipse.managedbuild.cross.option.command.size.1631548555.400802814.1693470660" name="Size command" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.command.size.1631548555.400802814"/>
+							<option id="ilg.gnuarmeclipse.managedbuild.cross.option.command.make.865572560.2047383170.914264195" name="Build command" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.command.make.865572560.2047383170"/>
+							<option id="ilg.gnuarmeclipse.managedbuild.cross.option.command.rm.1411877063.475117096.898030149" name="Remove command" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.command.rm.1411877063.475117096"/>
+							<option id="ilg.gnuarmeclipse.managedbuild.cross.option.addtools.createflash.1703915947.1687966569.996703179" name="Create flash image" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.addtools.createflash.1703915947.1687966569"/>
+							<option id="ilg.gnuarmeclipse.managedbuild.cross.option.addtools.printsize.644027954.469431396.1167664625" name="Print size" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.addtools.printsize.644027954.469431396"/>
+							<option id="ilg.gnuarmeclipse.managedbuild.cross.option.warnings.toerrors.340132678.1201307843.345171442" name="Generate errors instead of warnings (-Werror)" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.warnings.toerrors.340132678.1201307843"/>
+							<option id="ilg.gnuarmeclipse.managedbuild.cross.option.warnings.allwarn.1344067081.141183876.1272587280" name="Enable all common warnings (-Wall)" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.warnings.allwarn.1344067081.141183876"/>
+							<targetPlatform archList="all" binaryParser="org.eclipse.cdt.core.ELF" id="ilg.gnuarmeclipse.managedbuild.cross.targetPlatform" isAbstract="false" osList="all" superClass="ilg.gnuarmeclipse.managedbuild.cross.targetPlatform"/>
+							<tool id="ilg.gnuarmeclipse.managedbuild.cross.tool.assembler.848164857" name="Cross ARM GNU Assembler" superClass="ilg.gnuarmeclipse.managedbuild.cross.tool.assembler.1207269596">
+								<inputType id="ilg.gnuarmeclipse.managedbuild.cross.tool.assembler.input.1999419478" superClass="ilg.gnuarmeclipse.managedbuild.cross.tool.assembler.input"/>
+							</tool>
+							<tool id="ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler.1241037285" name="Cross ARM C Compiler" superClass="ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler.1288547811">
+								<option id="ilg.gnuarmeclipse.managedbuild.cross.option.c.compiler.include.paths.14180047" name="Include paths (-I)" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.c.compiler.include.paths" valueType="includePath">
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src/util}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src/arch}&quot;"/>
+								</option>
+								<inputType id="ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler.input.297925420" superClass="ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler.input"/>
+							</tool>
+							<tool id="ilg.gnuarmeclipse.managedbuild.cross.tool.cpp.compiler.647772376" name="Cross ARM C++ Compiler" superClass="ilg.gnuarmeclipse.managedbuild.cross.tool.cpp.compiler.1633605535"/>
+							<tool id="ilg.gnuarmeclipse.managedbuild.cross.tool.c.linker.1096589415" name="Cross ARM C Linker" superClass="ilg.gnuarmeclipse.managedbuild.cross.tool.c.linker.223086422"/>
+							<tool id="ilg.gnuarmeclipse.managedbuild.cross.tool.cpp.linker.997180157" name="Cross ARM C++ Linker" superClass="ilg.gnuarmeclipse.managedbuild.cross.tool.cpp.linker.603391002"/>
+							<tool id="ilg.gnuarmeclipse.managedbuild.cross.tool.archiver.1745943973" name="Cross ARM GNU Archiver" superClass="ilg.gnuarmeclipse.managedbuild.cross.tool.archiver.1181096452"/>
+							<tool id="ilg.gnuarmeclipse.managedbuild.cross.tool.createflash.570822394" name="Cross ARM GNU Create Flash Image" superClass="ilg.gnuarmeclipse.managedbuild.cross.tool.createflash.1035092105"/>
+							<tool id="ilg.gnuarmeclipse.managedbuild.cross.tool.createlisting.1802354302" name="Cross ARM GNU Create Listing" superClass="ilg.gnuarmeclipse.managedbuild.cross.tool.createlisting.353269141"/>
+							<tool id="ilg.gnuarmeclipse.managedbuild.cross.tool.printsize.1943107311" name="Cross ARM GNU Print Size" superClass="ilg.gnuarmeclipse.managedbuild.cross.tool.printsize.1489352131"/>
 						</toolChain>
 					</folderInfo>
 					<folderInfo id="ilg.gnuarmeclipse.managedbuild.cross.config.elf.debug.159798083.1807549010" name="/" resourcePath="src/project-1">
@@ -349,6 +410,7 @@
 							<tool id="ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler.635969319" name="Cross ARM C Compiler" superClass="ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler.1226851946">
 								<option id="ilg.gnuarmeclipse.managedbuild.cross.option.c.compiler.include.paths.1067240193" name="Include paths (-I)" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.c.compiler.include.paths" valueType="includePath">
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src/arch}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src/arch/frdm-kl25z}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src/util}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src/project-1}&quot;"/>
 								</option>
@@ -364,7 +426,7 @@
 						</toolChain>
 					</folderInfo>
 					<sourceEntries>
-						<entry excluding="src/arch/uart-host.c|3rd-party|src/hw3|src/project-2|src/util/test_utils.c|src/util/test_memory.c|src/util/test_data.c|src/util/test_circular_buffer.c|src/util/test_bit-operations.c" flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name=""/>
+						<entry excluding="src/arch/host|src/arch/uart-host.c|3rd-party|src/hw3|src/project-2|src/util/test_utils.c|src/util/test_memory.c|src/util/test_data.c|src/util/test_circular_buffer.c|src/util/test_bit-operations.c" flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name=""/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>

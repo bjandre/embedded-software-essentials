@@ -1,7 +1,7 @@
 #
 # configuration for native ubuntu builds
 #
-include gcc-linux.makefile
+include $(MAKERULES)/gcc-linux.makefile
 
 LDFLAGS = \
 	-L/usr/lib/gcc/x86_64-linux-gnu/5 \

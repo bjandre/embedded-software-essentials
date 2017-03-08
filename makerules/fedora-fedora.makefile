@@ -1,4 +1,5 @@
 #
 # configuration for native fedora builds
 #
-include gcc-linux.makefile
+include $(MAKERULES)/gcc-linux.makefile
+
