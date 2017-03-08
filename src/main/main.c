@@ -1,10 +1,12 @@
 #ifdef BARE_METAL
 #define PRINTF(X)
 #else
+#define MOCK_RECEIVE_DATA_INTERRUPT
 #define PRINTF(ARGS) printf(ARGS)
 #include <stdio.h>
 #endif
 
+#include <stdbool.h>
 #include <stdint.h>
 #include <stdlib.h>
 
@@ -14,8 +16,11 @@
 #include "analyze-data.h"
 #include "debug-uart-data.h"
 
-// Global, asynchronously accessed logger instance
+#include "async-global.h"
+
+// Global, asynchronously accessed data instances
 volatile BinaryLogger_t logger;
+volatile async_data_t global_async_data;
 
 // define the pins for the leds. FIXME(bja, 2017-03) Should be platform
 // dependent!
@@ -116,6 +121,8 @@ int main(int argc, char **argv)
 {
     //PRINTF("Hello from Emebbed Software Essentials Project!\n");
 
+    global_async_data.data_available = false;
+
 #if (PLATFORM == PLATFORM_FRDM)
     NVIC_EnableIRQ(UART0_IRQn);
 #endif
@@ -160,7 +167,17 @@ int main(int argc, char **argv)
 
     uint8_t byte;
     uint8_t const num_required = 16;
+    uint8_t num_received = 0;
     data_summary_t data_summary;
+    bool data_available;
+    clear_data_summary(&data_summary);
+
+    logger_status = UpdateLogItem(item, DATA_ANALYSIS_STARTED, zero_payload_bytes,
+                                  null_payload);
+    if (BinaryLogger_OK != logger_status) {
+        abort();
+    }
+    log_item(item);
 
     while (1) { /* main event loop */
         __asm("NOP"); /* breakpoint to stop while looping */
@@ -170,32 +187,42 @@ int main(int argc, char **argv)
         uint8_t tx_or_rx = 0;
         debug_uart(tx_or_rx, buffer, buffer_size);
 #endif
-        logger_status = UpdateLogItem(item, DATA_ANALYSIS_STARTED, zero_payload_bytes,
-                                      null_payload);
-        if (BinaryLogger_OK != logger_status) {
-            abort();
-        }
-        log_item(item);
 
-        clear_data_summary(&data_summary);
-        for (uint8_t n = 0; n < num_required; n++) {
+#ifdef MOCK_RECEIVE_DATA_INTERRUPT
+        global_async_data.data_available = true;
+#endif
+
+        {
+            // NOTE(bja, 2017-03) critical region accessing global data.
+            data_available = global_async_data.data_available;
+            global_async_data.data_available = false;
+        }
+
+        if (data_available) {
             log_receive_data(1, &byte);
             logger_status = UpdateLogItem(item, DATA_RECEIVED, 1, &byte);
             if (BinaryLogger_OK != logger_status) {
                 abort();
             }
             log_item(item);
-
+            num_received++;
             process_data(&data_summary, byte);
         }
-        log_data_analysis(item, &data_summary);
-        logger_status = UpdateLogItem(item, DATA_ANALYSIS_COMPLETED, zero_payload_bytes,
-                                      null_payload);
-        if (BinaryLogger_OK != logger_status) {
+
+        if (num_received == num_required) {
+            log_data_analysis(item, &data_summary);
+            logger_status = UpdateLogItem(item, DATA_ANALYSIS_COMPLETED,
+                                          zero_payload_bytes, null_payload);
+            if (BinaryLogger_OK != logger_status) {
+                abort();
+            }
+            log_item(item);
+            clear_data_summary(&data_summary);
+            num_received = 0;
+#ifdef MOCK_RECEIVE_DATA_INTERRUPT
             abort();
+#endif
         }
-        log_item(item);
-        abort();
     }
 #ifdef DEBUG_UART
     free(buffer);
@@ -300,7 +327,11 @@ extern void UART0_IRQHandler(void)
     if (UART0->S1 & UART0_S1_RDRF_MASK) {
         // received data register full
         byte = UART0->D;
-        cb_status = CircularBufferAddItem(logger.receive_buffer, &byte);
+        {
+            // NOTE(bja, 2017-03) critical region accessing global data.
+            cb_status = CircularBufferAddItem(logger.receive_buffer, &byte);
+            global_async_data.data_available = true;
+        }
         if (CB_No_Error == cb_status) {
             // do nothing? status flag is automatically reset
         } else {
@@ -308,7 +339,10 @@ extern void UART0_IRQHandler(void)
         }
     } else if (UART0->S1 & UART0_S1_TDRE_MASK) {
         // transmit data register empty
-        cb_status = CircularBufferRemoveItem(logger.transmit_buffer, &byte);
+        {
+            // NOTE(bja, 2017-03) critical region accessing global data.
+            cb_status = CircularBufferRemoveItem(logger.transmit_buffer, &byte);
+        }
         if (CB_No_Error == cb_status) {
             // successfully removed item.
             UART0->D = byte;

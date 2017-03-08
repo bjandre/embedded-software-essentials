@@ -14,7 +14,7 @@ SRCS = \
 OBJS = $(SRCS:%.c=%.o)
 
 INCLUDES = \
-	-I../util \
+	-I../../util \
 	-I..
 
 
