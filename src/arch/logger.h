@@ -26,8 +26,10 @@ typedef struct BinaryLogger {
 typedef enum BinaryLoggerStatus {
     BinaryLogger_OK,
     BinaryLogger_Error,
+    BinaryLogger_Null,
     BinaryLogger_ItemAllocationError,
     BinaryLogger_ItemNULL,
+    BinaryLogger_DataNull,
 } BinaryLoggerStatus;
 
 typedef enum BinaryLoggerID {
@@ -47,25 +49,32 @@ typedef enum BinaryLoggerID {
     DATA_ANALYSIS_COMPLETED,
 } BinaryLoggerID;
 
+typedef uint8_t logger_size_t;
+static logger_size_t const max_payload_bytes = UINT8_MAX;
+static const logger_size_t zero_payload_bytes = 0;
+static const void *null_payload = NULL;
+
+// NOTE(bja, 2017-03) log item is limited to a max of UINT8_MAX items
 typedef struct BinaryLoggerData {
     BinaryLoggerID id;
-    size_t payload_num_bytes;
-    void *payload;
+    logger_size_t payload_num_bytes;
+    uint8_t *payload;
 } log_item_t;
 
-BinaryLoggerStatus BinaryLoggerInitialize(size_t num_bytes);
+BinaryLoggerStatus BinaryLoggerInitialize(logger_size_t num_bytes);
 
-BinaryLoggerStatus log_data(size_t num_bytes, uint8_t *buffer);
+BinaryLoggerStatus log_data(logger_size_t num_bytes, uint8_t *buffer);
 BinaryLoggerStatus log_string(uint8_t *string);
 BinaryLoggerStatus log_integer(int32_t integer);
 BinaryLoggerStatus log_flush(void);
 
-BinaryLoggerStatus log_receive_data(size_t num_bytes, uint8_t *buffer);
+BinaryLoggerStatus log_receive_data(logger_size_t num_bytes, uint8_t *buffer);
 
-BinaryLoggerStatus CreateLogItem(log_item_t **item, BinaryLoggerID id,
-                                 size_t num_bytes, void *payload);
+BinaryLoggerStatus CreateLogItem(log_item_t **item);
+BinaryLoggerStatus UpdateLogItem(log_item_t *item, BinaryLoggerID id,
+                                 logger_size_t num_bytes, const void *payload);
 BinaryLoggerStatus DestroyLogItem(log_item_t **item);
-BinaryLoggerStatus log_item(log_item_t *item);
+BinaryLoggerStatus log_item(const log_item_t *item);
 
 
 #endif // ESE_ARCH_LOGGER_H_

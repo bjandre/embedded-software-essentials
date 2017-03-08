@@ -4,12 +4,13 @@ MAKERULES = $(WORKSPACE_PATH)/makerules
 
 include $(MAKERULES)/config.makefile
 
-EXE = $(EXE_BASE)$(PROJECT).$(EXE_EXTENSION)
+EXE = $(EXE_BASE).$(EXE_EXTENSION)
 
 BIN = $(EXE:%.$(EXE_EXTENSION)=%.$(BIN_EXTENSION))
 
 SRCS = \
 	main.c \
+	analyze-data.c \
 	debug-uart-data.c
 
 OBJS = $(SRCS:%.c=%.o)
@@ -52,6 +53,8 @@ DEPEND_LIBS += \
 	../util/libutil.a
 
 TEST_EXE = $(EXE)
+
+TEST_EXE_ARGS = < console-input.txt | ./ese-process-logs.py
 
 include $(MAKERULES)/generic.makefile
 

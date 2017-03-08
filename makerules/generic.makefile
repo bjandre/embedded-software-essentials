@@ -68,7 +68,7 @@ endif
 test : $(SUBDIRS) all $(TEST_EXE)
 ifdef TEST_EXE
 	if [ -e ./$(TEST_EXE) ]; then \
-    ./$(TEST_EXE); \
+    ./$(TEST_EXE) $(TEST_EXE_ARGS); \
 fi
 endif
 

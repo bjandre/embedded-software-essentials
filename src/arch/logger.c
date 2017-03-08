@@ -19,10 +19,10 @@
 extern BinaryLogger_t volatile logger;
 
 static const uint32_t debugger_baud = 115200u;
-static const size_t num_buffer_items = 64;
-static const size_t bytes_per_item = sizeof(uint8_t);
+static const logger_size_t num_buffer_items = 64;
+static const logger_size_t bytes_per_item = sizeof(uint8_t);
 
-BinaryLoggerStatus BinaryLoggerInitialize(size_t num_bytes)
+BinaryLoggerStatus BinaryLoggerInitialize(logger_size_t num_bytes)
 {
     BinaryLoggerStatus status = BinaryLogger_OK;
     CircularBufferStatus cb_status;
@@ -58,17 +58,17 @@ BinaryLoggerStatus BinaryLoggerInitialize(size_t num_bytes)
     log_data(sizeof(magic_number), (uint8_t *)(&magic_number));
     uint8_t data = sizeof(BinaryLoggerID);
     log_data(sizeof(data), (uint8_t *)(&data));
-    data = sizeof(size_t);
+    data = sizeof(logger_size_t);
     log_data(sizeof(data), (uint8_t *)(&data));
     return status;
 }
 
-BinaryLoggerStatus log_data(size_t num_bytes, uint8_t *buffer)
+BinaryLoggerStatus log_data(logger_size_t num_bytes, uint8_t *buffer)
 {
     BinaryLoggerStatus status = BinaryLogger_OK;
     UartStatus uart_status = UART_Status_OK;
     CircularBufferStatus cb_status;
-    for (size_t n = 0; n < num_bytes; n++) {
+    for (logger_size_t n = 0; n < num_bytes; n++) {
         bool is_full;
         do {
             // poll the transmit buffer to see if in can accept data.
@@ -146,7 +146,7 @@ BinaryLoggerStatus log_flush(void)
     return status;
 }
 
-BinaryLoggerStatus log_receive_data(size_t num_bytes, uint8_t *buffer)
+BinaryLoggerStatus log_receive_data(logger_size_t num_bytes, uint8_t *buffer)
 {
     // FIXME(bja, 2017-03) need to figure out how to do this with
     // interrupts.... Poll circular buffer until number of bytes are present...?
@@ -160,7 +160,7 @@ BinaryLoggerStatus log_receive_data(size_t num_bytes, uint8_t *buffer)
     // make sure receive buffer full interrupt is on
     (void)uart_status;
 #else // LOGGER_ALGORITHM == LOGGER_POLLING
-    for (int n = 0; n < num_bytes; n++) {
+    for (logger_size_t n = 0; n < num_bytes; n++) {
         uint8_t byte;
         uart_status = logger.uart.receive_byte(&byte);
         if (UART_Status_OK != uart_status) {
@@ -173,45 +173,31 @@ BinaryLoggerStatus log_receive_data(size_t num_bytes, uint8_t *buffer)
     }
 #endif
     // extract from circular buffer and pack into user buffer.
-    int num_received = 0;
-    int num_polled = 0;
-    int max_polled = 10 * num_bytes;
-    while (num_received < num_bytes && num_polled < max_polled) {
+    logger_size_t num_received = 0;
+    while (num_received < num_bytes) {
         uint8_t byte;
         cb_status = CircularBufferRemoveItem(logger.receive_buffer, (void *)(&byte));
         if (CB_No_Error == cb_status) {
             *(buffer + num_received) = byte;
             num_received++;
         }
-        num_polled++;
         // FIXME(bja, 2017-03) error handling if we didn't get our desired number of bytes? just return what we got...
     }
     return status;
 }
 
-BinaryLoggerStatus CreateLogItem(log_item_t **item, BinaryLoggerID id,
-                                 size_t num_bytes, void *payload)
+BinaryLoggerStatus CreateLogItem(log_item_t **item)
 {
     BinaryLoggerStatus status = BinaryLogger_OK;
     *item = malloc(sizeof(log_item_t));
     if (NULL == *item) {
         status = BinaryLogger_ItemAllocationError;
     } else {
-        (*item)->id = id;
-        (*item)->payload_num_bytes = num_bytes;
-        if (0 == (*item)->payload_num_bytes) {
-            (*item)->payload = NULL;
-        } else {
-            (*item)->payload = malloc(num_bytes);
-            if (NULL == (*item)->payload) {
-                status = BinaryLogger_ItemAllocationError;
-            } else {
-                MemStatus mem_stat = my_memmove((uint8_t *)payload, (*item)->payload,
-                                                num_bytes);
-                if (MemStatus_SUCCESS != mem_stat) {
-                    status = BinaryLogger_ItemAllocationError;
-                }
-            }
+        (*item)->id = 0;
+        (*item)->payload_num_bytes = 0;
+        (*item)->payload = malloc(max_payload_bytes);
+        if (NULL == (*item)->payload) {
+            status = BinaryLogger_ItemAllocationError;
         }
     }
     if (BinaryLogger_OK != status) {
@@ -220,20 +206,52 @@ BinaryLoggerStatus CreateLogItem(log_item_t **item, BinaryLoggerID id,
     return status;
 }
 
-BinaryLoggerStatus log_item(log_item_t *item)
+BinaryLoggerStatus UpdateLogItem(log_item_t *item, BinaryLoggerID id,
+                                 logger_size_t num_bytes, const void *payload)
+{
+    BinaryLoggerStatus status = BinaryLogger_OK;
+    if (NULL == item) {
+        status = BinaryLogger_Null;
+    }
+
+    if (NULL == item->payload) {
+        status = BinaryLogger_Null;
+    }
+
+    if (BinaryLogger_OK == status) {
+        item->id = id;
+        // FIXME(bja, 2017-03) what's the best error handling for a size greater
+        // than our buffer...? Return an error, or just log what we can....
+        num_bytes = num_bytes > max_payload_bytes ? max_payload_bytes : num_bytes;
+        item->payload_num_bytes = num_bytes;
+        if (item->payload_num_bytes > 0) {
+            MemStatus mem_stat = my_memmove((uint8_t *)payload, item->payload,
+                                            item->payload_num_bytes);
+            if (MemStatus_SUCCESS != mem_stat) {
+                status = BinaryLogger_ItemAllocationError;
+            }
+        }
+    }
+    return status;
+}
+
+BinaryLoggerStatus log_item(const log_item_t *item)
 {
     BinaryLoggerStatus status = BinaryLogger_OK;
     if (NULL == item) {
         status = BinaryLogger_ItemNULL;
     } else {
-        log_data(sizeof(item->id), (uint8_t *)(&item->id));
+        log_data(sizeof(item->id), (uint8_t *)(&(item->id)));
         log_data(sizeof(item->payload_num_bytes),
                  (uint8_t *)(&item->payload_num_bytes));
         if (item->payload_num_bytes > 0) {
-            log_data(item->payload_num_bytes, item->payload);
+            if (null_payload == item->payload) {
+                status = BinaryLogger_DataNull;
+            } else {
+                log_data(item->payload_num_bytes, item->payload);
+            }
         }
     }
-
     return status;
 }
 
@@ -249,13 +267,14 @@ BinaryLoggerStatus DestroyLogItem(log_item_t **item)
 }
 
 #else
-BinaryLoggerStatus BinaryLoggerInitialize(size_t num_bytes)
+BinaryLoggerStatus BinaryLoggerInitialize(logger_size_t num_bytes)
 {
+    (void)null_payload;
     (void)num_bytes;
     return BinaryLogger_OK;
 }
 
-BinaryLoggerStatus log_data(size_t num_bytes, uint8_t *buffer)
+BinaryLoggerStatus log_data(logger_size_t num_bytes, uint8_t *buffer)
 {
     (void)num_bytes;
     (void)buffer;
@@ -279,27 +298,35 @@ BinaryLoggerStatus log_flush(void)
     return BinaryLogger_OK;
 }
 
-BinaryLoggerStatus log_receive_data(size_t num_bytes, uint8_t *buffer)
+BinaryLoggerStatus log_receive_data(logger_size_t num_bytes, uint8_t *buffer)
 {
     (void)num_bytes;
     (void)buffer;
     return BinaryLogger_OK;
 }
 
-BinaryLoggerStatus CreateLogItem(log_item_t **item, BinaryLoggerID id,
-                                 size_t num_bytes, void *payload)
+BinaryLoggerStatus CreateLogItem(log_item_t **item)
+{
+    (void)item;
+    return BinaryLogger_OK;
+}
+
+BinaryLoggerStatus UpdateLogItem(log_item_t *item, BinaryLoggerID id,
+                                 logger_size_t num_bytes, const void *payload)
 {
     (void)item;
     (void)num_bytes;
     (void)payload;
     return BinaryLogger_OK;
 }
+
 BinaryLoggerStatus DestroyLogItem(log_item_t **item)
 {
     (void)item;
     return BinaryLogger_OK;
 }
-BinaryLoggerStatus log_item(log_item_t *item)
+
+BinaryLoggerStatus log_item(const log_item_t *item)
 {
     (void)item;
     return BinaryLogger_OK;

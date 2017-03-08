@@ -11,6 +11,7 @@
 #include "platform-defs.h"
 #include "logger.h"
 
+#include "analyze-data.h"
 #include "debug-uart-data.h"
 
 // Global, asynchronously accessed logger instance
@@ -113,52 +114,93 @@ void frdm_kl25z_update_leds(void);
 
 int main(int argc, char **argv)
 {
-    PRINTF("Hello from Emebbed Software Essentials Project!\n");
+    //PRINTF("Hello from Emebbed Software Essentials Project!\n");
 
 #if (PLATFORM == PLATFORM_FRDM)
     NVIC_EnableIRQ(UART0_IRQn);
 #endif
 
     BinaryLoggerStatus logger_status = BinaryLogger_OK;
-    logger_status = BinaryLoggerInitialize(32);
+    uint8_t const buffer_size_bytes = 32;
+    logger_status = BinaryLoggerInitialize(buffer_size_bytes);
     if (BinaryLogger_OK != logger_status) {
         abort();
     }
+
     log_item_t *item;
-    logger_status = CreateLogItem(&item, LOGGER_INITIALIZED, 0, NULL);
+    logger_status = CreateLogItem(&item);
+    if (BinaryLogger_OK != logger_status) {
+        abort();
+    }
+    logger_status = UpdateLogItem(item, LOGGER_INITIALIZED, zero_payload_bytes,
+                                  null_payload);
     if (BinaryLogger_OK != logger_status) {
         abort();
     }
     log_item(item);
-    logger_status = DestroyLogItem(&item);
 
     initialize_gpio();
 
-    logger_status = CreateLogItem(&item, SYSTEM_INITIALIZED, 0, NULL);
+    logger_status = UpdateLogItem(item, SYSTEM_INITIALIZED, zero_payload_bytes,
+                                  null_payload);
     if (BinaryLogger_OK != logger_status) {
         abort();
     }
     log_item(item);
-    logger_status = DestroyLogItem(&item);
 
     if (0) {
         hello_logger();
     }
 
+#undef DEBUG_UART
+#ifdef DEBUG_UART
     size_t const buffer_size = 32 * sizeof(uint8_t);
     uint8_t *buffer = malloc(buffer_size);
-    /* Add your code here */
+#endif
+
+    uint8_t byte;
+    uint8_t const num_required = 16;
+    data_summary_t data_summary;
 
     while (1) { /* main event loop */
         __asm("NOP"); /* breakpoint to stop while looping */
         update_leds();
-#define DEBUG_UART
+
 #ifdef DEBUG_UART
         uint8_t tx_or_rx = 0;
         debug_uart(tx_or_rx, buffer, buffer_size);
 #endif
+        logger_status = UpdateLogItem(item, DATA_ANALYSIS_STARTED, zero_payload_bytes,
+                                      null_payload);
+        if (BinaryLogger_OK != logger_status) {
+            abort();
+        }
+        log_item(item);
+
+        clear_data_summary(&data_summary);
+        for (uint8_t n = 0; n < num_required; n++) {
+            log_receive_data(1, &byte);
+            logger_status = UpdateLogItem(item, DATA_RECEIVED, 1, &byte);
+            if (BinaryLogger_OK != logger_status) {
+                abort();
+            }
+            log_item(item);
+
+            process_data(&data_summary, byte);
+        }
+        log_data_analysis(item, &data_summary);
+        logger_status = UpdateLogItem(item, DATA_ANALYSIS_COMPLETED, zero_payload_bytes,
+                                      null_payload);
+        if (BinaryLogger_OK != logger_status) {
+            abort();
+        }
+        log_item(item);
+        abort();
     }
+#ifdef DEBUG_UART
     free(buffer);
+#endif
+    logger_status = DestroyLogItem(&item);
     return 0;
 }
 
@@ -167,7 +209,11 @@ void hello_logger(void)
     log_item_t *item;
     BinaryLoggerStatus logger_status = BinaryLogger_OK;
     char hello[] = "Hello from Emebbed Software Essentials Project!\n";
-    logger_status = CreateLogItem(&item, INFO, sizeof(hello), &hello);
+    logger_status = CreateLogItem(&item);
+    if (BinaryLogger_OK != logger_status) {
+        abort();
+    }
+    logger_status = UpdateLogItem(item, INFO, sizeof(hello), &hello);
     if (BinaryLogger_OK != logger_status) {
         abort();
     }
@@ -213,7 +259,12 @@ void frdm_kl25z_initialize_gpio(void)
 
     log_item_t *item;
     BinaryLoggerStatus logger_status = BinaryLogger_OK;
-    logger_status = CreateLogItem(&item, GPIO_INITIALIZED, 0, NULL);
+    logger_status = CreateLogItem(&item);
+    if (BinaryLogger_OK != logger_status) {
+        abort();
+    }
+    logger_status = UpdateLogItem(item, GPIO_INITIALIZED, zero_payload_bytes,
+                                  null_payload);
     if (BinaryLogger_OK != logger_status) {
         abort();
     }
