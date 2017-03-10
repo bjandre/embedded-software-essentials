@@ -16,9 +16,8 @@
    than N, the user won't find out about it until after they have already added
    items to the buffer. If it doesn't make sense to add a partial block, then
    there is no way to remove the partial data (FIFO). So the user is stuck
-   polling until it can add all the data.
-
-
+   polling until it can add all the data. But they won't know how much data was
+   added....
 
 */
 

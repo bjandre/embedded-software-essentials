@@ -17,13 +17,47 @@ struct CircularBuffer_t {
     void *buffer_end; // End of the allocated buffer.
 };
 
+/**
+   ClearCircularBuffer()
+
+   Set all internall pointers and sizes to NULL or zero.
+
+   Params: cb - pointer to a circular buffer to be cleared.
+ */
 void ClearCircularBuffer(CircularBuffer_t volatile *cb);
+
+/**
+
+   InitCircularBuffer()
+
+   Initialize a circular buffer, allocating internal memory, setting up
+   pointers, and internal sizes.
+
+   Param: cb - pointer to circular buffer
+          num_items - number of items to allocate memory for. all items
+                      must be the same size.
+          bytes_per_item - the number of bytes per item to be stored.
+
+ */
 CircularBufferStatus InitCircularBuffer(CircularBuffer_t volatile *cb,
                                         const size_t num_items,
                                         const size_t bytes_per_item);
-void *NewBufferPosition(CircularBuffer_t volatile *cb, void *current_position);
 
-void *NewBufferPosition(CircularBuffer_t volatile *cb, void *current_position)
+/**
+
+   NewBufferposition()
+
+   Calculate and return the next buffer position accounting for wrap around.
+
+   Params: cb - pointer to the circular buffer.
+
+           current_position - the current position to be incremented.
+
+ */
+void *NextBufferPosition(CircularBuffer_t volatile *cb, void *current_position);
+
+
+void *NextBufferPosition(CircularBuffer_t volatile *cb, void *current_position)
 {
     void *new_position = current_position + cb->bytes_per_item;
     if (new_position > cb->buffer_end - cb->bytes_per_item) {
@@ -43,7 +77,7 @@ CircularBufferStatus CircularBufferAddItem(CircularBuffer_t volatile *cb,
     } else {
         MemStatus memstat = my_memmove(item, cb->head, cb->bytes_per_item);
         if (MemStatus_SUCCESS == memstat) {
-            cb->head = NewBufferPosition(cb, cb->head);
+            cb->head = NextBufferPosition(cb, cb->head);
             cb->bytes_used += cb->bytes_per_item;
         } else {
             status = CB_Copy_Error;
@@ -63,7 +97,7 @@ CircularBufferStatus CircularBufferRemoveItem(CircularBuffer_t volatile *cb,
     } else {
         MemStatus memstat = my_memmove(cb->tail, item, cb->bytes_per_item);
         if (MemStatus_SUCCESS == memstat) {
-            cb->tail = NewBufferPosition(cb, cb->tail);
+            cb->tail = NextBufferPosition(cb, cb->tail);
             cb->bytes_used -= cb->bytes_per_item;
         } else {
             status = CB_Copy_Error;

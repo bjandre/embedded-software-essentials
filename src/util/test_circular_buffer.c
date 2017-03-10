@@ -55,8 +55,8 @@ int suite_circular_buffer(void)
 
 void test_cb_allocate_free(void **state)
 {
-    // test Allocate-Free - Checks that a new dynamic buffer can be created on the
-    // heap
+    // test Allocate-Free - Checks that a new dynamic buffer can be created on
+    // the heap and freed correctly.
     CircularBuffer_t volatile *cb = NULL;
     size_t num_items = 1;
     size_t bytes_per_item = 1;
@@ -82,9 +82,7 @@ void test_cb_new_size_error(void **state)
 
 void test_cb_new_length_error(void **state)
 {
-    // test Allocate-Free - Checks that a new dynamic buffer can be created on the
-    // heap
-    // test new returns an error when bytes_per_item is 0
+    // test new returns an error when num_items is 0
     CircularBuffer_t volatile *cb = NULL;
     size_t num_items = 0;
     size_t bytes_per_item = 1;
@@ -99,6 +97,8 @@ void test_cb_buffer_null_pointer(void **state)
     uint32_t data = 12345;
     CircularBuffer_t volatile *cb = NULL;
     CircularBufferStatus status = CircularBufferAddItem(cb, &data);
+    assert_int_equal(status, CB_Null_Pointer);
+    status = CircularBufferRemoveItem(cb, &data);
     assert_int_equal(status, CB_Null_Pointer);
 }
 
@@ -270,7 +270,7 @@ void test_cb_add_remove_n_items_sizeof4(void **state)
 
 void test_cb_buffer_full(void **state)
 {
-    // test Buffer Full - Check buffer reports true for full
+    // test Buffer Full - Check buffer reports when full
 #define SIZE 10
     uint32_t offset = -12345;
     CircularBuffer_t volatile *cb = NULL;
@@ -306,7 +306,7 @@ void test_cb_buffer_full(void **state)
 
 void test_cb_buffer_empty(void **state)
 {
-    // test Buffer Empty - Check buffer reports true for empty
+    // test Buffer Empty - Check buffer reports for empty
     uint32_t data = 12345;
     CircularBuffer_t volatile *cb = NULL;
     size_t num_items = 1;
@@ -333,7 +333,7 @@ void test_cb_buffer_empty(void **state)
 
 void test_cb_wrap_add(void **state)
 {
-    // test Wrap Add - Test that your buffer can wrap around the edge boundary
+    // test Wrap Add - Test that buffer can wrap around the edge boundary
     // and add to the front
 
     // NOTE(bja, 2017-02) create a small buffer and a bunch of data, and then
