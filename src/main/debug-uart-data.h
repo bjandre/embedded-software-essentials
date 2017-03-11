@@ -8,6 +8,10 @@
 static const uint32_t data_dead_beef = 0xEFBEADDEu;
 static const uint32_t data_dead_code = 0xDEC0ADDEu;
 static const uint32_t data_aaaa_5555 = 0x5555AAAAu;
+static const uint32_t data_negative_int = -40577;
+static const char ese_hello[] =
+    "Hello from Emebbed Software Essentials Project!\n";
+
 
 /**
    debug_uart()

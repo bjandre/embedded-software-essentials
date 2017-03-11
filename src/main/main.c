@@ -68,17 +68,6 @@ void initialize_led_pin(GPIO_PINS led_pin);
  */
 void update_leds(void);
 
-/*
-  hello_logger()
-
-  Output hello through the binary logger.
-
-  Parameters: none
-
-  Return: none
- */
-void hello_logger(void);
-
 #if (PLATFORM == PLATFORM_FRDM)
 #include "MKL25Z4.h"
 
@@ -155,10 +144,6 @@ int main(int argc, char **argv)
     }
     log_item(item);
 
-    if (0) {
-        hello_logger();
-    }
-
 #undef DEBUG_UART
 #ifdef DEBUG_UART
     size_t const buffer_size = 32 * sizeof(uint8_t);
@@ -184,7 +169,7 @@ int main(int argc, char **argv)
         update_leds();
 
 #ifdef DEBUG_UART
-        uint8_t tx_or_rx = 0;
+        uint8_t tx_or_rx = 1;
         debug_uart(tx_or_rx, buffer, buffer_size);
 #endif
 
@@ -229,23 +214,6 @@ int main(int argc, char **argv)
 #endif
     logger_status = DestroyLogItem(&item);
     return 0;
-}
-
-void hello_logger(void)
-{
-    log_item_t *item;
-    BinaryLoggerStatus logger_status = BinaryLogger_OK;
-    char hello[] = "Hello from Emebbed Software Essentials Project!\n";
-    logger_status = CreateLogItem(&item);
-    if (BinaryLogger_OK != logger_status) {
-        abort();
-    }
-    logger_status = UpdateLogItem(item, INFO, sizeof(hello), &hello);
-    if (BinaryLogger_OK != logger_status) {
-        abort();
-    }
-    log_item(item);
-    logger_status = DestroyLogItem(&item);
 }
 
 void initialize_gpio(void)

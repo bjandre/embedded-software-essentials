@@ -27,6 +27,10 @@ void debug_uart_transmit(void)
     byte = 0xAAu;
     log_data(sizeof(uint8_t), &byte);
     log_data(sizeof(data_dead_code), (uint8_t *)(&data_dead_code));
+    byte = 0xAAu;
+    log_string((uint8_t *)ese_hello);
+    byte = 0xAAu;
+    log_integer(data_negative_int);
 }
 
 void debug_uart_receive_transmit(uint8_t *buffer, size_t buffer_size)

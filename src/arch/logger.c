@@ -68,7 +68,6 @@ BinaryLoggerStatus BinaryLoggerInitialize(logger_size_t num_bytes)
 BinaryLoggerStatus log_data(logger_size_t num_bytes, uint8_t *buffer)
 {
     BinaryLoggerStatus status = BinaryLogger_OK;
-    UartStatus uart_status = UART_Status_OK;
     CircularBufferStatus cb_status;
     for (logger_size_t n = 0; n < num_bytes; n++) {
         bool is_full;
@@ -80,38 +79,36 @@ BinaryLoggerStatus log_data(logger_size_t num_bytes, uint8_t *buffer)
         if (CB_No_Error != cb_status) {
             abort();
         }
-    }
 
-    // Only use interrupts on platforms that support it and it was requested in
-    // the build. Otherwise use polling.
+        // Only use interrupts on platforms that support it and it was requested in
+        // the build. Otherwise use polling.
 #if (PLATFORM == PLATFORM_FRDM) && (LOGGER_ALGORITHM == LOGGER_INTERRUPTS)
-    // make sure transmit buffer empty interrupt is on
-    //UART0->C2 |= UART0_C2_TIE(1);
-    if (UART0->S1 & UART0_S1_TDRE_MASK) {
-        // transmit buffer empty, turn on interrupts
-        UART0->C2 |= UART0_C2_TIE(1);
-    }
+        // make sure transmit buffer empty interrupt is on
+        //UART0->C2 |= UART0_C2_TIE(1);
+        if (UART0->S1 & UART0_S1_TDRE_MASK) {
+            // transmit buffer empty, turn on interrupts
+            UART0->C2 |= UART0_C2_TIE(1);
+        }
 #else // LOGGER_ALGORITHM == LOGGER_POLLING
-    // no interrupts, just write all available data
-    bool is_empty;
-    cb_status = CircularBufferIsEmpty(logger.transmit_buffer, &is_empty);
-    while (!is_empty) {
-        uint8_t byte;
-        cb_status = CircularBufferRemoveItem(logger.transmit_buffer, &byte);
-        uart_status = logger.uart.transmit_byte(byte);
-
+        // no interrupts, just write all available data
+        bool is_empty;
         cb_status = CircularBufferIsEmpty(logger.transmit_buffer, &is_empty);
-    }
+        while (!is_empty) {
+            uint8_t byte;
+            cb_status = CircularBufferRemoveItem(logger.transmit_buffer, &byte);
+            UartStatus uart_status = uart_status = logger.uart.transmit_byte(byte);
+
+            cb_status = CircularBufferIsEmpty(logger.transmit_buffer, &is_empty);
+        }
 #endif
-    if (UART_Status_OK != uart_status) {
-        status = BinaryLogger_Error;
     }
+
     return status;
 }
 
 BinaryLoggerStatus log_string(uint8_t *string)
 {
-    BinaryLoggerStatus status = BinaryLogger_Error;
+    BinaryLoggerStatus status = BinaryLogger_OK;
     size_t string_length = 0;
     while (*(string + string_length) != '\0') {
         string_length++;
