@@ -19,13 +19,13 @@
 extern BinaryLogger_t volatile logger;
 
 static const uint32_t debugger_baud = 115200u;
-static const logger_size_t num_buffer_items = 64;
 static const logger_size_t bytes_per_item = sizeof(uint8_t);
 
 BinaryLoggerStatus BinaryLoggerInitialize(logger_size_t num_bytes)
 {
     BinaryLoggerStatus status = BinaryLogger_OK;
     CircularBufferStatus cb_status;
+    logger_size_t num_buffer_items = num_bytes / bytes_per_item;
     cb_status = CircularBufferNew(&(logger.transmit_buffer), num_buffer_items,
                                   bytes_per_item);
     if (CB_No_Error != cb_status) {
@@ -36,6 +36,7 @@ BinaryLoggerStatus BinaryLoggerInitialize(logger_size_t num_bytes)
     if (CB_No_Error != cb_status) {
         return BinaryLogger_Error;
     }
+
     UartStatus uart_status = CreateUART(&(logger.uart), UartDebugger);
     if (UART_Status_OK != uart_status) {
         abort();
@@ -44,6 +45,7 @@ BinaryLoggerStatus BinaryLoggerInitialize(logger_size_t num_bytes)
     if (UART_Status_OK != uart_status) {
         abort();
     }
+
     // Now we need to send four bytes to make the logger self describing.
     //
     // 1. two bytes - magic number 0x4477 in hex. Allows us to tell if we have
@@ -80,8 +82,8 @@ BinaryLoggerStatus log_data(logger_size_t num_bytes, uint8_t *buffer)
         }
     }
 
-    //FIXME(bja, 2017-03) should this based on an interrupt vs polling flag
-    //instead of the platform so we can run polling on frdm...?
+    // Only use interrupts on platforms that support it and it was requested in
+    // the build. Otherwise use polling.
 #if (PLATFORM == PLATFORM_FRDM) && (LOGGER_ALGORITHM == LOGGER_INTERRUPTS)
     // make sure transmit buffer empty interrupt is on
     //UART0->C2 |= UART0_C2_TIE(1);
@@ -148,17 +150,14 @@ BinaryLoggerStatus log_flush(void)
 
 BinaryLoggerStatus log_receive_data(logger_size_t num_bytes, uint8_t *buffer)
 {
-    // FIXME(bja, 2017-03) need to figure out how to do this with
-    // interrupts.... Poll circular buffer until number of bytes are present...?
     BinaryLoggerStatus status = BinaryLogger_OK;
     UartStatus uart_status = UART_Status_OK;
     CircularBufferStatus cb_status = CB_No_Error;
 
-    // extract from uart and pack into the circular buffer. This code goes into
-    // the interrupts....
 #if (PLATFORM == PLATFORM_FRDM) && (LOGGER_ALGORITHM == LOGGER_INTERRUPTS)
-    // make sure receive buffer full interrupt is on
-    (void)uart_status;
+    // extraction from uart receive data register and pack into the circular
+    // buffer is done by the UART0 interrupt handler
+    (void)uart_status; // keep the compiler happy
 #else // LOGGER_ALGORITHM == LOGGER_POLLING
     for (logger_size_t n = 0; n < num_bytes; n++) {
         uint8_t byte;
@@ -266,7 +265,10 @@ BinaryLoggerStatus DestroyLogItem(log_item_t **item)
     return status;
 }
 
-#else
+#else // LOGGING_DISABLED - disable logging by providing empty functions that
+// simply return status OK. These may be removed by the linker when link
+// time optimization in enabled. If profiling shows that they are not, we
+// can replace them with a macro that substitutes status ok.
 BinaryLoggerStatus BinaryLoggerInitialize(logger_size_t num_bytes)
 {
     (void)null_payload;
