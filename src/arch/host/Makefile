@@ -17,7 +17,18 @@ INCLUDES = \
 	-I../../util \
 	-I..
 
+else ifeq ($(PLATFORM), $(PLATFORM_ENUM_BBB))
+LIB = \
+	libesehost.a
 
+SRCS = \
+	uart-host.c
+
+OBJS = $(SRCS:%.c=%.o)
+
+INCLUDES = \
+	-I../../util \
+	-I..
 endif
 
 include $(MAKERULES)/generic.makefile

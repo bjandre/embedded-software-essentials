@@ -44,6 +44,13 @@ else ifeq ($(PLATFORM), $(PLATFORM_ENUM_HOST))
 	../arch/host/libesehost.a
   LIBS += \
 	-L../arch/host -lesehost
+else ifeq ($(PLATFORM), $(PLATFORM_ENUM_BBB))
+  INCLUDES += \
+	-I../arch/host
+  DEPEND_LIBS += \
+	../arch/host/libesehost.a
+  LIBS += \
+	-L../arch/host -lesehost
 endif
 
 LIBS += \

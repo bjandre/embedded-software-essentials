@@ -3,7 +3,7 @@
 
 SYS_LINUX := Linux
 SYS_DARWIN := Darwin
-SYS_UBUNTU := Ubuntu 16.04.1 LTS
+SYS_UBUNTU := Ubuntu 16.04.2 LTS
 SYS_WHEEZY := Debian GNU/Linux 7.9 (wheezy)
 SYS_FEDORA := "Fedora release 24 (Twenty Four)"
 PLATFORM_HOST := host
