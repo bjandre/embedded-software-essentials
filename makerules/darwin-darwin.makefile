@@ -11,6 +11,8 @@ AR = ar
 LD = ld
 LDFLAGS = -macosx_version_min $(VERSION_MIN) -lSystem -map $*.map
 
+CC_LDFLAGS = -Wl,-map,$(EXE).map
+
 SIZE = size
 SIZEFLAGS = -m -l -x
 

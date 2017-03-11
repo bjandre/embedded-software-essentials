@@ -33,6 +33,7 @@ CC_LDFLAGS = \
 	-T "../arch/frdm-kl25z/MKL25Z128xxx4_flash.ld" \
 	-Xlinker --gc-sections -Xlinker -z -Xlinker muldefs \
 	-Xlinker --print-output-format \
+	-Xlinker -Map=$(EXE).map \
 	$(CC_SPECS)
 
 
@@ -43,7 +44,8 @@ SIZE = $(TOOLS_PREFIX)-size
 SIZEFLAGS = --format=sysv -x
 
 OBJDUMP = $(TOOLS_PREFIX)-objdump
-OBJDUMP_FLAGS = --disassemble-all --line-numbers --source --full-contents --all-headers
+OBJDUMP_FLAGS = --disassemble-all --line-numbers --source \
+	--full-contents --all-headers --reloc --syms
 
 ifeq ($(BIN_EXTENSION), srec)
   OBJFORMAT = $(BIN_EXTENSION)
