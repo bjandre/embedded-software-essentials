@@ -18,6 +18,19 @@ struct uart_t {
                                   uint8_t *bytes);
 };
 
+
+/**
+   CreateUART()
+
+   Create a uart data strucure with pointers to the correct functions for th
+   desired functionality, e.g. logger uart, and platform.
+
+   Params: uart - pointer to the struct of function pointers.
+           uart_function - the type of uart functionality
+
+   Returns: status of the create operation
+
+ */
 UartStatus CreateUART(uart_t volatile *uart, UartFunction uart_func);
 
 

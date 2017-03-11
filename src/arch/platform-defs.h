@@ -2,9 +2,9 @@
 #define ESE_ARCH_PLATFORM_DEFS_H_
 
 /**
-   Contains platform specific preprocssor definitions for controlling
-   conditional compilation of platform specific code (hardware uart vs software
-   printf, interrupt vs polling driven logging.
+   Contains global preprocssor definitions for controlling conditional
+   compilation of platform specific code (hardware uart vs software printf,
+   interrupt vs polling driven logging.
  */
 
 #define PLATFORM_HOST (0)

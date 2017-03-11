@@ -11,10 +11,48 @@
 #include "uart-frdm-kl25z.h"
 #endif
 
+/**
+   uart_transmit_n_bytes()
+
+   Platform independent routine to loop over n bytes and transmit them.
+
+   Params: uart - pointer to the uart data structure with platform specific
+                  function pointers.
+           num_bytes - the number of bytes to transmit
+           bytes - pointer to the buffer containing the data
+
+   Returns: status of the operation
+ */
 UartStatus uart_transmit_n_bytes(uart_t *uart,
                                  const size_t num_bytes, uint8_t *bytes);
+
+
+/**
+   uart_receive_n_bytes()
+
+   Platform independent routine to stort n bytes from the uart receiver
+
+   Params: uart - pointer to the uart data structure with platform specific
+                  function pointers.
+           num_bytes - the number of bytes to receive
+           bytes - pointer to the buffer where the data should be stored
+
+   Returns: status of the operation
+ */
 UartStatus uart_receive_n_bytes(uart_t *uart,
                                 const size_t num_bytes, uint8_t *bytes);
+
+
+/**
+   uartSetupDebugger()
+
+   Setup the platform specific UART for the debugging logger.
+
+   Params: uart - pointer to the uart data structure with platform specific
+                  function pointers.
+
+   Returns: status of the operation
+ */
 UartStatus uartSetupDebugger(uart_t volatile *uart);
 
 
