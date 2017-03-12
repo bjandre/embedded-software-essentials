@@ -59,7 +59,7 @@ int suite_memory(void)
 
 void test_my_memmove_null_ptrs(void **state)
 {
-    // test return status when null pointers are passed in
+    // test return status indicates error when null pointers are passed in
 #define SIZE 16
 
     size_t const range = 4;
@@ -76,7 +76,7 @@ void test_my_memmove_null_ptrs(void **state)
 
 void test_my_memmove_src_dest_complete_overlap(void **state)
 {
-    // test complete overlap
+    // test memmove with complete overlap of src and dest
 #define SIZE 16
 #define RANGE 4
 
@@ -97,7 +97,8 @@ void test_my_memmove_src_dest_complete_overlap(void **state)
 
 void test_my_memmove_no_overlap_src_dest(void **state)
 {
-    // test no overlap, source before destestination
+    // test memmove with no overlap between source and destination, source
+    // address comes before destestination
 #define SIZE 16
 #define RANGE 4
 
@@ -118,7 +119,8 @@ void test_my_memmove_no_overlap_src_dest(void **state)
 
 void test_my_memmove_no_overlap_dest_src(void **state)
 {
-    // test no overlap, destination before source
+    // test memmove with no overlap between source and destination, destination
+    // address before source
 #define SIZE 16
 #define RANGE 4
 
@@ -139,7 +141,8 @@ void test_my_memmove_no_overlap_dest_src(void **state)
 
 void test_my_memmove_overlap_src_in_dest(void **state)
 {
-    // test overlap, destination before source, copy from begining of source
+    // test overlap source and destination, destination before source, copy from
+    // begining of source
 #define SIZE 16
 #define RANGE 4
 
@@ -160,7 +163,8 @@ void test_my_memmove_overlap_src_in_dest(void **state)
 
 void test_my_memmove_overlap_dest_in_src(void **state)
 {
-    // test overlap, source before destination, copy from end of source
+    // test overlap of source and destination, source before destination, copy
+    // from end of source
 #define SIZE 16
 #define RANGE 4
 
@@ -191,7 +195,7 @@ void test_my_memset_null_ptrs(void **state)
 
 void test_my_memset_set_entire_array(void **state)
 {
-    // test setting entire array
+    // test setting entire array to the same value
     size_t const size = 20;
     uint8_t data[size];
     for (size_t i = 0; i < size; i++) {

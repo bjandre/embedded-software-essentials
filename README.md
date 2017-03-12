@@ -11,6 +11,25 @@ Project Repository
 
 # Building
 
+## Third-party libraries
+
+The third party library cmocka is used a a unit testing framework. The
+source for cmocka is included in the 3rd-party directory. The unit
+tests require cmocka be built by running:
+
+    ```
+    make cmocka
+    ```
+
+All third party library builds can be deleted with:
+
+    ```
+    make clobber
+    ```
+
+Additional details about the 3rd-party libries, including url,
+version, license can be found in the 3rd-party library directory.
+
 ## Supported make rules
 
   * all - Build all libraries and executables.

@@ -114,11 +114,13 @@ void test_convert_endian32_1(void **state)
 
 void test_convert_endian32_2(void **state)
 {
-    // test convert endian, array of 4 8-byte ints
+    // test convert endian works on an array of 4 8-byte ints
     uint32_t const length = 4;
     uint32_t data[length];
     uint32_t expected[length];
     size_t num_bytes = sizeof(*data);
+
+    // create some dummy data and manually reverse it
     *data = 0x01234567;
     *expected = 0x67452301;
     *(data + 1) = 0x89abcdef;
