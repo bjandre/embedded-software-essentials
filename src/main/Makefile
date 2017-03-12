@@ -69,7 +69,9 @@ DEPEND_LIBS += \
 
 TEST_EXE = $(EXE)
 
-TEST_EXE_ARGS = < console-input.txt | ./ese-process-logs.py
+TEST_EXE_ARGS = < console-input.txt > output.txt; \
+	./ese-process-logs.py < output.txt; \
+	diff baseline.txt output.txt
 
 include $(MAKERULES)/generic.makefile
 

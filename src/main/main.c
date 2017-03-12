@@ -215,7 +215,7 @@ int main(int argc, char **argv)
             clear_data_summary(&data_summary);
             num_received = 0;
 #ifdef MOCK_RECEIVE_DATA_INTERRUPT
-            abort();
+            exit(EXIT_SUCCESS);
 #endif
         }
     }
