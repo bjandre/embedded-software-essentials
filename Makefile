@@ -1,5 +1,13 @@
 # -*- mode: Makefile -*-
 
+# Copyright 2017 Benjamin J. Andre.
+# All Rights Reserved.
+# 
+# This Source Code Form is subject to the terms of the Mozilla
+# Public License, v. 2.0. If a copy of the MPL was not distributed
+# with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
+
+
 # Makefile for building ECEN 5013 class projects on unix systems
 WORKSPACE_PATH := $(PWD)
 MAKERULES = $(WORKSPACE_PATH)/makerules
