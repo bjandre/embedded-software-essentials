@@ -32,7 +32,7 @@ UartStatus frdm_kl25z_uart_initialize(const uint32_t baud)
     //   PTA2 - Port A, Pin 2, Alternate function 2, UART0_TX
 
     // enable the clock for porta pins
-    UartStatus status = UART_Status_OK;
+    UartStatus status = UART_Status_Success;
     SIM->SCGC5 |= SIM_SCGC5_PORTA(1);
     SIM->SCGC4 |= SIM_SCGC4_UART0(1);  // enable uart0
 
@@ -95,7 +95,7 @@ UartStatus frdm_kl25z_uart_initialize(const uint32_t baud)
 UartStatus frdm_kl25z_uart_transmit_byte(const uint8_t byte)
 {
     const uint8_t TX_BUFFER_FULL = 0;
-    UartStatus status = UART_Status_OK;
+    UartStatus status = UART_Status_Success;
     // FIXME(bja, 2017-02) is uart0->d shared between transmit and receive?
     UART0->D = byte; // send a character
     while ((UART0->S1 & UART0_S1_TDRE_MASK) ==
@@ -106,7 +106,7 @@ UartStatus frdm_kl25z_uart_transmit_byte(const uint8_t byte)
 UartStatus frdm_kl25z_uart_transmit_n_bytes(const size_t num_bytes,
         uint8_t *bytes)
 {
-    UartStatus status = UART_Status_OK;
+    UartStatus status = UART_Status_Success;
     for (size_t n = 0; n < num_bytes; n++) {
         frdm_kl25z_uart_transmit_byte(*(bytes + n));
     }
@@ -117,7 +117,7 @@ UartStatus frdm_kl25z_uart_receive_byte(uint8_t *byte)
 {
     const uint8_t RX_BUFFER_EMPTY = 0;
     //const uint8_t RX_BUFFER_FULL = 1;
-    UartStatus status = UART_Status_OK;
+    UartStatus status = UART_Status_Success;
     // FIXME(bja, 2017-02) is uart0->d shared between transmit and receive?
     while ((UART0->S1 & UART0_S1_RDRF_MASK) ==
             RX_BUFFER_EMPTY); // ensure the receive data register is empty
@@ -129,7 +129,7 @@ UartStatus frdm_kl25z_uart_receive_byte(uint8_t *byte)
 UartStatus frdm_kl25z_uart_receive_n_bytes(const size_t num_bytes,
         uint8_t *bytes)
 {
-    UartStatus status = UART_Status_OK;
+    UartStatus status = UART_Status_Success;
     for (size_t n = 0; n < num_bytes; n++) {
         frdm_kl25z_uart_receive_byte(bytes + n);
     }

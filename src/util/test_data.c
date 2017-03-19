@@ -67,7 +67,7 @@ void test_big_to_little_null_ptr(void **state)
     uint32_t const length = 1;
 
     DataStatus status = big_to_little32(NULL, length);
-    assert_int_equal(status, DataStatus_ERROR_NULL);
+    assert_int_equal(status, DataStatus_Null_Pointer);
 }
 
 void test_big_to_little_valid(void **state)
@@ -81,7 +81,7 @@ void test_big_to_little_valid(void **state)
     size_t num_bytes = sizeof(data);
 
     DataStatus status = big_to_little32(&data, length);
-    assert_int_equal(status, DataStatus_SUCCESS);
+    assert_int_equal(status, DataStatus_Success);
     assert_memory_equal((uint8_t *)&expected, (uint8_t *)&data, length * num_bytes);
 }
 
@@ -93,7 +93,7 @@ void test_little_to_big_null_ptr(void **state)
     uint32_t const length = 1;
 
     DataStatus status = big_to_little32(NULL, length);
-    assert_int_equal(status, DataStatus_ERROR_NULL);
+    assert_int_equal(status, DataStatus_Null_Pointer);
 }
 
 void test_little_to_big_valid(void **state)
@@ -107,7 +107,7 @@ void test_little_to_big_valid(void **state)
     size_t num_bytes = sizeof(data);
 
     DataStatus status = little_to_big32(&data, length);
-    assert_int_equal(status, DataStatus_SUCCESS);
+    assert_int_equal(status, DataStatus_Success);
     assert_memory_equal((uint8_t *)&expected, (uint8_t *)&data,
                         length * num_bytes);
 }
@@ -124,12 +124,12 @@ void test_convert_endian32_1(void **state)
 
     // note: just calling the wrapper to avoid exposing convert_endian
     DataStatus status = big_to_little32(&data, length);
-    assert_int_equal(status, DataStatus_SUCCESS);
+    assert_int_equal(status, DataStatus_Success);
     assert_memory_equal((uint8_t *)&expected, (uint8_t *)&data, length * num_bytes);
 
     uint32_t expected_orig = 0x01234567;
     status = little_to_big32(&data, length);
-    assert_int_equal(status, DataStatus_SUCCESS);
+    assert_int_equal(status, DataStatus_Success);
     assert_memory_equal((uint8_t *)&expected_orig, (uint8_t *)&data,
                         length * num_bytes);
 
@@ -162,11 +162,11 @@ void test_convert_endian32_2(void **state)
 
     // note: just calling the wrapper to avoid exposing convert_endian
     DataStatus status = little_to_big32(data, length);
-    assert_int_equal(status, DataStatus_SUCCESS);
+    assert_int_equal(status, DataStatus_Success);
     assert_memory_equal((uint8_t *)expected, (uint8_t *)data, length * num_bytes);
 
     status = big_to_little32(data, length);
-    assert_int_equal(status, DataStatus_SUCCESS);
+    assert_int_equal(status, DataStatus_Success);
     assert_memory_equal((uint8_t *)expected_orig, (uint8_t *)data,
                         length * num_bytes);
 

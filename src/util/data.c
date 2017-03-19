@@ -112,7 +112,7 @@ int32_t my_atoi(int8_t *string)
     // 1002 = str = {' ', ' ', '1', '0', '0', '2', '\0'}
     // only handles decimal strings.
     if (NULL == string) {
-        return DataStatus_SUCCESS;
+        return DataStatus_Success;
     }
 
     int8_t *position = string;
@@ -154,7 +154,7 @@ int32_t my_atoi(int8_t *string)
  *
  * returns:
  *
- *   DataStatus_FAILURE if the conversion fails for any reason, otherwise DataStatus_SUCCESS
+ *   DataStatus_FAILURE if the conversion fails for any reason, otherwise DataStatus_Success
  *
  */
 DataStatus convert_endian32(uint32_t *data, uint32_t length)
@@ -165,18 +165,18 @@ DataStatus convert_endian32(uint32_t *data, uint32_t length)
     // conversion from big to little and little to big is the same, just swap
     // the order of bytes within each integer....
     if (NULL == data) {
-        return DataStatus_ERROR_NULL;
+        return DataStatus_Null_Pointer;
     }
     size_t num_bytes = sizeof(*data);
     for (uint32_t i = 0; i < length; i++) {
         // each uint32 object is a chunk of num_bytes that get reversed.
         uint8_t *object = (uint8_t *)(data + i);
         MemStatus error = my_reverse(object, num_bytes);
-        if (MemStatus_SUCCESS != error) {
-            return DataStatus_ERROR_UNKNOWN;
+        if (MemStatus_Success != error) {
+            return DataStatus_Unknown_Error;
         }
     }
-    return DataStatus_SUCCESS;
+    return DataStatus_Success;
 }
 
 DataStatus big_to_little32(uint32_t *data, uint32_t length)

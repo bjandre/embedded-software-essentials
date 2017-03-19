@@ -82,9 +82,9 @@ void test_my_memmove_null_ptrs(void **state)
     uint8_t *source = data + range;
 
     MemStatus status = my_memmove(NULL, source, range);
-    assert_int_equal(status, MemStatus_ERROR_NULL);
+    assert_int_equal(status, MemStatus_Null_Pointer);
     status = my_memmove(source, NULL, range);
-    assert_int_equal(status, MemStatus_ERROR_NULL);
+    assert_int_equal(status, MemStatus_Null_Pointer);
 
 #undef SIZE
 }
@@ -105,7 +105,7 @@ void test_my_memmove_src_dest_complete_overlap(void **state)
 
     uint8_t expected[SIZE] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15};
     MemStatus status = my_memmove(source, destination, range);
-    assert_int_equal(status, MemStatus_SUCCESS);
+    assert_int_equal(status, MemStatus_Success);
     assert_memory_equal(data, expected, size);
 
 #undef SIZE
@@ -129,7 +129,7 @@ void test_my_memmove_no_overlap_src_dest(void **state)
 
     uint8_t expected[SIZE] = {0, 1, 2, 3, 4, 5, 6, 7, 2, 3, 4, 5, 12, 13, 14, 15};
     MemStatus status = my_memmove(source, destination, range);
-    assert_int_equal(status, MemStatus_SUCCESS);
+    assert_int_equal(status, MemStatus_Success);
     assert_memory_equal(data, expected, size);
 
 #undef SIZE
@@ -153,7 +153,7 @@ void test_my_memmove_no_overlap_dest_src(void **state)
 
     uint8_t expected[SIZE] = {0, 1, 8, 9, 10, 11, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15};
     MemStatus status = my_memmove(source, destination, range);
-    assert_int_equal(status, MemStatus_SUCCESS);
+    assert_int_equal(status, MemStatus_Success);
     assert_memory_equal(data, expected, size);
 
 #undef SIZE
@@ -177,7 +177,7 @@ void test_my_memmove_overlap_src_in_dest(void **state)
 
     uint8_t expected[SIZE] = {0, 1, 4, 5, 6, 7, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15};
     MemStatus status = my_memmove(source, destination, range);
-    assert_int_equal(status, MemStatus_SUCCESS);
+    assert_int_equal(status, MemStatus_Success);
     assert_memory_equal(data, expected, size);
 
 #undef SIZE
@@ -201,7 +201,7 @@ void test_my_memmove_overlap_dest_in_src(void **state)
 
     uint8_t expected[SIZE] = {0, 1, 2, 3, 2, 3, 4, 5, 8, 9, 10, 11, 12, 13, 14, 15};
     MemStatus status = my_memmove(source, destination, range);
-    assert_int_equal(status, MemStatus_SUCCESS);
+    assert_int_equal(status, MemStatus_Success);
     assert_memory_equal(data, expected, size);
 
 #undef SIZE
@@ -217,7 +217,7 @@ void test_my_memset_null_ptrs(void **state)
     uint8_t expected = 0x23;
 
     MemStatus status = my_memset(NULL, size, expected);
-    assert_int_equal(status, MemStatus_ERROR_NULL);
+    assert_int_equal(status, MemStatus_Null_Pointer);
 }
 
 void test_my_memset_set_entire_array(void **state)
@@ -232,7 +232,7 @@ void test_my_memset_set_entire_array(void **state)
     }
     uint8_t expected = 0x23;
     MemStatus status = my_memset(data, size, expected);
-    assert_int_equal(status, MemStatus_SUCCESS);
+    assert_int_equal(status, MemStatus_Success);
 
     for (size_t i = 0; i < size; i++) {
 #       ifdef NDEBUG
@@ -260,7 +260,7 @@ void test_my_memset_set_subarray(void **state)
     uint8_t value = 0x34;
     uint8_t expected[SIZE] = {0, 1, value, value, value, value, 6, 7};
     MemStatus status = my_memset(data + 2, range, value);
-    assert_int_equal(status, MemStatus_SUCCESS);
+    assert_int_equal(status, MemStatus_Success);
     assert_memory_equal(data, expected, size);
 #undef SIZE
 #undef RANGE
@@ -273,7 +273,7 @@ void test_my_memzero_null_ptrs(void **state)
     */
     uint32_t size = 10;
     MemStatus status = my_memzero(NULL, size);
-    assert_int_equal(status, MemStatus_ERROR_NULL);
+    assert_int_equal(status, MemStatus_Null_Pointer);
 
 }
 
@@ -289,7 +289,7 @@ void test_my_memzero_set_entire_array(void **state)
     }
 
     MemStatus status = my_memzero(data, size);
-    assert_int_equal(status, MemStatus_SUCCESS);
+    assert_int_equal(status, MemStatus_Success);
     uint8_t expected = 0;
     for (size_t i = 0; i < size; i++) {
 #       ifdef NDEBUG
@@ -308,7 +308,7 @@ void test_my_reverse_null_ptr(void **state)
     */
     int length = 4;
     MemStatus status = my_reverse(NULL, length);
-    assert_int_equal(status, MemStatus_ERROR_NULL);
+    assert_int_equal(status, MemStatus_Null_Pointer);
 }
 
 void test_my_reverse_even_length(void **state)
@@ -321,7 +321,7 @@ void test_my_reverse_even_length(void **state)
     uint8_t data[LENGTH] = {0, 1, 2, 3};
     uint8_t expected[LENGTH] = {3, 2, 1, 0};
     MemStatus status = my_reverse(data, length);
-    assert_int_equal(status, MemStatus_SUCCESS);
+    assert_int_equal(status, MemStatus_Success);
     assert_memory_equal(expected, data, length);
 #undef LENGTH
 }
@@ -336,7 +336,7 @@ void test_my_reverse_odd_length(void **state)
     uint8_t data[LENGTH] = {0, 1, 2, 3, 4};
     uint8_t expected[LENGTH] = {4, 3, 2, 1, 0};
     MemStatus status = my_reverse(data, length);
-    assert_int_equal(status, MemStatus_SUCCESS);
+    assert_int_equal(status, MemStatus_Success);
     assert_memory_equal(expected, data, length);
 #undef LENGTH
 }
@@ -351,7 +351,7 @@ void test_my_reverse_zero_length(void **state)
     uint8_t data[LENGTH] = {0, 1, 2, 3, 4};
     uint8_t expected[LENGTH] = {0, 1, 2, 3, 4};
     MemStatus status = my_reverse(data, 0);
-    assert_int_equal(status, MemStatus_SUCCESS);
+    assert_int_equal(status, MemStatus_Success);
     assert_memory_equal(expected, data, length);
 #undef LENGTH
 }
@@ -366,7 +366,7 @@ void test_my_reverse_subarray_after(void **state)
     uint8_t data[LENGTH] = {0, 1, 2, 3, 4};
     uint8_t expected[LENGTH] = {3, 2, 1, 0, 4};
     MemStatus status = my_reverse(data, 4);
-    assert_int_equal(status, MemStatus_SUCCESS);
+    assert_int_equal(status, MemStatus_Success);
     assert_memory_equal(expected, data, length);
 #undef LENGTH
 }
@@ -381,7 +381,7 @@ void test_my_reverse_subarray_before(void **state)
     uint8_t data[LENGTH] = {0, 1, 2, 3, 4};
     uint8_t expected[LENGTH] = {0, 4, 3, 2, 1};
     MemStatus status = my_reverse(data + 1, 4);
-    assert_int_equal(status, MemStatus_SUCCESS);
+    assert_int_equal(status, MemStatus_Success);
     assert_memory_equal(expected, data, length);
 #undef LENGTH
 }
@@ -400,7 +400,7 @@ void test_my_reverse_all_characters(void **state)
     }
 
     MemStatus status = my_reverse(data, size);
-    assert_int_equal(status, MemStatus_SUCCESS);
+    assert_int_equal(status, MemStatus_Success);
     assert_memory_equal(expected, data, size);
 
 }

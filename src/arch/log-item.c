@@ -20,7 +20,7 @@
 
 BinaryLoggerStatus InitializeLoggerForLogItems(void)
 {
-    BinaryLoggerStatus status = BinaryLogger_OK;
+    BinaryLoggerStatus status = BinaryLogger_Success;
     uint16_t magic_number = 0x4477u;
     log_data(sizeof(magic_number), (uint8_t *)(&magic_number));
     uint8_t data = sizeof(BinaryLoggerID);
@@ -33,19 +33,19 @@ BinaryLoggerStatus InitializeLoggerForLogItems(void)
 
 BinaryLoggerStatus CreateLogItem(log_item_t **item)
 {
-    BinaryLoggerStatus status = BinaryLogger_OK;
+    BinaryLoggerStatus status = BinaryLogger_Success;
     *item = malloc(sizeof(log_item_t));
     if (NULL == *item) {
-        status = BinaryLogger_ItemAllocationError;
+        status = BinaryLogger_Item_Alloc_Error;
     } else {
         (*item)->id = 0;
         (*item)->payload_num_bytes = 0;
         (*item)->payload = malloc(max_payload_bytes);
         if (NULL == (*item)->payload) {
-            status = BinaryLogger_ItemAllocationError;
+            status = BinaryLogger_Item_Alloc_Error;
         }
     }
-    if (BinaryLogger_OK != status) {
+    if (BinaryLogger_Success != status) {
         DestroyLogItem(item);
     }
     return status;
@@ -54,16 +54,16 @@ BinaryLoggerStatus CreateLogItem(log_item_t **item)
 BinaryLoggerStatus UpdateLogItem(log_item_t *item, BinaryLoggerID id,
                                  logger_size_t num_bytes, const void *payload)
 {
-    BinaryLoggerStatus status = BinaryLogger_OK;
+    BinaryLoggerStatus status = BinaryLogger_Success;
     if (NULL == item) {
-        status = BinaryLogger_Null;
+        status = BinaryLogger_Null_Pointer;
     }
 
     if (NULL == item->payload) {
-        status = BinaryLogger_Null;
+        status = BinaryLogger_Null_Pointer;
     }
 
-    if (BinaryLogger_OK == status) {
+    if (BinaryLogger_Success == status) {
         item->id = id;
         // FIXME(bja, 2017-03) what's the best error handling for a size greater
         // than our buffer...? Return an error, or just log what we can....
@@ -72,8 +72,8 @@ BinaryLoggerStatus UpdateLogItem(log_item_t *item, BinaryLoggerID id,
         if (item->payload_num_bytes > 0) {
             MemStatus mem_stat = my_memmove((uint8_t *)payload, item->payload,
                                             item->payload_num_bytes);
-            if (MemStatus_SUCCESS != mem_stat) {
-                status = BinaryLogger_ItemAllocationError;
+            if (MemStatus_Success != mem_stat) {
+                status = BinaryLogger_Item_Alloc_Error;
             }
         }
     }
@@ -82,16 +82,16 @@ BinaryLoggerStatus UpdateLogItem(log_item_t *item, BinaryLoggerID id,
 
 BinaryLoggerStatus log_item(const log_item_t *item)
 {
-    BinaryLoggerStatus status = BinaryLogger_OK;
+    BinaryLoggerStatus status = BinaryLogger_Success;
     if (NULL == item) {
-        status = BinaryLogger_ItemNULL;
+        status = BinaryLogger_Null_Item;
     } else {
         log_data(sizeof(item->id), (uint8_t *)(&(item->id)));
         log_data(sizeof(item->payload_num_bytes),
                  (uint8_t *)(&item->payload_num_bytes));
         if (item->payload_num_bytes > 0) {
             if (null_payload == item->payload) {
-                status = BinaryLogger_DataNull;
+                status = BinaryLogger_Null_Data;
             } else {
                 log_data(item->payload_num_bytes, item->payload);
             }
@@ -102,7 +102,7 @@ BinaryLoggerStatus log_item(const log_item_t *item)
 
 BinaryLoggerStatus DestroyLogItem(log_item_t **item)
 {
-    BinaryLoggerStatus status = BinaryLogger_OK;
+    BinaryLoggerStatus status = BinaryLogger_Success;
     if (NULL != *item) {
         free((*item)->payload);
     }
@@ -118,7 +118,7 @@ BinaryLoggerStatus DestroyLogItem(log_item_t **item)
 BinaryLoggerStatus CreateLogItem(log_item_t **item)
 {
     (void)item;
-    return BinaryLogger_OK;
+    return BinaryLogger_Success;
 }
 
 BinaryLoggerStatus UpdateLogItem(log_item_t *item, BinaryLoggerID id,
@@ -127,19 +127,19 @@ BinaryLoggerStatus UpdateLogItem(log_item_t *item, BinaryLoggerID id,
     (void)item;
     (void)num_bytes;
     (void)payload;
-    return BinaryLogger_OK;
+    return BinaryLogger_Success;
 }
 
 BinaryLoggerStatus DestroyLogItem(log_item_t **item)
 {
     (void)item;
-    return BinaryLogger_OK;
+    return BinaryLogger_Success;
 }
 
 BinaryLoggerStatus log_item(const log_item_t *item)
 {
     (void)item;
-    return BinaryLogger_OK;
+    return BinaryLogger_Success;
 }
 
 #endif

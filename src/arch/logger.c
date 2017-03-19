@@ -35,26 +35,26 @@ static const logger_size_t bytes_per_item = sizeof(
 
 BinaryLoggerStatus BinaryLoggerCreate(logger_size_t num_bytes)
 {
-    BinaryLoggerStatus status = BinaryLogger_OK;
+    BinaryLoggerStatus status = BinaryLogger_Success;
     CircularBufferStatus cb_status;
     logger_size_t num_buffer_items = num_bytes / bytes_per_item;
     cb_status = CircularBufferNew(&(logger.transmit_buffer), num_buffer_items,
                                   bytes_per_item);
-    if (CB_No_Error != cb_status) {
+    if (CircularBuffer_Success != cb_status) {
         return BinaryLogger_Error;
     }
     cb_status = CircularBufferNew(&(logger.receive_buffer), num_buffer_items,
                                   bytes_per_item);
-    if (CB_No_Error != cb_status) {
+    if (CircularBuffer_Success != cb_status) {
         return BinaryLogger_Error;
     }
 
     UartStatus uart_status = CreateUART(&(logger.uart), UartDebugger);
-    if (UART_Status_OK != uart_status) {
+    if (UART_Status_Success != uart_status) {
         abort();
     }
     logger.uart.initialize(debugger_baud);
-    if (UART_Status_OK != uart_status) {
+    if (UART_Status_Success != uart_status) {
         abort();
     }
 
@@ -63,7 +63,7 @@ BinaryLoggerStatus BinaryLoggerCreate(logger_size_t num_bytes)
 
 BinaryLoggerStatus log_data(logger_size_t num_bytes, uint8_t *buffer)
 {
-    BinaryLoggerStatus status = BinaryLogger_OK;
+    BinaryLoggerStatus status = BinaryLogger_Success;
     CircularBufferStatus cb_status;
     for (logger_size_t n = 0; n < num_bytes; n++) {
         bool is_full;
@@ -72,7 +72,7 @@ BinaryLoggerStatus log_data(logger_size_t num_bytes, uint8_t *buffer)
             cb_status = CircularBufferIsFull(logger.transmit_buffer, &is_full);
         } while (is_full);
         cb_status = CircularBufferAddItem(logger.transmit_buffer, buffer + n);
-        if (CB_No_Error != cb_status) {
+        if (CircularBuffer_Success != cb_status) {
             abort();
         }
 
@@ -104,7 +104,7 @@ BinaryLoggerStatus log_data(logger_size_t num_bytes, uint8_t *buffer)
 
 BinaryLoggerStatus log_string(uint8_t *string)
 {
-    BinaryLoggerStatus status = BinaryLogger_OK;
+    BinaryLoggerStatus status = BinaryLogger_Success;
     size_t string_length = 0;
     while (*(string + string_length) != '\0') {
         string_length++;
@@ -115,7 +115,7 @@ BinaryLoggerStatus log_string(uint8_t *string)
 
 BinaryLoggerStatus log_integer(int32_t integer)
 {
-    BinaryLoggerStatus status = BinaryLogger_OK;
+    BinaryLoggerStatus status = BinaryLogger_Success;
     const size_t max_digits = 32;
     char string[max_digits];
     my_memset((uint8_t *)string, max_digits, '\0');
@@ -127,13 +127,13 @@ BinaryLoggerStatus log_integer(int32_t integer)
 
 BinaryLoggerStatus log_flush(void)
 {
-    BinaryLoggerStatus status = BinaryLogger_OK;
+    BinaryLoggerStatus status = BinaryLogger_Success;
     CircularBufferStatus cb_status;
 
     bool is_empty = false;
     do {
         cb_status = CircularBufferIsEmpty(logger.transmit_buffer, &is_empty);
-        if (CB_No_Error != cb_status) {
+        if (CircularBuffer_Success != cb_status) {
             status = BinaryLogger_Error;
             break;
         }
@@ -143,9 +143,9 @@ BinaryLoggerStatus log_flush(void)
 
 BinaryLoggerStatus log_receive_data(logger_size_t num_bytes, uint8_t *buffer)
 {
-    BinaryLoggerStatus status = BinaryLogger_OK;
-    UartStatus uart_status = UART_Status_OK;
-    CircularBufferStatus cb_status = CB_No_Error;
+    BinaryLoggerStatus status = BinaryLogger_Success;
+    UartStatus uart_status = UART_Status_Success;
+    CircularBufferStatus cb_status = CircularBuffer_Success;
 
 #if (PLATFORM == PLATFORM_FRDM) && (LOGGER_ALGORITHM == LOGGER_INTERRUPTS)
     // extraction from uart receive data register and pack into the circular
@@ -155,11 +155,11 @@ BinaryLoggerStatus log_receive_data(logger_size_t num_bytes, uint8_t *buffer)
     for (logger_size_t n = 0; n < num_bytes; n++) {
         uint8_t byte;
         uart_status = logger.uart.receive_byte(&byte);
-        if (UART_Status_OK != uart_status) {
+        if (UART_Status_Success != uart_status) {
             status = BinaryLogger_Error;
         }
         cb_status = CircularBufferAddItem(logger.receive_buffer, &byte);
-        if (CB_No_Error != cb_status) {
+        if (CircularBuffer_Success != cb_status) {
             abort();
         }
     }
@@ -169,7 +169,7 @@ BinaryLoggerStatus log_receive_data(logger_size_t num_bytes, uint8_t *buffer)
     while (num_received < num_bytes) {
         uint8_t byte;
         cb_status = CircularBufferRemoveItem(logger.receive_buffer, (void *)(&byte));
-        if (CB_No_Error == cb_status) {
+        if (CircularBuffer_Success == cb_status) {
             *(buffer + num_received) = byte;
             num_received++;
         }
@@ -186,37 +186,37 @@ BinaryLoggerStatus BinaryLoggerInitialize(logger_size_t num_bytes)
 {
     (void)null_payload;
     (void)num_bytes;
-    return BinaryLogger_OK;
+    return BinaryLogger_Success;
 }
 
 BinaryLoggerStatus log_data(logger_size_t num_bytes, uint8_t *buffer)
 {
     (void)num_bytes;
     (void)buffer;
-    return BinaryLogger_OK;
+    return BinaryLogger_Success;
 }
 
 BinaryLoggerStatus log_string(uint8_t *string)
 {
     (void)string;
-    return BinaryLogger_OK;
+    return BinaryLogger_Success;
 }
 
 BinaryLoggerStatus log_integer(int32_t integer)
 {
     (void)integer;
-    return BinaryLogger_OK;
+    return BinaryLogger_Success;
 }
 
 BinaryLoggerStatus log_flush(void)
 {
-    return BinaryLogger_OK;
+    return BinaryLogger_Success;
 }
 
 BinaryLoggerStatus log_receive_data(logger_size_t num_bytes, uint8_t *buffer)
 {
     (void)num_bytes;
     (void)buffer;
-    return BinaryLogger_OK;
+    return BinaryLogger_Success;
 }
 #endif

@@ -33,14 +33,14 @@ void frdm_kl25z_initialize_gpio(void)
     GPIOB->PTOR |= (1 << LED_PIN_GREEN);
 
     log_item_t *item;
-    BinaryLoggerStatus logger_status = BinaryLogger_OK;
+    BinaryLoggerStatus logger_status = BinaryLogger_Success;
     logger_status = CreateLogItem(&item);
-    if (BinaryLogger_OK != logger_status) {
+    if (BinaryLogger_Success != logger_status) {
         abort();
     }
     logger_status = UpdateLogItem(item, GPIO_INITIALIZED, zero_payload_bytes,
                                   null_payload);
-    if (BinaryLogger_OK != logger_status) {
+    if (BinaryLogger_Success != logger_status) {
         abort();
     }
     log_item(item);

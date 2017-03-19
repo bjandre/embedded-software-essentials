@@ -18,7 +18,7 @@ void swap(uint8_t *a, uint8_t *b);
 MemStatus my_memmove(uint8_t *source, uint8_t *destination, uint32_t length)
 {
     if (NULL == source || NULL == destination) {
-        return MemStatus_ERROR_NULL;
+        return MemStatus_Null_Pointer;
     }
     // Check for overlapped regions. Note that there are five possible overlap patterns:
     //
@@ -57,35 +57,35 @@ MemStatus my_memmove(uint8_t *source, uint8_t *destination, uint32_t length)
         }
     }
 
-    return MemStatus_SUCCESS;
+    return MemStatus_Success;
 }
 
 MemStatus my_memset(uint8_t *source, uint32_t length, uint8_t value)
 {
     if (NULL == source) {
-        return MemStatus_ERROR_NULL;
+        return MemStatus_Null_Pointer;
     }
 
     for (uint32_t i = 0; i < length; i++) {
         *(source + i) = value;
     }
-    return MemStatus_SUCCESS;
+    return MemStatus_Success;
 }
 
 MemStatus my_memzero(uint8_t *source, uint32_t length)
 {
     if (NULL == source) {
-        return MemStatus_ERROR_NULL;
+        return MemStatus_Null_Pointer;
     }
 
     my_memset(source, length, 0);
-    return MemStatus_SUCCESS;
+    return MemStatus_Success;
 }
 
 MemStatus my_reverse(uint8_t *source, uint32_t length)
 {
     if (NULL == source) {
-        return MemStatus_ERROR_NULL;
+        return MemStatus_Null_Pointer;
     }
 
     uint8_t *begin = source;
@@ -95,7 +95,7 @@ MemStatus my_reverse(uint8_t *source, uint32_t length)
         begin++;
         end--;
     }
-    return MemStatus_SUCCESS;
+    return MemStatus_Success;
 }
 
 void swap(uint8_t *a, uint8_t *b)

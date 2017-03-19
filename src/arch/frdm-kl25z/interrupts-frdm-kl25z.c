@@ -30,7 +30,7 @@ void frdm_kl25z_initialize_interrupts(void)
 
 extern void UART0_IRQHandler(void)
 {
-    CircularBufferStatus cb_status = CB_No_Error;
+    CircularBufferStatus cb_status = CircularBuffer_Success;
     uint8_t byte;
     // What triggered the interrupt...
     if (UART0->S1 & UART0_S1_RDRF_MASK) {
@@ -41,7 +41,7 @@ extern void UART0_IRQHandler(void)
             cb_status = CircularBufferAddItem(logger.receive_buffer, &byte);
             global_async_data.data_available = true;
         }
-        if (CB_No_Error == cb_status) {
+        if (CircularBuffer_Success == cb_status) {
             // do nothing? status flag is automatically reset
         } else {
             // error handling?
@@ -52,7 +52,7 @@ extern void UART0_IRQHandler(void)
             // NOTE(bja, 2017-03) critical region accessing global data.
             cb_status = CircularBufferRemoveItem(logger.transmit_buffer, &byte);
         }
-        if (CB_No_Error == cb_status) {
+        if (CircularBuffer_Success == cb_status) {
             // successfully removed item.
             UART0->D = byte;
         } else {

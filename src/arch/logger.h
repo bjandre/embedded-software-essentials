@@ -41,12 +41,12 @@ typedef struct BinaryLogger {
    Status codes returned by binary logger operations
  */
 typedef enum BinaryLoggerStatus {
-    BinaryLogger_OK,
+    BinaryLogger_Success,
     BinaryLogger_Error,
-    BinaryLogger_Null,
-    BinaryLogger_ItemAllocationError,
-    BinaryLogger_ItemNULL,
-    BinaryLogger_DataNull,
+    BinaryLogger_Null_Pointer,
+    BinaryLogger_Item_Alloc_Error,
+    BinaryLogger_Null_Item,
+    BinaryLogger_Null_Data,
 } BinaryLoggerStatus;
 
 /**

@@ -78,22 +78,22 @@ int main(int argc, char **argv)
 
     initialize_interrupts();
 
-    BinaryLoggerStatus logger_status = BinaryLogger_OK;
+    BinaryLoggerStatus logger_status = BinaryLogger_Success;
     uint8_t const buffer_size_bytes = 32;
     logger_status = BinaryLoggerCreate(buffer_size_bytes);
-    if (BinaryLogger_OK != logger_status) {
+    if (BinaryLogger_Success != logger_status) {
         abort();
     }
 
     InitializeLoggerForLogItems();
     log_item_t *item;
     logger_status = CreateLogItem(&item);
-    if (BinaryLogger_OK != logger_status) {
+    if (BinaryLogger_Success != logger_status) {
         abort();
     }
     logger_status = UpdateLogItem(item, LOGGER_INITIALIZED, zero_payload_bytes,
                                   null_payload);
-    if (BinaryLogger_OK != logger_status) {
+    if (BinaryLogger_Success != logger_status) {
         abort();
     }
     log_item(item);
@@ -102,7 +102,7 @@ int main(int argc, char **argv)
 
     logger_status = UpdateLogItem(item, SYSTEM_INITIALIZED, zero_payload_bytes,
                                   null_payload);
-    if (BinaryLogger_OK != logger_status) {
+    if (BinaryLogger_Success != logger_status) {
         abort();
     }
     log_item(item);
@@ -122,7 +122,7 @@ int main(int argc, char **argv)
 
     logger_status = UpdateLogItem(item, DATA_ANALYSIS_STARTED, zero_payload_bytes,
                                   null_payload);
-    if (BinaryLogger_OK != logger_status) {
+    if (BinaryLogger_Success != logger_status) {
         abort();
     }
     log_item(item);
@@ -149,7 +149,7 @@ int main(int argc, char **argv)
         if (data_available) {
             log_receive_data(1, &byte);
             logger_status = UpdateLogItem(item, DATA_RECEIVED, 1, &byte);
-            if (BinaryLogger_OK != logger_status) {
+            if (BinaryLogger_Success != logger_status) {
                 abort();
             }
             log_item(item);
@@ -161,7 +161,7 @@ int main(int argc, char **argv)
             log_data_analysis(item, &data_summary);
             logger_status = UpdateLogItem(item, DATA_ANALYSIS_COMPLETED,
                                           zero_payload_bytes, null_payload);
-            if (BinaryLogger_OK != logger_status) {
+            if (BinaryLogger_Success != logger_status) {
                 abort();
             }
             log_item(item);

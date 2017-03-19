@@ -70,7 +70,7 @@ UartStatus uartSetupDebugger(uart_t volatile *uart);
 UartStatus uart_transmit_n_bytes(uart_t *uart,
                                  const size_t num_bytes, uint8_t *bytes)
 {
-    UartStatus status = UART_Status_OK;
+    UartStatus status = UART_Status_Success;
     for (size_t n = 0; n < num_bytes; n++) {
         uart->transmit_byte(*(bytes + n));
     }
@@ -80,7 +80,7 @@ UartStatus uart_transmit_n_bytes(uart_t *uart,
 UartStatus uart_receive_n_bytes(uart_t *uart, const size_t num_bytes,
                                 uint8_t *bytes)
 {
-    UartStatus status = UART_Status_OK;
+    UartStatus status = UART_Status_Success;
     for (size_t n = 0; n < num_bytes; n++) {
         uart->receive_byte(bytes + n);
     }
@@ -90,7 +90,7 @@ UartStatus uart_receive_n_bytes(uart_t *uart, const size_t num_bytes,
 
 UartStatus CreateUART(uart_t volatile *uart, UartFunction uart_function)
 {
-    UartStatus status = UART_Status_OK;
+    UartStatus status = UART_Status_Success;
 
     uart->transmit_n_bytes = &uart_transmit_n_bytes;
     uart->receive_n_bytes = &uart_receive_n_bytes;
@@ -107,7 +107,7 @@ UartStatus CreateUART(uart_t volatile *uart, UartFunction uart_function)
 
 UartStatus uartSetupDebugger(uart_t volatile *uart)
 {
-    UartStatus status = UART_Status_OK;
+    UartStatus status = UART_Status_Success;
 #if (PLATFORM == PLATFORM_HOST) || (PLATFORM == PLATFORM_BBB)
     uart->initialize = &host_uart_initialize;
     uart->transmit_byte = &host_uart_transmit_byte;

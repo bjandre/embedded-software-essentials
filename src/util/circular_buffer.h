@@ -38,15 +38,15 @@ typedef struct CircularBuffer_t CircularBuffer_t;
 /**
    Status code returned by all circular buffer operations
  */
-typedef enum CircularBufferStatus_t {
-    CB_No_Error,
-    CB_Full,
-    CB_Empty,
-    CB_Null_Pointer,
-    CB_No_Num_Items,
-    CB_No_Bytes_Per_Item,
-    CB_Buffer_Allocation_Failure,
-    CB_Copy_Error
+typedef enum CircularBufferStatus {
+    CircularBuffer_Success,
+    CircularBuffer_Is_Full,
+    CircularBuffer_Is_Empty,
+    CircularBuffer_Null_Pointer,
+    CircularBuffer_No_Num_Items,
+    CircularBuffer_No_Bytes_Per_Item,
+    CircularBuffer_Buffer_Allocation_Failure,
+    CircularBuffer_Copy_Error
 } CircularBufferStatus;
 
 /**
@@ -94,7 +94,7 @@ CircularBufferStatus CircularBufferIsFull(CircularBuffer_t volatile *cb,
 
    \return CircularBufferStatus corresponding to action or buffer status
             Note:
-            this returns CircularBuffer_Success or CircularBuffer_Null. CB_Empyt only returned when
+            this returns CircularBuffer_Success or CircularBuffer_Null. CircularBuffer_Empyt only returned when
             trying to remove an item from an empty buffer.
  */
 CircularBufferStatus CircularBufferIsEmpty(CircularBuffer_t volatile *cb,

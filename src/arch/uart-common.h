@@ -16,8 +16,8 @@
 /**
    Status of UART operation
  */
-typedef enum UartStatus_t {
-    UART_Status_OK,
+typedef enum UartStatus {
+    UART_Status_Success,
     UART_Status_Error,
 } UartStatus;
 

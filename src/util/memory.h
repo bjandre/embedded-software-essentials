@@ -24,8 +24,8 @@
     All memory utilities return the status of the operation.
  */
 typedef enum MemoryStatus {
-    MemStatus_SUCCESS, //!< operation successful
-    MemStatus_ERROR_NULL, //!< operation failed with an unknow error
+    MemStatus_Success, //!< operation successful
+    MemStatus_Null_Pointer, //!< operation failed with an unknow error
 } MemStatus;
 
 /**
