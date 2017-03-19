@@ -15,6 +15,9 @@
 
 #include <logger.h>
 
+/**
+   Store results of data analysis
+ */
 typedef struct DataSummary {
     uint32_t num_alphabetic;
     uint32_t num_numeric;
@@ -27,10 +30,10 @@ typedef struct DataSummary {
 
    Clear the counters in a data_summary struct.
 
-   Params: *data_summary - pointer to a data_summary object that is to be
+   \param[in,out] *data_summary - pointer to a data_summary object that is to be
    cleared.
 
-   Returns: none
+   \return none
  */
 void clear_data_summary(data_summary_t *data_summary);
 
@@ -43,10 +46,11 @@ void clear_data_summary(data_summary_t *data_summary);
    Analysis is to classify each byte if input data according to what type of
    ascii character it is: alphabetic, numeric, punctuation, or misc.
 
-   Params: *data_summary - pointer to a data_summary struct with the current
+   \param[in,out] *data_summary - pointer to a data_summary struct with the current
    analysis.
+   \param[in] byte - data to add to the analysis
 
-   Returns: none
+   \return none
  */
 void process_data(data_summary_t *data_summary, uint8_t byte);
 
@@ -55,10 +59,11 @@ void process_data(data_summary_t *data_summary, uint8_t byte);
 
    Send the data analysis to the global logger.
 
-   Params: *data_summary - pointer to a data_summary struct with the current
+   \param[in] *item - pointer to a log item object
+   \param[in] *data_summary - pointer to a data_summary struct with the current
    analysis.
 
-   Returns: none
+   \return none
  */
 void log_data_analysis(log_item_t *item, data_summary_t *data_summary);
 

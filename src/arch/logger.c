@@ -26,10 +26,12 @@
 
 #ifdef LOGGING_ENABLED
 
-extern BinaryLogger_t volatile logger;
+extern BinaryLogger_t volatile
+logger; //!< extern reference to the global logger
 
-static const uint32_t debugger_baud = 115200u;
-static const logger_size_t bytes_per_item = sizeof(uint8_t);
+static const uint32_t debugger_baud = 115200u; //!< UART debugger baud
+static const logger_size_t bytes_per_item = sizeof(
+            uint8_t); //!< number of bytes per sent via logger
 
 BinaryLoggerStatus BinaryLoggerInitialize(logger_size_t num_bytes)
 {

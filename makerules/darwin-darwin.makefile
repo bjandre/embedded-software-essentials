@@ -33,4 +33,4 @@ endif
 OBJDUMP = otool
 OBJDUMP_FLAGS = -Vvt
 
-
+DOXYGEN = doxygen

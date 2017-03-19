@@ -37,6 +37,9 @@ void test_my_itoa_negative_base10(void **state);
 void test_my_itoa_positive_base2(void **state);
 void test_my_itoa_negative_base16(void **state);
 
+/**
+   Test suite for data manipulation utilities
+*/
 int suite_data(void)
 {
     const struct CMUnitTest data_tests[] = {
@@ -58,7 +61,9 @@ int suite_data(void)
 
 void test_big_to_little_null_ptr(void **state)
 {
-    // test convert big to little error with null pointer
+    /**
+       test convert big to little error with null pointer
+    */
     uint32_t const length = 1;
 
     DataStatus status = big_to_little32(NULL, length);
@@ -67,7 +72,9 @@ void test_big_to_little_null_ptr(void **state)
 
 void test_big_to_little_valid(void **state)
 {
-    // test convert endian by round tripping data, single 8-byte int
+    /**
+       test convert endian by round tripping data, single 8-byte int
+     */
     uint32_t const length = 1;
     uint32_t data = 0x01234567;
     uint32_t expected = 0x67452301;
@@ -80,7 +87,9 @@ void test_big_to_little_valid(void **state)
 
 void test_little_to_big_null_ptr(void **state)
 {
-    // test convert big to little error with null pointer
+    /**
+       test convert big to little error with null pointer
+    */
     uint32_t const length = 1;
 
     DataStatus status = big_to_little32(NULL, length);
@@ -89,7 +98,9 @@ void test_little_to_big_null_ptr(void **state)
 
 void test_little_to_big_valid(void **state)
 {
-    // test convert endian by round tripping data, single 8-byte int
+    /**
+       test convert endian by round tripping data, single 8-byte int
+    */
     uint32_t const length = 1;
     uint32_t data = 0x67452301;
     uint32_t expected = 0x01234567;
@@ -103,7 +114,9 @@ void test_little_to_big_valid(void **state)
 
 void test_convert_endian32_1(void **state)
 {
-    // test convert endian by round tripping data, single 8-byte int
+    /**
+       test convert endian by round tripping data, single 8-byte int
+    */
     uint32_t const length = 1;
     uint32_t data = 0x01234567;
     uint32_t expected = 0x67452301;
@@ -124,7 +137,9 @@ void test_convert_endian32_1(void **state)
 
 void test_convert_endian32_2(void **state)
 {
-    // test convert endian works on an array of 4 8-byte ints
+    /**
+       test convert endian works on an array of 4 8-byte ints
+    */
     uint32_t const length = 4;
     uint32_t data[length];
     uint32_t expected[length];
@@ -159,7 +174,9 @@ void test_convert_endian32_2(void **state)
 
 void test_my_atoi_leading_whitespace_null_term(void **state)
 {
-    // test converting a null terminated string with leading whitespace.
+    /**
+       test converting a null terminated string with leading whitespace.
+    */
 #define LENGTH 10
     int8_t string[LENGTH] = "     1002\0";
     uint32_t expected = 1002;
@@ -175,7 +192,9 @@ void test_my_atoi_leading_whitespace_null_term(void **state)
 
 void test_my_atoi_negative_null_term(void **state)
 {
-    // test converting a negative number as a null terminated string
+    /**
+       test converting a negative number as a null terminated string
+    */
 #define LENGTH 10
     int8_t string[LENGTH] = " -1537902\0";
     uint32_t expected = -1537902;
@@ -191,7 +210,9 @@ void test_my_atoi_negative_null_term(void **state)
 
 void test_my_itoa_positive_base10(void **state)
 {
-    // test converting an integer base 10 to a string
+    /**
+       test converting an integer base 10 to a string
+    */
 #define LENGTH 33
     uint32_t length = LENGTH;
     int8_t string[LENGTH];
@@ -212,7 +233,9 @@ void test_my_itoa_positive_base10(void **state)
 
 void test_my_itoa_negative_base10(void **state)
 {
-    // test converting an negative integer base 10 to a string
+    /**
+       test converting an negative integer base 10 to a string
+    */
 #define LENGTH 33
     uint32_t length = LENGTH;
     int8_t string[LENGTH];
@@ -234,7 +257,9 @@ void test_my_itoa_negative_base10(void **state)
 
 void test_my_itoa_positive_base2(void **state)
 {
-    // test converting an integer base 2 to a string
+    /**
+       test converting an integer base 2 to a string
+    */
 #define LENGTH 33
     uint32_t length = LENGTH;
     int8_t string[LENGTH];
@@ -256,7 +281,9 @@ void test_my_itoa_positive_base2(void **state)
 
 void test_my_itoa_negative_base16(void **state)
 {
-    // test converting a negative integer base 16 to a string
+    /**
+       test converting a negative integer base 16 to a string
+    */
 #define LENGTH 33
     uint32_t length = LENGTH;
     int8_t string[LENGTH];

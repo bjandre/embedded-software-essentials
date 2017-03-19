@@ -33,7 +33,8 @@ BUILD_ARTIFACTS = \
   *.i \
   *.$(DUMP_EXTENSION) \
   *.$(SREC_EXTENSION) \
-  $(DEPENDS_DIR) *.d *.Td
+  $(DEPENDS_DIR) *.d *.Td \
+  doxygen.warnings.log
 
 EDITOR_FILES = \
   *~ \
@@ -44,3 +45,6 @@ THIRD_PARTY_DIR := 3rd-party
 
 CMOCKA_INCLUDE_DIR = $(WORKSPACE_PATH)/$(THIRD_PARTY_DIR)/build-Debug/include
 CMOCKA_LIBRARY = $(WORKSPACE_PATH)/$(THIRD_PARTY_DIR)/build-Debug/lib/libcmocka.a
+
+DOC_HTML = doc/html
+DOC_LATEX = doc/latex

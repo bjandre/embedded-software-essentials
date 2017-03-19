@@ -16,6 +16,9 @@
 #include "test_circular_buffer.h"
 #include "test_bit-operations.h"
 
+/**
+   main test driver for all platform independent utilities
+ */
 int main(int argc, char **argv)
 {
     int status = 0;

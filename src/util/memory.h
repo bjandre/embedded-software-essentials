@@ -1,3 +1,8 @@
+/**
+   \file memory.h
+
+   Platform and architecture independent memory related utilities
+ */
 
 /*
 ** Copyright 2017 Benjamin J. Andre.
@@ -13,15 +18,17 @@
 
 #include <stdint.h>
 
+/**
+    Memory Utilities Return Status
+
+    All memory utilities return the status of the operation.
+ */
 typedef enum MemoryStatus {
-    MemStatus_SUCCESS,
-    MemStatus_ERROR_NULL,
+    MemStatus_SUCCESS, //!< operation successful
+    MemStatus_ERROR_NULL, //!< operation failed with an unknow error
 } MemStatus;
 
-/*
- * my_memove(source, destination, length)
- *
- *
+/**
  * Takes one source pointer, one destination pointer and a length of bytes to
  * move from one location to the other.
  *
@@ -30,76 +37,48 @@ typedef enum MemoryStatus {
  * The source and destination locations must have at least length bytes of
  * properly allocated memory.
  *
- * input:
+ * \param[in] source pointer to a list of bytes to be moved.
+ * \param[out] destination pointer to a destination location.
+ * \param[in] length the number of bytes to be moved
  *
- *   source : pointer to a list of bytes to be moved.
- *
- *   destination : pointer to a destination location.
- *
- *   length : the number of bytes to be moved
- *
- * returns:
- *
- *   MemStatus flag indicating success or type of error tha occured.
+ * \return MemStatus flag indicating success or type of error tha occured.
  *
  */
 MemStatus my_memmove(uint8_t *source, uint8_t *destination, uint32_t length);
 
-/*
- * my_memset(source, length, value)
- *
+/**
  * Take a pointer to a memory location, a length in
  * bytes and 1 byte value. Set all bytes of the memory to the specified value.
  *
- * input:
+ * \param[in,out] source pointer to a list of bytes
+ * \param[in] length the number of bytes to be moved
+ * \param[in] value 1 byte value to assign to all bytes.
  *
- *   source : pointer to a list of bytes
- *
- *   length : the number of bytes to be moved
- *
- *   value : 1 byte value to assign to all bytes.
- *
- * returns:
- *
- *   MemStatus flag indicating success or type of error tha occured.
+ * \returns MemStatus flag indicating success or type of error tha occured.
  *
  */
 MemStatus my_memset(uint8_t *source, uint32_t length, uint8_t value);
 
-/*
- * my_memzero(source, length)
- *
+/**
  * Takes a pointer to a memory location and a length in
  * bytes and zeros out all of the memory.
  *
- * input:
+ * \param[in,out] source pointer to a list of bytes
+ * \param[in] length the number of bytes to be zeroed
  *
- *   source : pointer to a list of bytes
- *
- *   length : the number of bytes to be moved
- *
- * returns:
- *
- *   MemStatus flag indicating success or type of error tha occured.
+ * \return MemStatus flag indicating success or type of error tha occured.
  *
  */
 MemStatus my_memzero(uint8_t *source, uint32_t length);
 
-/*
- * my_reverse(source, length)
- *
+/**
  * Takes a pointer to a memory location and a length in
  * bytes and reverses the order of the bytes
  *
- * input:
+ * \param[in,out] source pointer to a list of bytes
+ * \param[in] length the number of bytes to be moved
  *
- *   source : pointer to a list of bytes
- *
- *   length : the number of bytes to be moved
- *
- * returns:
- *
- *   MemStatus flag indicating success or type of error tha occured.
+ * \return MemStatus flag indicating success or type of error tha occured.
  *
  */
 MemStatus my_reverse(uint8_t *source, uint32_t length);

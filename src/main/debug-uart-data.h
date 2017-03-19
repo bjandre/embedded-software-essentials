@@ -28,9 +28,9 @@ static const char ese_hello[] =
 
    Routine to send and receive some data for debugging the uart logger.
 
-   Params: data_switch - flag to control which uart data test is run.
-
-   Returns: none
+   \param[in] data_switch - flag to control which uart data test is run.
+   \param[in] *buffer - pointer to data buffer
+   \param[in] buffer_size
 
  */
 void debug_uart(uint8_t data_switch, uint8_t *buffer, size_t buffer_size);
@@ -39,10 +39,6 @@ void debug_uart(uint8_t data_switch, uint8_t *buffer, size_t buffer_size);
    debug_uart_transmit()
 
    Routine to send some fixed byte patterns to the logger
-
-   Params: none
-
-   Returns: none
 
  */
 void debug_uart_transmit(void);
@@ -53,9 +49,8 @@ void debug_uart_transmit(void);
    Routine to receive a byte and send back different data based on the received
    data. Note: this only works if the logging algorithm is set to polling.
 
-   Params: none
-
-   Returns: none
+   \param[in] *buffer - pointer to buffer to received and transmit
+   \param[in] buffer_size size of the buffer
 
  */
 void debug_uart_receive_transmit(uint8_t *buffer, size_t buffer_size);

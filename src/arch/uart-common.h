@@ -13,13 +13,17 @@
 
 #include <stdint.h>
 
-#include "uart-common.h"
-
+/**
+   Status of UART operation
+ */
 typedef enum UartStatus_t {
     UART_Status_OK,
     UART_Status_Error,
 } UartStatus;
 
+/**
+   Type of UART functionality
+ */
 typedef enum UartFunction_t {
     UartDebugger,
     UartGeneral,

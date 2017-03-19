@@ -93,7 +93,7 @@
 */
 
 /*!
- * @file MKL25Z4
+ * @file system_MKL25Z4.c
  * @version 2.5
  * @date 2015-02-19
  * @brief Device specific configuration file for MKL25Z4 (implementation file)

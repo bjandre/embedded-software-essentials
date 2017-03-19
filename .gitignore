@@ -32,3 +32,8 @@ _depends
 # 3rd party library builds
 3rd-party/build-*
 /Debug/
+
+# generated documentation
+doc/html/
+doc/latex/
+doxygen.warnings.log

@@ -28,6 +28,9 @@ void test_flip_bit_false(void **state);
 void test_get_bit_true(void **state);
 void test_get_bit_false(void **state);
 
+/**
+   Test suite for bit operations utilities.
+*/
 int suite_bit_operations(void)
 {
     const struct CMUnitTest tests[] = {

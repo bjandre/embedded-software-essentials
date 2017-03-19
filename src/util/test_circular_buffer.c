@@ -39,6 +39,9 @@ void test_cb_over_fill(void **state);
 void test_cb_over_empty(void **state);
 void test_cb_peak(void **state);
 
+/**
+   Test suite for circular buffer
+*/
 int suite_circular_buffer(void)
 {
     const struct CMUnitTest cb_tests[] = {
@@ -65,8 +68,10 @@ int suite_circular_buffer(void)
 
 void test_cb_allocate_free(void **state)
 {
-    // test Allocate-Free - Checks that a new dynamic buffer can be created on
-    // the heap and freed correctly.
+    /**
+       test Allocate-Free - Checks that a new dynamic buffer can be created on
+       the heap and freed correctly.
+    */
     CircularBuffer_t volatile *cb = NULL;
     size_t num_items = 1;
     size_t bytes_per_item = 1;
@@ -81,7 +86,9 @@ void test_cb_allocate_free(void **state)
 
 void test_cb_new_size_error(void **state)
 {
-    // test new returns an error when bytes_per_item is 0
+    /**
+       test new returns an error when bytes_per_item is 0
+    */
     CircularBuffer_t volatile *cb = NULL;
     size_t num_items = 1;
     size_t bytes_per_item = 0;
@@ -92,7 +99,9 @@ void test_cb_new_size_error(void **state)
 
 void test_cb_new_length_error(void **state)
 {
-    // test new returns an error when num_items is 0
+    /**
+       test new returns an error when num_items is 0
+    */
     CircularBuffer_t volatile *cb = NULL;
     size_t num_items = 0;
     size_t bytes_per_item = 1;
@@ -103,7 +112,9 @@ void test_cb_new_length_error(void **state)
 
 void test_cb_buffer_null_pointer(void **state)
 {
-    // test Invalid Pointer - Check that buffer pointer is valid
+    /**
+       test Invalid Pointer - Check that buffer pointer is valid
+    */
     uint32_t data = 12345;
     CircularBuffer_t volatile *cb = NULL;
     CircularBufferStatus status = CircularBufferAddItem(cb, &data);
@@ -114,7 +125,9 @@ void test_cb_buffer_null_pointer(void **state)
 
 void test_cb_item_null_pointer(void **state)
 {
-    // test Invalid Pointer - Check that item pointer is valid
+    /**
+       test Invalid Pointer - Check that item pointer is valid
+    */
     CircularBuffer_t volatile *cb = NULL;
     size_t num_items = 2;
     size_t bytes_per_item = sizeof(num_items);
@@ -130,19 +143,22 @@ void test_cb_item_null_pointer(void **state)
 
 void test_cb_uninitialized_buffer(void **state)
 {
-    // test Non-initialized Buffer - Check that buffer is initialized
+    /**
+       test Non-initialized Buffer - Check that buffer is initialized
 
-    // NOTE(bja, 2017-03) the implemenetation of the circular_buffer type should
-    // not allow returning a valid pointer to a circular buffer with an
-    // uninitialized internal buffer. This test isn't really relevant unless I
-    // find an unaccounted for edge case. Marking as passing.
+       NOTE(bja, 2017-03) the implemenetation of the circular_buffer type should
+       not allow returning a valid pointer to a circular buffer with an
+       uninitialized internal buffer. This test isn't really relevant unless I
+       find an unaccounted for edge case. Marking as passing.
+    */
     assert_true(true);
 }
 
 void test_cb_add_remove_one_item(void **state)
 {
-    // test Add-Remove - Check that add and then a remove returns the same item
-    // for full length of buffer
+    /** test Add-Remove - Check that add and then a remove returns the same item
+        for full length of buffer
+    */
     uint32_t data = 12345;
     CircularBuffer_t volatile *cb = NULL;
     size_t num_items = 1;
@@ -166,8 +182,10 @@ void test_cb_add_remove_one_item(void **state)
 
 void test_cb_add_remove_n_items_sizeof1(void **state)
 {
-    // test Add-Remove - Check that add and then a remove returns the same item
-    // for full length of buffer
+    /**
+       test Add-Remove - Check that add and then a remove returns the same item
+       for full length of buffer
+    */
 #define SIZE 10
     uint8_t offset = 123;
     CircularBuffer_t volatile *cb = NULL;
@@ -208,8 +226,10 @@ void test_cb_add_remove_n_items_sizeof1(void **state)
 
 void test_cb_add_remove_n_items_sizeof2(void **state)
 {
-    // test Add-Remove - Check that add and then a remove returns the same item
-    // for full length of buffer
+    /**
+       test Add-Remove - Check that add and then a remove returns the same item
+       for full length of buffer
+    */
 #define SIZE 10
     uint16_t offset = 12345;
     CircularBuffer_t volatile *cb = NULL;
@@ -250,8 +270,10 @@ void test_cb_add_remove_n_items_sizeof2(void **state)
 
 void test_cb_add_remove_n_items_sizeof4(void **state)
 {
-    // test Add-Remove - Check that add and then a remove returns the same item
-    // for full length of buffer
+    /**
+       test Add-Remove - Check that add and then a remove returns the same item
+       for full length of buffer
+    */
 #define SIZE 10
     uint32_t offset = -12345;
     CircularBuffer_t volatile *cb = NULL;
@@ -292,7 +314,9 @@ void test_cb_add_remove_n_items_sizeof4(void **state)
 
 void test_cb_buffer_full(void **state)
 {
-    // test Buffer Full - Check buffer reports when full
+    /**
+       test Buffer Full - Check buffer reports when full
+    */
 #define SIZE 10
     uint32_t offset = -12345;
     CircularBuffer_t volatile *cb = NULL;
@@ -332,7 +356,9 @@ void test_cb_buffer_full(void **state)
 
 void test_cb_buffer_empty(void **state)
 {
-    // test Buffer Empty - Check buffer reports for empty
+    /**
+       test Buffer Empty - Check buffer reports for empty
+    */
     uint32_t data = 12345;
     CircularBuffer_t volatile *cb = NULL;
     size_t num_items = 1;
@@ -361,11 +387,12 @@ void test_cb_buffer_empty(void **state)
 
 void test_cb_wrap_add(void **state)
 {
-    // test Wrap Add - Test that buffer can wrap around the edge boundary
-    // and add to the front
+    /** test Wrap Add - Test that buffer can wrap around the edge boundary
+        and add to the front
 
-    // NOTE(bja, 2017-02) create a small buffer and a bunch of data, and then
-    // add-remove stuff to wrap around a bunch of times.
+        NOTE(bja, 2017-02) create a small buffer and a bunch of data, and then
+        add-remove stuff to wrap around a bunch of times.
+    */
 #define SIZE 32
     uint32_t offset = 12345;
     CircularBuffer_t volatile *cb = NULL;
@@ -404,9 +431,11 @@ void test_cb_wrap_add(void **state)
 
 void test_cb_wrap_remove(void **state)
 {
-    // test Wrap Remove - Test that your buffer can wrap around the edge
-    // boundary and add to the front
-    // NOTE(bja, 2017-02) size is assumed to be a multiple of 4
+    /**
+       test Wrap Remove - Test that your buffer can wrap around the edge
+       boundary and add to the front
+       NOTE(bja, 2017-02) size is assumed to be a multiple of 4
+    */
 #define SIZE 32
     uint32_t offset = -12345;
     CircularBuffer_t volatile *cb = NULL;
@@ -471,8 +500,10 @@ void test_cb_wrap_remove(void **state)
 
 void test_cb_over_fill(void **state)
 {
-    // test Over Fill - Test that your buffer fails when too many items are
-    // added
+    /**
+       test Over Fill - Test that your buffer fails when too many items are
+       added
+    */
 #define SIZE 5
     uint16_t offset = 12345;
     CircularBuffer_t volatile *cb = NULL;
@@ -505,8 +536,10 @@ void test_cb_over_fill(void **state)
 
 void test_cb_over_empty(void **state)
 {
-    // test Over Empty - Test that your buffer fails to remove an item when
-    // empty
+    /**
+       test Over Empty - Test that your buffer fails to remove an item when
+       empty
+    */
 #define SIZE 5
     uint16_t offset = 12345;
     CircularBuffer_t volatile *cb = NULL;
@@ -552,8 +585,10 @@ void test_cb_over_empty(void **state)
 
 void test_cb_peak(void **state)
 {
-    // test peaking into the buffer copies out the correct item, but does not
-    // remove it.
+    /**
+       test peaking into the buffer copies out the correct item, but does not
+       remove it.
+    */
 #define SIZE 32
     uint32_t offset = 12345;
     CircularBuffer_t volatile *cb = NULL;

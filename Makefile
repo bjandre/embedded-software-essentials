@@ -31,3 +31,10 @@ astyle : FORCE
 archive : FORCE
 	tar --exclude .git/ -c -v -f andre-ecen5013-project$(PROJECT).tgz .
 
+.PHONY : doc
+doc : FORCE
+	$(DOXYGEN) doc/Doxyfile
+
+.PHONY : clean-doc
+clean-doc : FORCE
+	@-$(RM) -rf $(DOC_HTML) $(DOC_LATEX)
