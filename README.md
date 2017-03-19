@@ -1,3 +1,5 @@
+[//]: # (\mainpage
+
 ```
 
 Ben Andre
@@ -43,9 +45,13 @@ version, license can be found in the 3rd-party library directory.
   * build - builds all sources, create libraries, necessary to link
     executables.
   
-  * test - Build all, then run any tests.
+  * test - Build all, then run all tests.
+
+  * doc - build documentation with doxygen.
   
   * clean - Removes all build artifacts and editor files.
+
+  * clean-doc - remove doxygen generated documentation.
   
 ## Supported options
   
