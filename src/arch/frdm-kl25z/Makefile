@@ -17,7 +17,9 @@ LIB = \
 	libesefrdm.a
 
 SRCS = \
-	uart-frdm-kl25z.c
+	uart-frdm-kl25z.c \
+	interrupts-frdm-kl25z.c \
+	gpio-frdm-kl25z.c
 
 STARTUP_LIB = libfrdm_startup.a
 STARTUP_SRCS = system_MKL25Z4.c
