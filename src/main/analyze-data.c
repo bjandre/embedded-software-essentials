@@ -12,6 +12,7 @@
 #include <stdlib.h>
 
 #include "logger.h"
+#include "log-item.h"
 #include "analyze-data.h"
 
 void analyze_data_silence_compiler_warnings(void)

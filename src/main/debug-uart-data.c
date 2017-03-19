@@ -15,11 +15,6 @@
 
 #include "debug-uart-data.h"
 
-void debug_uart_silence_compiler_warnings(void)
-{
-    (void)null_payload;
-}
-
 void debug_uart(uint8_t tx_or_rx, uint8_t *buffer, size_t buffer_size)
 {
     if (tx_or_rx) {

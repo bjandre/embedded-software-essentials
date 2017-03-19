@@ -61,7 +61,7 @@ typedef uint8_t logger_size_t;
 
    \return status of the operation
  */
-BinaryLoggerStatus BinaryLoggerInitialize(logger_size_t num_bytes);
+BinaryLoggerStatus BinaryLoggerCreate(logger_size_t num_bytes);
 
 /**
    Log the specified number of bytes from the provided buffer.
@@ -118,84 +118,5 @@ BinaryLoggerStatus log_flush(void);
    \return status of the operation
  */
 BinaryLoggerStatus log_receive_data(logger_size_t num_bytes, uint8_t *buffer);
-
-/**
-   Identifiers for data sent via the binary logger.
- */
-typedef enum BinaryLoggerID {
-    LOGGER_INITIALIZED,
-    GPIO_INITIALIZED,
-    SYSTEM_INITIALIZED,
-    SYSTEM_HALTED,
-    INFO,
-    WARNING,
-    ERROR,
-    DATA_RECEIVED,
-    DATA_ANALYSIS_STARTED,
-    DATA_ALPHA_COUNT,
-    DATA_NUMERIC_COUNT,
-    DATA_PUNCTUATION_COUNT,
-    DATA_MISC_COUNT,
-    DATA_ANALYSIS_COMPLETED,
-} BinaryLoggerID;
-
-// define some reusable constants
-static const logger_size_t max_payload_bytes =
-    UINT8_MAX; //!< maximum payload size in bytes
-static const logger_size_t zero_payload_bytes =
-    0; //!< consant for zero payload size
-static const void *null_payload = NULL; //!< constant for a null payload
-
-/**
-   Container for items sent to the binary logger.
-
-   NOTE(bja, 2017-03) logged item is limited to a size of max_payload_bytes
-*/
-typedef struct BinaryLoggerItem {
-    BinaryLoggerID id;
-    logger_size_t payload_num_bytes;
-    uint8_t *payload;
-} log_item_t;
-
-/**
-   Allocate a log item and internal buffer.
-
-   \param[out] item - return the location of the allocated item
-
-   \return status of the operation
- */
-BinaryLoggerStatus CreateLogItem(log_item_t **item);
-
-/**
-   Update the values stored in a previously allocated log item
-
-   \param[in,out] *item - pointer to item storage
-   \param[in] id - id of the item being stored
-   \param[in] num_bytes - number of bytes in the payload
-   \param[in] payload - pointer to the user supplied buffer containing the data
-
-   \return status of the operation
- */
-BinaryLoggerStatus UpdateLogItem(log_item_t *item, BinaryLoggerID id,
-                                 logger_size_t num_bytes, const void *payload);
-
-/**
-   Free the internal item memory and the item itself.
-
-   \param[in,out] *item - pointer to item to be freed.
-
-   \return status of the operation
- */
-BinaryLoggerStatus DestroyLogItem(log_item_t **item);
-
-/**
-   Log the user provided item to the global logger.
-
-   \param[in] *item - pointer to item to be logged
-
-   \return status of the operation
- */
-BinaryLoggerStatus log_item(const log_item_t *item);
-
 
 #endif // ESE_ARCH_LOGGER_H_

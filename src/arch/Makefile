@@ -17,13 +17,8 @@ LIB = \
 
 SRCS = \
 	uart.c \
-	logger.c
-
-SRCS_HOST = \
-	uart-host.c
-
-SRCS_FRDM = \
-	uart-frdm-kl25z.c
+	logger.c \
+	log-item.c
 
 INCLUDES = -I. -I../util
 

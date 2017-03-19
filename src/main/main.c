@@ -22,6 +22,7 @@
 
 #include "platform-defs.h"
 #include "logger.h"
+#include "log-item.h"
 
 #include "analyze-data.h"
 #include "debug-uart-data.h"
@@ -128,11 +129,12 @@ int main(int argc, char **argv)
 
     BinaryLoggerStatus logger_status = BinaryLogger_OK;
     uint8_t const buffer_size_bytes = 32;
-    logger_status = BinaryLoggerInitialize(buffer_size_bytes);
+    logger_status = BinaryLoggerCreate(buffer_size_bytes);
     if (BinaryLogger_OK != logger_status) {
         abort();
     }
 
+    InitializeLoggerForLogItems();
     log_item_t *item;
     logger_status = CreateLogItem(&item);
     if (BinaryLogger_OK != logger_status) {
