@@ -16,7 +16,8 @@
 #include <stdlib.h>
 
 #include "data.h"
-#include "memory.h"
+#include "memory-common.h"
+#include "memory-cpu.h"
 #include "project_1.h"
 
 void initialize_set_1(uint8_t *data, uint32_t size);
@@ -241,14 +242,14 @@ void test_data2(uint8_t *data, uint32_t size)
  *
  * 2. my_reverse(); On the first 12 bytes
  *
- * 3. my_memset(); Set 0xEE on the 17th to the 20th bytes ([16]-[19])
+ * 3. memset_cpu(); Set 0xEE on the 17th to the 20th bytes ([16]-[19])
  *
- * 4. my_memmove(); Move the 6 bytes starting at the 26th byte ([25]), to the
+ * 4. memmove_cpu(); Move the 6 bytes starting at the 26th byte ([25]), to the
  *    20th position ([19])
  *
  * 5. memzero();  Bytes 12 - 16 ([11] - [15])
  *
- * 6. my_memmove(); Move the 8 bytes starting at the 1st byte ([0]), to the 9th
+ * 6. memmove_cpu(); Move the 8 bytes starting at the 1st byte ([0]), to the 9th
  *     position ([8])
  *
  * 7. print_memory(); all 32 bytes
@@ -275,14 +276,14 @@ void test_memory(uint8_t *data, uint32_t size)
     position = data + 16;
     length = 4;
     uint8_t value = 0xEE;
-    my_memset(position, length, value);
+    memset_cpu(position, length, value);
     print_memory(data, size);
     printf("\n  ");
 
     uint8_t *source = data + 25;
     uint8_t *destination = data + 19;
     length = 6;
-    my_memmove(source, destination, length);
+    memmove_cpu(source, destination, length);
     print_memory(data, size);
     printf("\n  ");
 
@@ -295,7 +296,7 @@ void test_memory(uint8_t *data, uint32_t size)
     source = data;
     destination = data + 8;
     length = 8;
-    my_memmove(source, destination, length);
+    memmove_cpu(source, destination, length);
 
     print_memory(data, size);
     printf("\n  ");

@@ -20,7 +20,7 @@
 
 #ifdef LOGGING_ENABLED
 
-#include "memory.h"
+#include "memory-cpu.h"
 #include "data.h"
 #include "circular_buffer.h"
 #include "uart.h"
@@ -118,7 +118,7 @@ BinaryLoggerStatus log_integer(int32_t integer)
     BinaryLoggerStatus status = BinaryLogger_Success;
     const size_t max_digits = 32;
     char string[max_digits];
-    my_memset((uint8_t *)string, max_digits, '\0');
+    memset_cpu((uint8_t *)string, max_digits, '\0');
     uint32_t decimal_base = 10;
     my_itoa((int8_t *)string, integer, decimal_base);
     log_string((uint8_t *)string);

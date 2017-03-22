@@ -15,20 +15,21 @@
 #include <setjmp.h>
 #include <cmocka.h>
 
-#include "memory.h"
+#include "memory-common.h"
+#include "memory-cpu.h"
 
 #include "test_memory.h"
 
-void test_my_memmove_null_ptrs(void **state);
-void test_my_memmove_src_dest_complete_overlap(void **state);
-void test_my_memmove_no_overlap_src_dest(void **state);
-void test_my_memmove_no_overlap_dest_src(void **state);
-void test_my_memmove_overlap_src_in_dest(void **state);
-void test_my_memmove_overlap_dest_in_src(void **state);
+void test_memmove_cpu_null_ptrs(void **state);
+void test_memmove_cpu_src_dest_complete_overlap(void **state);
+void test_memmove_cpu_no_overlap_src_dest(void **state);
+void test_memmove_cpu_no_overlap_dest_src(void **state);
+void test_memmove_cpu_overlap_src_in_dest(void **state);
+void test_memmove_cpu_overlap_dest_in_src(void **state);
 
-void test_my_memset_null_ptrs(void **state);
-void test_my_memset_set_entire_array(void **state);
-void test_my_memset_set_subarray(void **state);
+void test_memset_cpu_null_ptrs(void **state);
+void test_memset_cpu_set_entire_array(void **state);
+void test_memset_cpu_set_subarray(void **state);
 
 void test_my_memzero_null_ptrs(void **state);
 void test_my_memzero_set_entire_array(void **state);
@@ -47,15 +48,15 @@ void test_my_reverse_all_characters(void **state);
 int suite_memory(void)
 {
     const struct CMUnitTest memory_tests[] = {
-        cmocka_unit_test(test_my_memmove_null_ptrs),
-        cmocka_unit_test(test_my_memmove_src_dest_complete_overlap),
-        cmocka_unit_test(test_my_memmove_no_overlap_src_dest),
-        cmocka_unit_test(test_my_memmove_no_overlap_dest_src),
-        cmocka_unit_test(test_my_memmove_overlap_src_in_dest),
-        cmocka_unit_test(test_my_memmove_overlap_dest_in_src),
-        cmocka_unit_test(test_my_memset_null_ptrs),
-        cmocka_unit_test(test_my_memset_set_entire_array),
-        cmocka_unit_test(test_my_memset_set_subarray),
+        cmocka_unit_test(test_memmove_cpu_null_ptrs),
+        cmocka_unit_test(test_memmove_cpu_src_dest_complete_overlap),
+        cmocka_unit_test(test_memmove_cpu_no_overlap_src_dest),
+        cmocka_unit_test(test_memmove_cpu_no_overlap_dest_src),
+        cmocka_unit_test(test_memmove_cpu_overlap_src_in_dest),
+        cmocka_unit_test(test_memmove_cpu_overlap_dest_in_src),
+        cmocka_unit_test(test_memset_cpu_null_ptrs),
+        cmocka_unit_test(test_memset_cpu_set_entire_array),
+        cmocka_unit_test(test_memset_cpu_set_subarray),
         cmocka_unit_test(test_my_memzero_null_ptrs),
         cmocka_unit_test(test_my_memzero_set_entire_array),
         cmocka_unit_test(test_my_reverse_null_ptr),
@@ -70,7 +71,7 @@ int suite_memory(void)
     return cmocka_run_group_tests(memory_tests, NULL, NULL);
 }
 
-void test_my_memmove_null_ptrs(void **state)
+void test_memmove_cpu_null_ptrs(void **state)
 {
     /**
        test return status indicates error when null pointers are passed in
@@ -81,15 +82,15 @@ void test_my_memmove_null_ptrs(void **state)
     uint8_t data[SIZE] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15};
     uint8_t *source = data + range;
 
-    MemStatus status = my_memmove(NULL, source, range);
+    MemStatus status = memmove_cpu(NULL, source, range);
     assert_int_equal(status, MemStatus_Null_Pointer);
-    status = my_memmove(source, NULL, range);
+    status = memmove_cpu(source, NULL, range);
     assert_int_equal(status, MemStatus_Null_Pointer);
 
 #undef SIZE
 }
 
-void test_my_memmove_src_dest_complete_overlap(void **state)
+void test_memmove_cpu_src_dest_complete_overlap(void **state)
 {
     /**
        test memmove with complete overlap of src and dest
@@ -104,7 +105,7 @@ void test_my_memmove_src_dest_complete_overlap(void **state)
     uint8_t *destination = data + range;
 
     uint8_t expected[SIZE] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15};
-    MemStatus status = my_memmove(source, destination, range);
+    MemStatus status = memmove_cpu(source, destination, range);
     assert_int_equal(status, MemStatus_Success);
     assert_memory_equal(data, expected, size);
 
@@ -112,7 +113,7 @@ void test_my_memmove_src_dest_complete_overlap(void **state)
 #undef RANGE
 }
 
-void test_my_memmove_no_overlap_src_dest(void **state)
+void test_memmove_cpu_no_overlap_src_dest(void **state)
 {
     /**
         test memmove with no overlap between source and destination, source
@@ -128,7 +129,7 @@ void test_my_memmove_no_overlap_src_dest(void **state)
     uint8_t *destination = data + 2 * range;
 
     uint8_t expected[SIZE] = {0, 1, 2, 3, 4, 5, 6, 7, 2, 3, 4, 5, 12, 13, 14, 15};
-    MemStatus status = my_memmove(source, destination, range);
+    MemStatus status = memmove_cpu(source, destination, range);
     assert_int_equal(status, MemStatus_Success);
     assert_memory_equal(data, expected, size);
 
@@ -136,7 +137,7 @@ void test_my_memmove_no_overlap_src_dest(void **state)
 #undef RANGE
 }
 
-void test_my_memmove_no_overlap_dest_src(void **state)
+void test_memmove_cpu_no_overlap_dest_src(void **state)
 {
     /**
        test memmove with no overlap between source and destination, destination
@@ -152,7 +153,7 @@ void test_my_memmove_no_overlap_dest_src(void **state)
     uint8_t *destination = data + range / 2;
 
     uint8_t expected[SIZE] = {0, 1, 8, 9, 10, 11, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15};
-    MemStatus status = my_memmove(source, destination, range);
+    MemStatus status = memmove_cpu(source, destination, range);
     assert_int_equal(status, MemStatus_Success);
     assert_memory_equal(data, expected, size);
 
@@ -160,7 +161,7 @@ void test_my_memmove_no_overlap_dest_src(void **state)
 #undef RANGE
 }
 
-void test_my_memmove_overlap_src_in_dest(void **state)
+void test_memmove_cpu_overlap_src_in_dest(void **state)
 {
     /**
        test overlap source and destination, destination before source, copy from
@@ -176,7 +177,7 @@ void test_my_memmove_overlap_src_in_dest(void **state)
     uint8_t *destination = data + range / 2;
 
     uint8_t expected[SIZE] = {0, 1, 4, 5, 6, 7, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15};
-    MemStatus status = my_memmove(source, destination, range);
+    MemStatus status = memmove_cpu(source, destination, range);
     assert_int_equal(status, MemStatus_Success);
     assert_memory_equal(data, expected, size);
 
@@ -184,7 +185,7 @@ void test_my_memmove_overlap_src_in_dest(void **state)
 #undef RANGE
 }
 
-void test_my_memmove_overlap_dest_in_src(void **state)
+void test_memmove_cpu_overlap_dest_in_src(void **state)
 {
     /**
         test overlap of source and destination, source before destination, copy
@@ -200,7 +201,7 @@ void test_my_memmove_overlap_dest_in_src(void **state)
     uint8_t *destination = data + range;
 
     uint8_t expected[SIZE] = {0, 1, 2, 3, 2, 3, 4, 5, 8, 9, 10, 11, 12, 13, 14, 15};
-    MemStatus status = my_memmove(source, destination, range);
+    MemStatus status = memmove_cpu(source, destination, range);
     assert_int_equal(status, MemStatus_Success);
     assert_memory_equal(data, expected, size);
 
@@ -208,7 +209,7 @@ void test_my_memmove_overlap_dest_in_src(void **state)
 #undef RANGE
 }
 
-void test_my_memset_null_ptrs(void **state)
+void test_memset_cpu_null_ptrs(void **state)
 {
     /**
        test return error when passed null pointer
@@ -216,11 +217,11 @@ void test_my_memset_null_ptrs(void **state)
     size_t const size = 20;
     uint8_t expected = 0x23;
 
-    MemStatus status = my_memset(NULL, size, expected);
+    MemStatus status = memset_cpu(NULL, size, expected);
     assert_int_equal(status, MemStatus_Null_Pointer);
 }
 
-void test_my_memset_set_entire_array(void **state)
+void test_memset_cpu_set_entire_array(void **state)
 {
     /**
        test setting entire array to the same value
@@ -231,7 +232,7 @@ void test_my_memset_set_entire_array(void **state)
         *(data + i) = i;
     }
     uint8_t expected = 0x23;
-    MemStatus status = my_memset(data, size, expected);
+    MemStatus status = memset_cpu(data, size, expected);
     assert_int_equal(status, MemStatus_Success);
 
     for (size_t i = 0; i < size; i++) {
@@ -244,7 +245,7 @@ void test_my_memset_set_entire_array(void **state)
     }
 }
 
-void test_my_memset_set_subarray(void **state)
+void test_memset_cpu_set_subarray(void **state)
 {
     /**
        test a subset of an array to ensure we are not changing values outside
@@ -259,7 +260,7 @@ void test_my_memset_set_subarray(void **state)
 
     uint8_t value = 0x34;
     uint8_t expected[SIZE] = {0, 1, value, value, value, value, 6, 7};
-    MemStatus status = my_memset(data + 2, range, value);
+    MemStatus status = memset_cpu(data + 2, range, value);
     assert_int_equal(status, MemStatus_Success);
     assert_memory_equal(data, expected, size);
 #undef SIZE

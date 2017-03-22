@@ -13,7 +13,8 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-#include "memory.h"
+#include "memory-common.h"
+#include "memory-cpu.h"
 #include "circular_buffer.h"
 
 struct CircularBuffer_t {
@@ -85,7 +86,7 @@ CircularBufferStatus CircularBufferAddItem(CircularBuffer_t volatile *cb,
     } else if (cb->bytes_used + cb->bytes_per_item > cb->num_bytes_allocated) {
         status = CircularBuffer_Is_Full;
     } else {
-        MemStatus memstat = my_memmove(item, cb->head, cb->bytes_per_item);
+        MemStatus memstat = memmove_cpu(item, cb->head, cb->bytes_per_item);
         if (MemStatus_Success == memstat) {
             cb->head = NextBufferPosition(cb, cb->head);
             cb->bytes_used += cb->bytes_per_item;
@@ -105,7 +106,7 @@ CircularBufferStatus CircularBufferRemoveItem(CircularBuffer_t volatile *cb,
     } else if (cb->bytes_used < cb->bytes_per_item) {
         status = CircularBuffer_Is_Empty;
     } else {
-        MemStatus memstat = my_memmove(cb->tail, item, cb->bytes_per_item);
+        MemStatus memstat = memmove_cpu(cb->tail, item, cb->bytes_per_item);
         if (MemStatus_Success == memstat) {
             cb->tail = NextBufferPosition(cb, cb->tail);
             cb->bytes_used -= cb->bytes_per_item;
@@ -160,7 +161,7 @@ CircularBufferStatus CircularBufferPeakItem(CircularBuffer_t volatile *cb,
             ptrdiff_t wrap_length = position - cb->buffer_end;
             position = cb->buffer + wrap_length;
         }
-        MemStatus memstat = my_memmove(position, item, cb->bytes_per_item);
+        MemStatus memstat = memmove_cpu(position, item, cb->bytes_per_item);
         if (MemStatus_Success == memstat) {
             // success!
         } else {

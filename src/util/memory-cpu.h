@@ -1,7 +1,9 @@
 /**
-   \file memory.h
+   \file memory-cpu.h
 
-   Platform and architecture independent memory related utilities
+   Platform and architecture independent memory related utilities that utilize
+   the cpu for memory manipulation. Platform specific implementations that use
+   DMA will be more efficient.
  */
 
 /*
@@ -18,15 +20,7 @@
 
 #include <stdint.h>
 
-/**
-    Memory Utilities Return Status
-
-    All memory utilities return the status of the operation.
- */
-typedef enum MemoryStatus {
-    MemStatus_Success, //!< operation successful
-    MemStatus_Null_Pointer, //!< operation failed with an unknow error
-} MemStatus;
+#include "memory-common.h"
 
 /**
  * Takes one source pointer, one destination pointer and a length of bytes to
@@ -44,7 +38,7 @@ typedef enum MemoryStatus {
  * \return MemStatus flag indicating success or type of error tha occured.
  *
  */
-MemStatus my_memmove(uint8_t *source, uint8_t *destination, uint32_t length);
+MemStatus memmove_cpu(uint8_t *source, uint8_t *destination, uint32_t length);
 
 /**
  * Take a pointer to a memory location, a length in
@@ -57,31 +51,6 @@ MemStatus my_memmove(uint8_t *source, uint8_t *destination, uint32_t length);
  * \returns MemStatus flag indicating success or type of error tha occured.
  *
  */
-MemStatus my_memset(uint8_t *source, uint32_t length, uint8_t value);
-
-/**
- * Takes a pointer to a memory location and a length in
- * bytes and zeros out all of the memory.
- *
- * \param[in,out] source pointer to a list of bytes
- * \param[in] length the number of bytes to be zeroed
- *
- * \return MemStatus flag indicating success or type of error tha occured.
- *
- */
-MemStatus my_memzero(uint8_t *source, uint32_t length);
-
-/**
- * Takes a pointer to a memory location and a length in
- * bytes and reverses the order of the bytes
- *
- * \param[in,out] source pointer to a list of bytes
- * \param[in] length the number of bytes to be moved
- *
- * \return MemStatus flag indicating success or type of error tha occured.
- *
- */
-MemStatus my_reverse(uint8_t *source, uint32_t length);
-
+MemStatus memset_cpu(uint8_t *source, uint32_t length, uint8_t value);
 
 #endif /* ESE_UTIL_MEMORY_H_ */

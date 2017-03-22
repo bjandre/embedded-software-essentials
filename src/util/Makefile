@@ -19,7 +19,8 @@ LIB = \
 	libutil.a
 
 SRCS = \
-	memory.c \
+	memory-common.c \
+	memory-cpu.c \
 	data.c \
 	circular_buffer.c \
 	bit-operations.c

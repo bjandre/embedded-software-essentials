@@ -11,11 +11,10 @@
 #include <stdint.h>
 #include <stdlib.h>
 
-#include "memory.h"
+#include "memory-common.h"
+#include "memory-cpu.h"
 
-void swap(uint8_t *a, uint8_t *b);
-
-MemStatus my_memmove(uint8_t *source, uint8_t *destination, uint32_t length)
+MemStatus memmove_cpu(uint8_t *source, uint8_t *destination, uint32_t length)
 {
     if (NULL == source || NULL == destination) {
         return MemStatus_Null_Pointer;
@@ -60,7 +59,7 @@ MemStatus my_memmove(uint8_t *source, uint8_t *destination, uint32_t length)
     return MemStatus_Success;
 }
 
-MemStatus my_memset(uint8_t *source, uint32_t length, uint8_t value)
+MemStatus memset_cpu(uint8_t *source, uint32_t length, uint8_t value)
 {
     if (NULL == source) {
         return MemStatus_Null_Pointer;
@@ -71,43 +70,4 @@ MemStatus my_memset(uint8_t *source, uint32_t length, uint8_t value)
     }
     return MemStatus_Success;
 }
-
-MemStatus my_memzero(uint8_t *source, uint32_t length)
-{
-    if (NULL == source) {
-        return MemStatus_Null_Pointer;
-    }
-
-    my_memset(source, length, 0);
-    return MemStatus_Success;
-}
-
-MemStatus my_reverse(uint8_t *source, uint32_t length)
-{
-    if (NULL == source) {
-        return MemStatus_Null_Pointer;
-    }
-
-    uint8_t *begin = source;
-    uint8_t *end = source + length - 1;
-    while (begin < end) {
-        swap(begin, end);
-        begin++;
-        end--;
-    }
-    return MemStatus_Success;
-}
-
-void swap(uint8_t *a, uint8_t *b)
-{
-    if (NULL == a || NULL == b) {
-        return;
-    }
-
-    uint8_t tmp;
-    tmp = *a;
-    *a = *b;
-    *b = tmp;
-}
-
 
