@@ -16,6 +16,7 @@
 #include <stdio.h>
 #endif
 
+#include <assert.h>
 #include <stdbool.h>
 #include <stdint.h>
 #include <stdlib.h>
@@ -36,6 +37,7 @@ volatile async_data_t global_async_data;
 #if (PLATFORM == PLATFORM_FRDM)
 #include "interrupts-frdm-kl25z.h"
 #include "gpio-frdm-kl25z.h"
+#include "dma-frdm-kl25z.h"
 #else
 typedef enum GPIO_PINS {LED_PIN} GPIO_PINS;
 #endif
@@ -74,8 +76,11 @@ int main(int argc, char **argv)
 {
     //PRINTF("Hello from Emebbed Software Essentials Project!\n");
 
-    global_async_data.data_available = false;
-
+    {
+        // critical region, disable interrupts
+        global_async_data.data_available = false;
+        global_async_data.dma_complete = false;
+    }
     initialize_interrupts();
 
     BinaryLoggerStatus logger_status = BinaryLogger_Success;
@@ -111,6 +116,28 @@ int main(int argc, char **argv)
 #ifdef DEBUG_UART
     size_t const buffer_size = 32 * sizeof(uint8_t);
     uint8_t *buffer = malloc(buffer_size);
+#endif
+
+#if (PLATFORM == PLATFORM_FRDM)
+    initialize_dma();
+    size_t const dest_size = 32;
+    uint8_t dma_dest[32];
+    const uint8_t initial_condition = 0x55;
+    const uint8_t expected = 0xAA;
+    for (size_t i = 0; i < dest_size; i++) {
+        *(dma_dest + i) = initial_condition;
+    }
+    memset_dma((uint8_t *)dma_dest, dest_size, expected);
+    bool dma_complete = false;
+    while (!dma_complete) {
+        {
+            // critical region, disable interrupts
+            dma_complete = global_async_data.dma_complete;
+        }
+    }
+    for (size_t i = 0; i < dest_size; i++) {
+        assert(expected == *(dma_dest + i));
+    }
 #endif
 
     uint8_t byte;

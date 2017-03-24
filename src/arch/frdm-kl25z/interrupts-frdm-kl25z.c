@@ -25,6 +25,7 @@ extern volatile async_data_t global_async_data;
 void frdm_kl25z_initialize_interrupts(void)
 {
     NVIC_EnableIRQ(UART0_IRQn);
+    NVIC_EnableIRQ(DMA2_IRQn);
 
 }
 

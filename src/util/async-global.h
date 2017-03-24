@@ -20,8 +20,9 @@
  */
 
 typedef struct AsynchronousData {
-    bool data_available; // flag indicating data is available to be retreived
-    // from logger receive buffer
+    bool data_available; /*!< flag indicating data is available to be retreived
+                            from logger receive buffer */
+    bool dma_complete; /*!< flag indicating a dma transfer has completed. */
 } async_data_t;
 
 // FIXME(bja, 2017-03) need to add logger instance here, but there are starting
