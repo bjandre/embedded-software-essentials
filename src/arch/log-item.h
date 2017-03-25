@@ -33,6 +33,7 @@
 typedef enum BinaryLoggerID {
     LOGGER_INITIALIZED,
     GPIO_INITIALIZED,
+    DMA_INITIALIZED,
     SYSTEM_INITIALIZED,
     SYSTEM_HALTED,
     INFO,
@@ -50,13 +51,6 @@ typedef enum BinaryLoggerID {
     DATA_MISC_COUNT,
     DATA_ANALYSIS_COMPLETED,
 } BinaryLoggerID;
-
-// define some reusable constants
-static const logger_size_t max_payload_bytes =
-    UINT8_MAX; //!< maximum payload size in bytes
-static const logger_size_t zero_payload_bytes =
-    0; //!< consant for zero payload size
-static const void *null_payload = NULL; //!< constant for a null payload
 
 /**
    Container for items sent to the binary logger.
@@ -105,6 +99,16 @@ BinaryLoggerStatus CreateLogItem(log_item_t **item);
  */
 BinaryLoggerStatus UpdateLogItem(log_item_t *item, BinaryLoggerID id,
                                  logger_size_t num_bytes, const void *payload);
+
+/**
+   Update the values stored in a previously allocated log item with defaults for no payload.
+
+   \param[in,out] *item - pointer to item storage
+   \param[in] id - id of the item being stored
+
+   \return status of the operation
+ */
+BinaryLoggerStatus UpdateLogItemNoPayload(log_item_t *item, BinaryLoggerID id);
 
 /**
    Free the internal item memory and the item itself.

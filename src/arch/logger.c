@@ -184,7 +184,6 @@ BinaryLoggerStatus log_receive_data(logger_size_t num_bytes, uint8_t *buffer)
 // can replace them with a macro that substitutes status ok.
 BinaryLoggerStatus BinaryLoggerInitialize(logger_size_t num_bytes)
 {
-    (void)null_payload;
     (void)num_bytes;
     return BinaryLogger_Success;
 }

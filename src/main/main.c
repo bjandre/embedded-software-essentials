@@ -54,14 +54,14 @@ void initialize_interrupts(void);
 
   Wrapper around platform specific code.
  */
-void initialize_gpio(void);
+void initialize_gpio(log_item_t *item);
 
 /*
   Generic routine to initialize DMA.
 
   Wrapper around platform specific code.
  */
-void initialize_dma(void);
+void initialize_dma(log_item_t *item);
 
 /*
   Generic routine to initialize an led pin.
@@ -87,6 +87,9 @@ int main(int argc, char **argv)
     set_global_async_data_available(false);
     set_global_async_dma_complete(false);
 
+    // NOTE(bja, 2017-03) logger uses interrupts on hardware where it is
+    // supported. We need to enable them first to log the full initialization
+    // sequence. They may need to be disabled selectively.
     initialize_interrupts();
 
     BinaryLoggerStatus logger_status = BinaryLogger_Success;
@@ -102,21 +105,16 @@ int main(int argc, char **argv)
     if (BinaryLogger_Success != logger_status) {
         abort();
     }
-    logger_status = UpdateLogItem(item, LOGGER_INITIALIZED, zero_payload_bytes,
-                                  null_payload);
+    logger_status = UpdateLogItemNoPayload(item, LOGGER_INITIALIZED);
     if (BinaryLogger_Success != logger_status) {
         abort();
     }
     log_item(item);
 
-    initialize_gpio();
-    initialize_dma();
+    initialize_gpio(item);
+    initialize_dma(item);
 
-    logger_status = UpdateLogItem(item, SYSTEM_INITIALIZED, zero_payload_bytes,
-                                  null_payload);
-    if (BinaryLogger_Success != logger_status) {
-        abort();
-    }
+    UpdateLogItemNoPayload(item, SYSTEM_INITIALIZED);
     log_item(item);
 
     power_on_self_tests(item);
@@ -134,11 +132,7 @@ int main(int argc, char **argv)
     bool data_available;
     clear_data_summary(&data_summary);
 
-    logger_status = UpdateLogItem(item, DATA_ANALYSIS_STARTED, zero_payload_bytes,
-                                  null_payload);
-    if (BinaryLogger_Success != logger_status) {
-        abort();
-    }
+    UpdateLogItemNoPayload(item, DATA_ANALYSIS_STARTED);
     log_item(item);
 
     while (1) { /* main event loop */
@@ -170,11 +164,7 @@ int main(int argc, char **argv)
 
         if (num_received == num_required) {
             log_data_analysis(item, &data_summary);
-            logger_status = UpdateLogItem(item, DATA_ANALYSIS_COMPLETED,
-                                          zero_payload_bytes, null_payload);
-            if (BinaryLogger_Success != logger_status) {
-                abort();
-            }
+            UpdateLogItemNoPayload(item, DATA_ANALYSIS_COMPLETED);
             log_item(item);
             clear_data_summary(&data_summary);
             num_received = 0;
@@ -197,18 +187,22 @@ void initialize_interrupts(void)
 #endif
 }
 
-void initialize_gpio(void)
+void initialize_gpio(log_item_t *item)
 {
 #if (PLATFORM == PLATFORM_FRDM)
     frdm_kl25z_initialize_gpio();
 #endif
+    UpdateLogItemNoPayload(item, GPIO_INITIALIZED);
+    log_item(item);
 }
 
-void initialize_dma(void)
+void initialize_dma(log_item_t *item)
 {
 #if (PLATFORM == PLATFORM_FRDM)
     frdm_kl25z_initialize_dma();
 #endif
+    UpdateLogItemNoPayload(item, DMA_INITIALIZED);
+    log_item(item);
 }
 
 

@@ -15,11 +15,6 @@
 #include "log-item.h"
 #include "analyze-data.h"
 
-void analyze_data_silence_compiler_warnings(void)
-{
-    (void)null_payload;
-}
-
 void clear_data_summary(data_summary_t *data_summary)
 {
     if (NULL != data_summary) {

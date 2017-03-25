@@ -18,6 +18,13 @@
 
 #ifdef LOGGING_ENABLED
 
+// define some reusable constants
+static const logger_size_t max_payload_bytes =
+    UINT8_MAX; //!< maximum payload size in bytes
+static const logger_size_t zero_payload_bytes =
+    0; //!< consant for zero payload size
+static const void *null_payload = NULL; //!< constant for a null payload
+
 BinaryLoggerStatus InitializeLoggerForLogItems(void)
 {
     BinaryLoggerStatus status = BinaryLogger_Success;
@@ -78,6 +85,11 @@ BinaryLoggerStatus UpdateLogItem(log_item_t *item, BinaryLoggerID id,
         }
     }
     return status;
+}
+
+BinaryLoggerStatus UpdateLogItemNoPayload(log_item_t *item, BinaryLoggerID id)
+{
+    return UpdateLogItem(item, id, zero_payload_bytes, null_payload);
 }
 
 BinaryLoggerStatus log_item(const log_item_t *item)

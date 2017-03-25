@@ -31,20 +31,6 @@ void frdm_kl25z_initialize_gpio(void)
     frdm_kl25z_initialize_led_pin(LED_PIN_GREEN);
     // toggle led pins
     GPIOB->PTOR |= (1 << LED_PIN_GREEN);
-
-    log_item_t *item;
-    BinaryLoggerStatus logger_status = BinaryLogger_Success;
-    logger_status = CreateLogItem(&item);
-    if (BinaryLogger_Success != logger_status) {
-        abort();
-    }
-    logger_status = UpdateLogItem(item, GPIO_INITIALIZED, zero_payload_bytes,
-                                  null_payload);
-    if (BinaryLogger_Success != logger_status) {
-        abort();
-    }
-    log_item(item);
-    logger_status = DestroyLogItem(&item);
 }
 
 void frdm_kl25z_initialize_led_pin(GPIO_PINS led_pin)

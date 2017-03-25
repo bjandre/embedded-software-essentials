@@ -18,7 +18,7 @@
 
 void power_on_self_tests(log_item_t *item)
 {
-    UpdateLogItem(item, POST_START, zero_payload_bytes, null_payload);
+    UpdateLogItemNoPayload(item, POST_START);
     log_item(item);
 
     POSTstatus status = POST_ALL_SKIPPED;
@@ -38,7 +38,6 @@ void power_on_self_tests(log_item_t *item)
     }
 #endif
 
-    UpdateLogItem(item, POST_COMPLETE, zero_payload_bytes,
-                  null_payload);
+    UpdateLogItemNoPayload(item, POST_COMPLETE);
     log_item(item);
 }
