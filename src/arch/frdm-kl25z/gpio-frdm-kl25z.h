@@ -20,8 +20,9 @@
    define the pins for the leds.
 */
 typedef enum GPIO_PINS {
-    LED_PIN_RED = 18,
-    LED_PIN_GREEN = 19,
+    LED_PIN_RED = 18, //!< built in red led, port b
+    LED_PIN_GREEN = 19, //!< built in green led, port b
+    LED_PIN_BLUE = 1, //!< built in blue led, port d
 } GPIO_PINS;
 
 /**
@@ -30,12 +31,20 @@ typedef enum GPIO_PINS {
 void frdm_kl25z_initialize_gpio(void);
 
 /**
-  Platform specific code to initialize leds.
+  Platform specific code to initialize GPIO pins as output on port b.
 
-  \param[in] led_pin gpio pin for the led
+  \param[in] pin gpio output pin
 
  */
-void frdm_kl25z_initialize_led_pin(GPIO_PINS led_pin);
+void frdm_kl25z_initialize_port_b_output_pin(GPIO_PINS pin);
+
+/**
+  Platform specific code to initialize GPIO pins as output on port d.
+
+  \param[in] pin gpio output pin
+
+ */
+void frdm_kl25z_initialize_port_d_output_pin(GPIO_PINS pin);
 
 /**
   Platform specific code to update led state
