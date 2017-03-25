@@ -27,6 +27,7 @@
 
 #include "analyze-data.h"
 #include "debug-uart-data.h"
+#include "post.h"
 
 #include "async-global.h"
 
@@ -54,6 +55,13 @@ void initialize_interrupts(void);
   Wrapper around platform specific code.
  */
 void initialize_gpio(void);
+
+/*
+  Generic routine to initialize DMA.
+
+  Wrapper around platform specific code.
+ */
+void initialize_dma(void);
 
 /*
   Generic routine to initialize an led pin.
@@ -102,6 +110,7 @@ int main(int argc, char **argv)
     log_item(item);
 
     initialize_gpio();
+    initialize_dma();
 
     logger_status = UpdateLogItem(item, SYSTEM_INITIALIZED, zero_payload_bytes,
                                   null_payload);
@@ -110,29 +119,12 @@ int main(int argc, char **argv)
     }
     log_item(item);
 
+    power_on_self_tests(item);
+
 #undef DEBUG_UART
 #ifdef DEBUG_UART
     size_t const buffer_size = 32 * sizeof(uint8_t);
     uint8_t *buffer = malloc(buffer_size);
-#endif
-
-#if (PLATFORM == PLATFORM_FRDM)
-    initialize_dma();
-    size_t const dest_size = 32;
-    uint8_t dma_dest[32];
-    const uint8_t initial_condition = 0x55;
-    const uint8_t expected = 0xAA;
-    for (size_t i = 0; i < dest_size; i++) {
-        *(dma_dest + i) = initial_condition;
-    }
-    memset_dma((uint8_t *)dma_dest, dest_size, expected);
-    bool dma_complete = false;
-    while (!dma_complete) {
-        dma_complete = get_global_async_dma_complete();
-    }
-    for (size_t i = 0; i < dest_size; i++) {
-        assert(expected == *(dma_dest + i));
-    }
 #endif
 
     uint8_t byte;
@@ -211,6 +203,15 @@ void initialize_gpio(void)
     frdm_kl25z_initialize_gpio();
 #endif
 }
+
+void initialize_dma(void)
+{
+#if (PLATFORM == PLATFORM_FRDM)
+    frdm_kl25z_initialize_dma();
+#endif
+}
+
+
 void initialize_led_pin(GPIO_PINS led_pin)
 {
 #if (PLATFORM == PLATFORM_FRDM)

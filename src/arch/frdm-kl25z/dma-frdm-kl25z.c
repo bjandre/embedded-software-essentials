@@ -65,7 +65,7 @@ typedef enum {
 
 static const uint8_t channel_m2m = 2;
 
-void initialize_dma(void)
+void frdm_kl25z_initialize_dma(void)
 {
     // enable the clocks for the DMA multiplexer and the DMA.
     SIM->SCGC6 |= SIM_SCGC6_DMAMUX(1);

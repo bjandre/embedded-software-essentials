@@ -25,7 +25,7 @@
 /**
    Initialize the DMA.
  */
-void initialize_dma(void);
+void frdm_kl25z_initialize_dma(void);
 
 /**
  * Takes one source pointer, one destination pointer and a length of bytes to

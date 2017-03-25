@@ -20,7 +20,8 @@ SRCS = \
 	main.c \
 	async-global.c \
 	analyze-data.c \
-	debug-uart-data.c
+	debug-uart-data.c \
+	post.c
 
 OBJS = $(SRCS:%.c=%.o)
 

@@ -18,6 +18,7 @@ LIB = \
 
 SRCS = \
 	dma-frdm-kl25z.c \
+	post-dma-frdm-kl25z.c \
 	uart-frdm-kl25z.c \
 	interrupts-frdm-kl25z.c \
 	gpio-frdm-kl25z.c

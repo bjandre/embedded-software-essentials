@@ -25,6 +25,8 @@
 #include <stddef.h>
 #include <stdint.h>
 
+#include "logger.h"
+
 /**
    Identifiers for data sent via the binary logger.
  */
@@ -36,6 +38,10 @@ typedef enum BinaryLoggerID {
     INFO,
     WARNING,
     ERROR,
+    POST_START,
+    POST_ERROR,
+    POST_STATUS,
+    POST_COMPLETE,
     DATA_RECEIVED,
     DATA_ANALYSIS_STARTED,
     DATA_ALPHA_COUNT,

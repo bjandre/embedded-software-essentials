@@ -1,0 +1,45 @@
+
+/*
+** Copyright 2017 Benjamin J. Andre.
+** All Rights Reserved.
+**
+** This Source Code Form is subject to the terms of the Mozilla
+** Public License, v. 2.0. If a copy of the MPL was not distributed
+** with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
+*/
+
+#include <stddef.h>
+#include <stdint.h>
+
+#include "async-global.h"
+
+#include "post-common.h"
+#include "post-dma-frdm-kl25z.h"
+
+#include "dma-frdm-kl25z.h"
+
+POSTstatus post_dma_memset(void)
+{
+    size_t const dest_size = 32;
+    uint8_t dma_dest[32];
+    const uint8_t initial_condition = 0x55;
+    const uint8_t expected = 0xAA;
+    for (size_t i = 0; i < dest_size; i++) {
+        *(dma_dest + i) = initial_condition;
+    }
+    memset_dma((uint8_t *)dma_dest, dest_size, expected);
+    // have to poll to verify success.
+    bool dma_complete = false;
+    while (!dma_complete) {
+        dma_complete = get_global_async_dma_complete();
+    }
+    uint8_t num_not_equal = 0;
+    for (size_t i = 0; i < dest_size; i++) {
+        num_not_equal += (expected != *(dma_dest + i));
+    }
+    POSTstatus status = POST_PASS;
+    if (num_not_equal > 0) {
+        status = POST_FAIL;
+    }
+    return status;
+}

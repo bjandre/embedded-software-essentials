@@ -1,0 +1,27 @@
+
+/*
+** Copyright 2017 Benjamin J. Andre.
+** All Rights Reserved.
+**
+** This Source Code Form is subject to the terms of the Mozilla
+** Public License, v. 2.0. If a copy of the MPL was not distributed
+** with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
+*/
+
+#ifndef ESE_ARCH_POST_DMA_FRDM_KL25Z_H_
+#define ESE_ARCH_POST_DMA_FRDM_KL25Z_H_
+
+#include "post-common.h"
+
+/**
+   \file post-dma-frdm-kl25z.h
+
+   Power on self tests for DMA version of memory utils.
+ */
+
+/**
+   POST test for dma version of memset
+ */
+POSTstatus post_dma_memset(void);
+
+#endif // ESE_ARCH_POST_DMA_FRDM_KL25Z_H_
