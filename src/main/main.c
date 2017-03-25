@@ -41,6 +41,7 @@ volatile async_data_t global_async_data;
 #else
 typedef enum GPIO_PINS {LED_PIN} GPIO_PINS;
 #endif
+
 /*
   Generic routine to initialize GPIO.
 
@@ -54,15 +55,6 @@ void initialize_interrupts(void);
   Wrapper around platform specific code.
  */
 void initialize_gpio(void);
-
-/*
-  Generic routine to initialize an led pin.
-
-  Wrapper around platform specific code.
-
-  Parameters: led pin enumeration
- */
-void initialize_led_pin(GPIO_PINS led_pin);
 
 /*
   Generic routine to update led status.
@@ -217,14 +209,6 @@ void initialize_gpio(void)
 {
 #if (PLATFORM == PLATFORM_FRDM)
     frdm_kl25z_initialize_gpio();
-#endif
-}
-void initialize_led_pin(GPIO_PINS led_pin)
-{
-#if (PLATFORM == PLATFORM_FRDM)
-    frdm_kl25z_initialize_led_pin(led_pin);
-#else
-    (void)led_pin;
 #endif
 }
 
