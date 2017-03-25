@@ -23,9 +23,16 @@ void power_on_self_tests(log_item_t *item)
 
     POSTstatus status = POST_ALL_SKIPPED;
 #if (PLATFORM == PLATFORM_FRDM)
-    status = post_dma_memset();
+    status = post_dma_memset_1byte();
     if (POST_PASS != status) {
-        const char name[] = "post_dma_memset";
+        const char name[] = "post_dma_memset_1byte";
+        UpdateLogItem(item, POST_ERROR, sizeof(name), (uint8_t *)name);
+        log_item(item);
+    }
+
+    status = post_dma_memset_4byte();
+    if (POST_PASS != status) {
+        const char name[] = "post_dma_memset_4byte";
         UpdateLogItem(item, POST_ERROR, sizeof(name), (uint8_t *)name);
         log_item(item);
     }

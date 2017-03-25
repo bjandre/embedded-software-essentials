@@ -65,6 +65,12 @@ typedef enum {
 
 static const uint8_t channel_m2m = 2;
 
+typedef enum {
+    DMA_SIZE_32BIT = 0U,
+    DMA_SIZE_8BIT = 1U,
+    DMA_SIZE_16BIT = 2U,
+} DMA_TRANSFER_SIZE;
+
 void frdm_kl25z_initialize_dma(void)
 {
     // enable the clocks for the DMA multiplexer and the DMA.
@@ -127,11 +133,16 @@ MemStatus memmove_dma(uint8_t *source, uint8_t *destination, uint32_t length)
 }
 
 MemStatus memset_dma(uint8_t *destination,
-                     uint32_t length,
-                     uint8_t source)
+                     uint32_t num_items,
+                     uint8_t *source, uint8_t bytes_per_item)
 {
-    if (NULL == destination) {
+    if (NULL == destination || NULL == source) {
         return MemStatus_Null_Pointer;
+    }
+    if (bytes_per_item != 1 &&
+            bytes_per_item != 2 &&
+            bytes_per_item != 4) {
+        return MemStatus_Transfer_Size_Error;
     }
     // is the channel busy?
     uint32_t status = DMA0->DMA[channel_m2m].DSR_BCR & DMA_DSR_BCR_BSY(1);
@@ -146,18 +157,29 @@ MemStatus memset_dma(uint8_t *destination,
     // stop the DMA channel and clear status?
     DMA0->DMA[channel_m2m].DSR_BCR = DMA_DSR_BCR_DONE(1);
 
-    // FIXME(bja, 2017-03) assert length > 0, return?
-    DMA0->DMA[channel_m2m].SAR = DMA_SAR_SAR(&source);
+    // FIXME(bja, 2017-03) assert num_items > 0, return?
+    DMA0->DMA[channel_m2m].SAR = DMA_SAR_SAR(source);
     DMA0->DMA[channel_m2m].DAR = DMA_DAR_DAR(destination);
 
+    uint32_t num_bytes = num_items * bytes_per_item;
     DMA0->DMA[channel_m2m].DSR_BCR |= DMA_DSR_BCR_BCR(
-                                          length); // number of bytes to copy
+                                          num_bytes); // number of bytes to copy
 
     DMA0->DMA[channel_m2m].DCR |= DMA_DCR_EINT(1); // enable interrupt
     DMA0->DMA[channel_m2m].DCR &= ~DMA_DCR_SINC(1); // no source increment
-    DMA0->DMA[channel_m2m].DCR |= DMA_DCR_SSIZE(1); // one byte source size
+    uint8_t size_indicator;
+    if (bytes_per_item == 4) {
+        size_indicator = DMA_SIZE_32BIT;
+    } else if (bytes_per_item == 2) {
+        size_indicator = DMA_SIZE_16BIT;
+    } else {
+        size_indicator = DMA_SIZE_8BIT;
+    }
+    DMA0->DMA[channel_m2m].DCR |= DMA_DCR_SSIZE(
+                                      size_indicator); // one byte source size
     DMA0->DMA[channel_m2m].DCR |= DMA_DCR_DINC(1); // one byte destination increment
-    DMA0->DMA[channel_m2m].DCR |= DMA_DCR_DSIZE(1); // one byte destination size
+    DMA0->DMA[channel_m2m].DCR |= DMA_DCR_DSIZE(
+                                      size_indicator); // one byte destination size
 
     set_global_async_dma_complete(false);
 

@@ -18,7 +18,7 @@
 
 #include "dma-frdm-kl25z.h"
 
-POSTstatus post_dma_memset(void)
+POSTstatus post_dma_memset_1byte(void)
 {
     size_t const dest_size = 32;
     uint8_t dma_dest[32];
@@ -27,7 +27,35 @@ POSTstatus post_dma_memset(void)
     for (size_t i = 0; i < dest_size; i++) {
         *(dma_dest + i) = initial_condition;
     }
-    memset_dma((uint8_t *)dma_dest, dest_size, expected);
+    memset_dma((uint8_t *)dma_dest, dest_size, (uint8_t *)&expected,
+               sizeof(expected));
+    // have to poll to verify success.
+    bool dma_complete = false;
+    while (!dma_complete) {
+        dma_complete = get_global_async_dma_complete();
+    }
+    uint8_t num_not_equal = 0;
+    for (size_t i = 0; i < dest_size; i++) {
+        num_not_equal += (expected != *(dma_dest + i));
+    }
+    POSTstatus status = POST_PASS;
+    if (num_not_equal > 0) {
+        status = POST_FAIL;
+    }
+    return status;
+}
+
+POSTstatus post_dma_memset_4byte(void)
+{
+    size_t const dest_size = 32;
+    uint32_t dma_dest[32];
+    const uint32_t initial_condition = 0xAAAAAAAA;
+    const uint32_t expected = 0xdeadc0de;
+    for (size_t i = 0; i < dest_size; i++) {
+        *(dma_dest + i) = initial_condition;
+    }
+    memset_dma((uint8_t *)dma_dest, dest_size, (uint8_t *)&expected,
+               sizeof(expected));
     // have to poll to verify success.
     bool dma_complete = false;
     while (!dma_complete) {

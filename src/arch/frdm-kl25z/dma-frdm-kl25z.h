@@ -46,17 +46,20 @@ void frdm_kl25z_initialize_dma(void);
 MemStatus memmove_dma(uint8_t *source, uint8_t *destination, uint32_t length);
 
 /**
- * Take a pointer to a memory location, a length in
- * bytes and 1 byte value. Set all bytes of the memory to the specified value.
+ * Take a pointer to a destination memory location, a number of items, a source
+ * memory location, and the number of bytes per item. Set all bytes of the
+ * memory to the specified value.
  *
- * \param[in,out] source pointer to a list of bytes
- * \param[in] length the number of bytes to be moved
- * \param[in] value 1 byte value to assign to all bytes.
+ * \param[in,out] destination pointer to a list of items
+ * \param[in] num_items the number of items to be moved
+ * \param[in] source pointer to a list of items
+ * \param[in] bytes_per_item number of bytes per item. Valid values: 1, 2, or 4
  *
  * \returns MemStatus flag indicating success or type of error tha occured.
  *
  */
-MemStatus memset_dma(uint8_t *destination, uint32_t length, uint8_t source);
+MemStatus memset_dma(uint8_t *destination, uint32_t length, uint8_t *source,
+                     uint8_t bytes_per_item);
 
 
 #endif /* ESE_ARCH_DMA_FRDM_KL25Z_H_ */

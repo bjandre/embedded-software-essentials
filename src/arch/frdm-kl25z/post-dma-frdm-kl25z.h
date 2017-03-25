@@ -20,8 +20,13 @@
  */
 
 /**
-   POST test for dma version of memset
+   POST test for dma version of memset with 1 byte transfers
  */
-POSTstatus post_dma_memset(void);
+POSTstatus post_dma_memset_1byte(void);
+
+/**
+   POST test for dma version of memset with 4 byte transfers
+ */
+POSTstatus post_dma_memset_4byte(void);
 
 #endif // ESE_ARCH_POST_DMA_FRDM_KL25Z_H_
