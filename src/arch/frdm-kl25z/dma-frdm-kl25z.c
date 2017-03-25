@@ -18,8 +18,6 @@
 #include "dma-frdm-kl25z.h"
 #include "async-global.h"
 
-extern async_data_t global_async_data;
-
 /**
    DMA MUX sources are defined in the KL25Z subfamily reference manual section
    3.4.8.1, Table 3.20
@@ -160,11 +158,11 @@ MemStatus memset_dma(uint8_t *destination,
     DMA0->DMA[channel_m2m].DCR |= DMA_DCR_SSIZE(1); // one byte source size
     DMA0->DMA[channel_m2m].DCR |= DMA_DCR_DINC(1); // one byte destination increment
     DMA0->DMA[channel_m2m].DCR |= DMA_DCR_DSIZE(1); // one byte destination size
-    {
-        // critical region, disable interrupts
-        global_async_data.dma_complete = false;
-    }
+
+    set_global_async_dma_complete(false);
+
     DMA0->DMA[channel_m2m].DCR |= DMA_DCR_START(1);
+
     return MemStatus_Success;
 }
 
@@ -183,8 +181,6 @@ extern void DMA2_IRQHandler(void)
     // clear the done flag
     DMA0->DMA[channel_m2m].DCR &= ~DMA_DCR_EINT(1); // enable interrupt
     DMA0->DMA[channel_m2m].DSR_BCR |= DMA_DSR_BCR_DONE(1);
-    {
-        // critical region, disable interrupts
-        global_async_data.dma_complete = true;
-    }
+
+    set_global_async_dma_complete(true);
 }

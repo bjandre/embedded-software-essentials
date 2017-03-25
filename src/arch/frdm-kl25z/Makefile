@@ -31,8 +31,10 @@ ASM_OBJS = $(ASM_SRCS:%.S=%.o)
 OBJS = $(SRCS:%.c=%.o)
 
 INCLUDES = \
+	-I../../main \
 	-I../../util \
-	-I..
+	-I.. \
+	-I.
 
 endif
 

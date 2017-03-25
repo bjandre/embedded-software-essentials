@@ -20,7 +20,6 @@
 #include "async-global.h"
 
 extern volatile BinaryLogger_t logger;
-extern volatile async_data_t global_async_data;
 
 void frdm_kl25z_initialize_interrupts(void)
 {
@@ -40,7 +39,7 @@ extern void UART0_IRQHandler(void)
         {
             // NOTE(bja, 2017-03) critical region accessing global data.
             cb_status = CircularBufferAddItem(logger.receive_buffer, &byte);
-            global_async_data.data_available = true;
+            set_global_async_data_available(true);
         }
         if (CircularBuffer_Success == cb_status) {
             // do nothing? status flag is automatically reset

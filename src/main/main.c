@@ -76,11 +76,9 @@ int main(int argc, char **argv)
 {
     //PRINTF("Hello from Emebbed Software Essentials Project!\n");
 
-    {
-        // critical region, disable interrupts
-        global_async_data.data_available = false;
-        global_async_data.dma_complete = false;
-    }
+    set_global_async_data_available(false);
+    set_global_async_dma_complete(false);
+
     initialize_interrupts();
 
     BinaryLoggerStatus logger_status = BinaryLogger_Success;
@@ -130,10 +128,7 @@ int main(int argc, char **argv)
     memset_dma((uint8_t *)dma_dest, dest_size, expected);
     bool dma_complete = false;
     while (!dma_complete) {
-        {
-            // critical region, disable interrupts
-            dma_complete = global_async_data.dma_complete;
-        }
+        dma_complete = get_global_async_dma_complete();
     }
     for (size_t i = 0; i < dest_size; i++) {
         assert(expected == *(dma_dest + i));
@@ -164,14 +159,11 @@ int main(int argc, char **argv)
 #endif
 
 #ifdef MOCK_RECEIVE_DATA_INTERRUPT
-        global_async_data.data_available = true;
+        set_global_async_data_available(true);
 #endif
 
-        {
-            // NOTE(bja, 2017-03) critical region accessing global data.
-            data_available = global_async_data.data_available;
-            global_async_data.data_available = false;
-        }
+        data_available = get_global_async_data_available();
+        set_global_async_data_available(false);
 
         if (data_available) {
             log_receive_data(1, &byte);
