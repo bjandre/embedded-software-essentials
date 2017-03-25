@@ -152,7 +152,8 @@ MemStatus memset_dma(uint8_t *destination,
     DMA0->DMA[channel_m2m].SAR = DMA_SAR_SAR(&source);
     DMA0->DMA[channel_m2m].DAR = DMA_DAR_DAR(destination);
 
-    DMA0->DMA[channel_m2m].DSR_BCR |= DMA_DSR_BCR_BCR(length); // number of bytes to copy
+    DMA0->DMA[channel_m2m].DSR_BCR |= DMA_DSR_BCR_BCR(
+                                          length); // number of bytes to copy
 
     DMA0->DMA[channel_m2m].DCR |= DMA_DCR_EINT(1); // enable interrupt
     DMA0->DMA[channel_m2m].DCR &= ~DMA_DCR_SINC(1); // no source increment
@@ -163,7 +164,7 @@ MemStatus memset_dma(uint8_t *destination,
         // critical region, disable interrupts
         global_async_data.dma_complete = false;
     }
-    DMA0->DMA[channel_m2m].DCR |= DMA_DCR_START(1);    
+    DMA0->DMA[channel_m2m].DCR |= DMA_DCR_START(1);
     return MemStatus_Success;
 }
 

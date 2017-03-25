@@ -67,12 +67,12 @@ typedef struct BinaryLoggerItem {
    Initialize the logger in a way to make it self describing for log items.
 
      Now we need to send four bytes to make the logger self describing.
-    
+
      1. two bytes - magic number 0x4477 in hex. Allows us to tell if we have
      one of our files, and whether we have big or little endian data.
-    
+
      2. one byte - the number of bytes in the log_item_t id.
-    
+
      3. one byte - the second is the number of bytes in the log_item_t
      payload_num_bytes.
  */

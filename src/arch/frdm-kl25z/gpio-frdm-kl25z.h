@@ -17,7 +17,7 @@
 */
 
 /**
-   define the pins for the leds. 
+   define the pins for the leds.
 */
 typedef enum GPIO_PINS {
     LED_PIN_RED = 18,
