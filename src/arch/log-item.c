@@ -28,7 +28,7 @@ static const void *null_payload = NULL; //!< constant for a null payload
 BinaryLoggerStatus InitializeLoggerForLogItems(void)
 {
     BinaryLoggerStatus status = BinaryLogger_Success;
-    uint16_t magic_number = 0x4477u;
+    uint16_t magic_number = 0x4577u;
     log_data(sizeof(magic_number), (uint8_t *)(&magic_number));
     uint8_t data = sizeof(BinaryLoggerID);
     log_data(sizeof(data), (uint8_t *)(&data));
