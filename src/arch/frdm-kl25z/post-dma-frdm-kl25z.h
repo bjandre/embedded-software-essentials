@@ -29,4 +29,14 @@ POSTstatus post_dma_memset_1byte(void);
  */
 POSTstatus post_dma_memset_4byte(void);
 
+/**
+   POST test for dma version of memmov with 1 byte transfers
+ */
+POSTstatus post_dma_memmove_1byte(void);
+
+/**
+   POST test for dma version of memmov with 4 byte transfers
+ */
+POSTstatus post_dma_memmove_4byte(void);
+
 #endif // ESE_ARCH_POST_DMA_FRDM_KL25Z_H_

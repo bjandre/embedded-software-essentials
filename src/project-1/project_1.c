@@ -16,13 +16,11 @@
 #include <stdlib.h>
 
 #include "data.h"
+#include "data-set.h"
 #include "memory-common.h"
 #include "memory-cpu.h"
 #include "project_1.h"
 
-void initialize_set_1(uint8_t *data, uint32_t size);
-void initialize_set_2(uint8_t *data, uint32_t size);
-void initialize_set_3(uint8_t *data, uint32_t size);
 void test_data1(uint8_t *data, uint32_t size);
 void test_data2(uint8_t *data, uint32_t size);
 void test_memory(uint8_t *data, uint32_t size);
@@ -58,100 +56,6 @@ void project_1_report()
     test_data1(set_1, set_size);
     test_data2(set_2, set_size);
     test_memory(set_2, set_size);
-}
-
-/*
- * void initialize_set_1()
- *
- * Initialize an array of bytes (unsigned) using increasing hex numbers like:
- * 0x0123456789ABCDEF0123456789ABCDEF
- *
- * input:
- *
- *   set_1 : pointer to input bytes
- *
- *   size : number bytes to initialize, must be a multiple of 8 for this
- *   algorithm.
- *
- */
-void initialize_set_1(uint8_t *set_1, uint32_t size)
-{
-    // setting memory to repeating blocks of 0x0123456789abcdef is eight bytes.
-    const uint32_t bytes_per_block = 8;
-    assert(size % bytes_per_block == 0);
-    int num_blocks = size / bytes_per_block;
-    for (uint32_t block = 0; block < num_blocks ; block++) {
-        uint32_t block_start = block * bytes_per_block;
-        uint8_t *position = set_1 + block_start;
-        // set the first byte in the block.
-        *(position) = 0x01;
-        for (uint32_t byte = 0; byte < bytes_per_block; byte++) {
-            position++;
-            *position = *(position - 1) + 0x22;
-        }
-    }
-
-#   ifdef DEBUG_VERBOSE
-    printf("set_1 :\n  ");
-    print_memory(set_1, size);
-    printf("\n");
-#   endif
-}
-
-/*
- * void initialize_set_2()
- *
- * Initialize an array of bytes using an increasing integer count of 1 ,2, 3, 4,
- * 5, 6, 7, 8, 9, 10, 11, ...., 31.
- *
- * input:
- *
- *   set_1 : pointer to input bytes
- *
- *   size : number bytes to initialize
- *
- */
-void initialize_set_2(uint8_t *set_2, uint32_t size)
-{
-    for (uint32_t byte = 0; byte < size; byte++) {
-        *(set_2 + byte) = byte;
-    }
-
-#   ifdef DEBUG_VERBOSE
-    printf("set_2 :\n  ");
-    print_memory(set_2, size);
-    printf("\n");
-#   endif
-}
-
-/*
- * void initialize_set_3()
- *
- * Initialize an array of bytes using an increasing integer count of
- * “abcdefghijklmnopqrstuvwxyzABCDEF”
- *
- * input:
- *
- *   set_1 : pointer to input bytes
- *
- *   size : number bytes to initialize
- *
- */
-void initialize_set_3(uint8_t *set_3, uint32_t size)
-{
-    // FIXME(bja, 2017-02) unused in project 1. Need to keep track of the number
-    // of bytes initialized. Start with a base of 'a'. If we cross 26, then need
-    // to skip back to 'A' as the base. After we cross another 26, we reset the
-    // base to 'a', etc.
-    for (uint32_t byte = 0; byte < size; byte++) {
-        *(set_3 + byte) = 'a' + byte;
-    }
-
-#   ifdef DEBUG_VERBOSE
-    printf("set_3 :\n  ");
-    print_memory(set_3, size);
-    printf("\n");
-#   endif
 }
 
 /*

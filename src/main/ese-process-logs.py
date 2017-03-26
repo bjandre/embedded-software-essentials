@@ -181,6 +181,11 @@ def convert_logger_bytes_to_string():
 
         byte_stream = bytes.fromhex(sys.stdin.read(payload_size*2))
         payload = byte_stream.hex()
+        if item_name == "POST_ERROR":
+            fmt = ">{0}s".format(payload_size)
+            msg = struct.unpack(fmt, byte_stream)[0]
+
+            payload = "{0} : {1}".format(payload, msg.decode('utf-8'))
         print("{0}({1}) size = {2} : {3}".format(item_name, item_id,
                                                  payload_size, payload))
 

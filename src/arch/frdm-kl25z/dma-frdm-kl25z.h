@@ -43,6 +43,25 @@ void frdm_kl25z_initialize_dma(void);
  *
  * \return MemStatus flag indicating success or type of error tha occured.
  *
+ * Check for overlapped regions. Note that there are five possible overlap patterns:
+ *
+ *   * src < src + len < dest < dest + len - no overlap, start at beginning of src.
+ *
+ *   * dest < dest + len < src < src + len - no overlap, start at beginning of src
+ *
+ *   * src < dest < src + len < dest + len - overlap - start at end of src
+ *
+ *   * dest < src < dest + len < src + len - overlap - start at beginning of src
+ *
+ *   * src == dest - complete overlap, nothing to do.
+ *
+ * Not that of the five possible combinations, there are three operations.
+ *
+ *   * Start beginning of src
+ *
+ *   * start at end of src
+ *
+ *   * do nothing
  */
 MemStatus memmove_dma(uint8_t *destination, uint8_t *source, uint32_t num_items,
                       uint8_t bytes_per_item);

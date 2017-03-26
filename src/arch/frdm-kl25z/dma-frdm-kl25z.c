@@ -15,6 +15,7 @@
 #include "MKL25Z4.h"
 
 #include "memory-common.h"
+#include "memory-cpu.h"
 #include "dma-frdm-kl25z.h"
 #include "async-global.h"
 
@@ -71,6 +72,12 @@ typedef enum {
     DMA_SIZE_16BIT = 2U,
 } DMA_TRANSFER_SIZE;
 
+/**
+   Get the correct bit pattern for the transfer size.
+ */
+uint8_t get_transfer_size_indicator(uint8_t bytes_per_item);
+
+
 void frdm_kl25z_initialize_dma(void)
 {
     // enable the clocks for the DMA multiplexer and the DMA.
@@ -87,47 +94,76 @@ void frdm_kl25z_initialize_dma(void)
 
 }
 
+
+uint8_t get_transfer_size_indicator(uint8_t bytes_per_item)
+{
+    uint8_t size_indicator;
+    if (bytes_per_item == 4) {
+        size_indicator = DMA_SIZE_32BIT;
+    } else if (bytes_per_item == 2) {
+        size_indicator = DMA_SIZE_16BIT;
+    } else {
+        size_indicator = DMA_SIZE_8BIT;
+    }
+    return size_indicator;
+}
+
+
 MemStatus memmove_dma(uint8_t *destination, uint8_t *source,
                       uint32_t num_items, uint8_t bytes_per_item)
 {
-    if (NULL == source || NULL == destination) {
+    if (NULL == destination || NULL == source) {
         return MemStatus_Null_Pointer;
     }
-    // Check for overlapped regions. Note that there are five possible overlap patterns:
-    //
-    //   * src < src + len < dest < dest + len - no overlap, start at beginning of src.
-    //
-    //   * dest < dest + len < src < src + len - no overlap, start at beginning of src
-    //
-    //   * src < dest < src + len < dest + len - overlap - start at end of src
-    //
-    //   * dest < src < dest + len < src + len - overlap - start at beginning of src
-    //
-    //   * src == dest - complete overlap, nothing to do.
-    //
-    // Not that of the five possible combinations, there are three operations.
-    //   * Start beginning of src
-    //
-    //   * start at end of src
-    //
-    //   * do nothing
 
     if (source == destination) {
         // do nothing
     } else if (source < destination && destination < source + num_items) {
-        // copy from end of source.
-        uint8_t *source_pt = source + num_items - 1;
-        uint8_t *destination_pt = destination + num_items - 1;
-        for (int i = 0; i < num_items; i++) {
-            *destination_pt = *source_pt;
-            source_pt--;
-            destination_pt--;
-        }
+        // NOTE(bja, 2017-03) requires copying backward from end of source (not
+        // possible with DMA) or copying the overlapped region, wasteful, may
+        // not be possible on memory constrained system.... For now just call
+        // memmove_cpu...
+        memmove_cpu(destination, source, num_items * bytes_per_item);
     } else {
-        // copy from begining of source.
-        for (uint32_t i = 0; i < num_items; i++) {
-            *(destination + i) = *(source + i);
+        // setup dma to copy forward from start of source.
+
+        // is the channel busy?
+        uint32_t status = DMA0->DMA[channel_m2m].DSR_BCR & DMA_DSR_BCR_BSY(1);
+        // is there a pending request but the channel isn't selected?
+        status = DMA0->DMA[channel_m2m].DSR_BCR & DMA_DSR_BCR_REQ(1);
+        if (status) {
+            abort();
         }
+
+        // stop the DMA channel and clear status?
+        DMA0->DMA[channel_m2m].DSR_BCR = DMA_DSR_BCR_DONE(1);
+
+        // FIXME(bja, 2017-03) assert num_items > 0, return?
+        DMA0->DMA[channel_m2m].SAR = DMA_SAR_SAR(source);
+        DMA0->DMA[channel_m2m].DAR = DMA_DAR_DAR(destination);
+
+        uint32_t num_bytes = num_items * bytes_per_item;
+        // number of bytes to copy
+        DMA0->DMA[channel_m2m].DSR_BCR |= DMA_DSR_BCR_BCR(num_bytes);
+
+        // clear control register
+        DMA0->DMA[channel_m2m].DCR = 0x0U;
+        // enable interrupt
+        DMA0->DMA[channel_m2m].DCR |= DMA_DCR_EINT(1);
+        // source increment
+        DMA0->DMA[channel_m2m].DCR |= DMA_DCR_SINC(1);
+        uint8_t size_indicator = get_transfer_size_indicator(bytes_per_item);
+        // one byte source size
+        DMA0->DMA[channel_m2m].DCR |= DMA_DCR_SSIZE(size_indicator);
+        // one byte destination increment
+        DMA0->DMA[channel_m2m].DCR |= DMA_DCR_DINC(1);
+        // one byte destination size
+        DMA0->DMA[channel_m2m].DCR |= DMA_DCR_DSIZE(size_indicator);
+
+        set_global_async_dma_complete(false);
+
+        DMA0->DMA[channel_m2m].DCR |= DMA_DCR_START(1);
+
     }
 
     return MemStatus_Success;
@@ -148,8 +184,6 @@ MemStatus memset_dma(uint8_t *destination, uint8_t *source,
     uint32_t status = DMA0->DMA[channel_m2m].DSR_BCR & DMA_DSR_BCR_BSY(1);
     // is there a pending request but the channel isn't selected?
     status = DMA0->DMA[channel_m2m].DSR_BCR & DMA_DSR_BCR_REQ(1);
-    // configuration error?
-    status = DMA0->DMA[channel_m2m].DSR_BCR & DMA_DSR_BCR_CE(1);
     if (status) {
         abort();
     }
@@ -162,24 +196,22 @@ MemStatus memset_dma(uint8_t *destination, uint8_t *source,
     DMA0->DMA[channel_m2m].DAR = DMA_DAR_DAR(destination);
 
     uint32_t num_bytes = num_items * bytes_per_item;
-    DMA0->DMA[channel_m2m].DSR_BCR |= DMA_DSR_BCR_BCR(
-                                          num_bytes); // number of bytes to copy
+    // number of bytes to copy
+    DMA0->DMA[channel_m2m].DSR_BCR |= DMA_DSR_BCR_BCR(num_bytes);
 
-    DMA0->DMA[channel_m2m].DCR |= DMA_DCR_EINT(1); // enable interrupt
-    DMA0->DMA[channel_m2m].DCR &= ~DMA_DCR_SINC(1); // no source increment
-    uint8_t size_indicator;
-    if (bytes_per_item == 4) {
-        size_indicator = DMA_SIZE_32BIT;
-    } else if (bytes_per_item == 2) {
-        size_indicator = DMA_SIZE_16BIT;
-    } else {
-        size_indicator = DMA_SIZE_8BIT;
-    }
-    DMA0->DMA[channel_m2m].DCR |= DMA_DCR_SSIZE(
-                                      size_indicator); // one byte source size
-    DMA0->DMA[channel_m2m].DCR |= DMA_DCR_DINC(1); // one byte destination increment
-    DMA0->DMA[channel_m2m].DCR |= DMA_DCR_DSIZE(
-                                      size_indicator); // one byte destination size
+    // clear control register
+    DMA0->DMA[channel_m2m].DCR = 0x0U;
+    // enable interrupt
+    DMA0->DMA[channel_m2m].DCR |= DMA_DCR_EINT(1);
+    // no source increment
+    DMA0->DMA[channel_m2m].DCR &= ~DMA_DCR_SINC(1);
+    uint8_t size_indicator = get_transfer_size_indicator(bytes_per_item);
+    // one byte source size
+    DMA0->DMA[channel_m2m].DCR |= DMA_DCR_SSIZE(size_indicator);
+    // one byte destination increment
+    DMA0->DMA[channel_m2m].DCR |= DMA_DCR_DINC(1);
+    // one byte destination size
+    DMA0->DMA[channel_m2m].DCR |= DMA_DCR_DSIZE(size_indicator);
 
     set_global_async_dma_complete(false);
 

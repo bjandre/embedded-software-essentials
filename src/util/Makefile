@@ -22,6 +22,7 @@ SRCS = \
 	memory-common.c \
 	memory-cpu.c \
 	data.c \
+	data-set.c \
 	circular_buffer.c \
 	bit-operations.c
 
