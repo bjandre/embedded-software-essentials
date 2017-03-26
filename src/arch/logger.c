@@ -118,7 +118,8 @@ BinaryLoggerStatus log_integer(int32_t integer)
     BinaryLoggerStatus status = BinaryLogger_Success;
     const size_t max_digits = 32;
     char string[max_digits];
-    memset_cpu((uint8_t *)string, max_digits, '\0');
+    const uint8_t null_char = '\0';
+    memset_cpu((uint8_t *)string, &null_char, max_digits);
     uint32_t decimal_base = 10;
     my_itoa((int8_t *)string, integer, decimal_base);
     log_string((uint8_t *)string);

@@ -276,14 +276,14 @@ void test_memory(uint8_t *data, uint32_t size)
     position = data + 16;
     length = 4;
     uint8_t value = 0xEE;
-    memset_cpu(position, length, value);
+    memset_cpu(position, &value, length);
     print_memory(data, size);
     printf("\n  ");
 
     uint8_t *source = data + 25;
     uint8_t *destination = data + 19;
     length = 6;
-    memmove_cpu(source, destination, length);
+    memmove_cpu(destination, source, length);
     print_memory(data, size);
     printf("\n  ");
 
@@ -296,7 +296,7 @@ void test_memory(uint8_t *data, uint32_t size)
     source = data;
     destination = data + 8;
     length = 8;
-    memmove_cpu(source, destination, length);
+    memmove_cpu(destination, source, length);
 
     print_memory(data, size);
     printf("\n  ");

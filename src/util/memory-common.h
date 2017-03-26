@@ -34,13 +34,13 @@ typedef enum MemoryStatus {
  * Takes a pointer to a memory location and a length in
  * bytes and zeros out all of the memory.
  *
- * \param[in,out] source pointer to a list of bytes
+ * \param[in,out] destination pointer to a list of bytes
  * \param[in] length the number of bytes to be zeroed
  *
  * \return MemStatus flag indicating success or type of error tha occured.
  *
  */
-MemStatus my_memzero(uint8_t *source, uint32_t length);
+MemStatus my_memzero(uint8_t *destination, uint32_t length);
 
 /**
  * Takes a pointer to a memory location and a length in

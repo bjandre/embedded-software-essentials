@@ -77,7 +77,7 @@ BinaryLoggerStatus UpdateLogItem(log_item_t *item, BinaryLoggerID id,
         num_bytes = num_bytes > max_payload_bytes ? max_payload_bytes : num_bytes;
         item->payload_num_bytes = num_bytes;
         if (item->payload_num_bytes > 0) {
-            MemStatus mem_stat = memmove_cpu((uint8_t *)payload, item->payload,
+            MemStatus mem_stat = memmove_cpu(item->payload, (uint8_t *)payload,
                                              item->payload_num_bytes);
             if (MemStatus_Success != mem_stat) {
                 status = BinaryLogger_Item_Alloc_Error;

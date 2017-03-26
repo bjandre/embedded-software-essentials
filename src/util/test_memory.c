@@ -129,7 +129,7 @@ void test_memmove_cpu_no_overlap_src_dest(void **state)
     uint8_t *destination = data + 2 * range;
 
     uint8_t expected[SIZE] = {0, 1, 2, 3, 4, 5, 6, 7, 2, 3, 4, 5, 12, 13, 14, 15};
-    MemStatus status = memmove_cpu(source, destination, range);
+    MemStatus status = memmove_cpu(destination, source, range);
     assert_int_equal(status, MemStatus_Success);
     assert_memory_equal(data, expected, size);
 
@@ -153,7 +153,7 @@ void test_memmove_cpu_no_overlap_dest_src(void **state)
     uint8_t *destination = data + range / 2;
 
     uint8_t expected[SIZE] = {0, 1, 8, 9, 10, 11, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15};
-    MemStatus status = memmove_cpu(source, destination, range);
+    MemStatus status = memmove_cpu(destination, source, range);
     assert_int_equal(status, MemStatus_Success);
     assert_memory_equal(data, expected, size);
 
@@ -177,7 +177,7 @@ void test_memmove_cpu_overlap_src_in_dest(void **state)
     uint8_t *destination = data + range / 2;
 
     uint8_t expected[SIZE] = {0, 1, 4, 5, 6, 7, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15};
-    MemStatus status = memmove_cpu(source, destination, range);
+    MemStatus status = memmove_cpu(destination, source, range);
     assert_int_equal(status, MemStatus_Success);
     assert_memory_equal(data, expected, size);
 
@@ -201,7 +201,7 @@ void test_memmove_cpu_overlap_dest_in_src(void **state)
     uint8_t *destination = data + range;
 
     uint8_t expected[SIZE] = {0, 1, 2, 3, 2, 3, 4, 5, 8, 9, 10, 11, 12, 13, 14, 15};
-    MemStatus status = memmove_cpu(source, destination, range);
+    MemStatus status = memmove_cpu(destination, source, range);
     assert_int_equal(status, MemStatus_Success);
     assert_memory_equal(data, expected, size);
 
@@ -217,7 +217,7 @@ void test_memset_cpu_null_ptrs(void **state)
     size_t const size = 20;
     uint8_t expected = 0x23;
 
-    MemStatus status = memset_cpu(NULL, size, expected);
+    MemStatus status = memset_cpu(NULL, &expected, size);
     assert_int_equal(status, MemStatus_Null_Pointer);
 }
 
@@ -232,7 +232,7 @@ void test_memset_cpu_set_entire_array(void **state)
         *(data + i) = i;
     }
     uint8_t expected = 0x23;
-    MemStatus status = memset_cpu(data, size, expected);
+    MemStatus status = memset_cpu(data, &expected, size);
     assert_int_equal(status, MemStatus_Success);
 
     for (size_t i = 0; i < size; i++) {
@@ -260,7 +260,7 @@ void test_memset_cpu_set_subarray(void **state)
 
     uint8_t value = 0x34;
     uint8_t expected[SIZE] = {0, 1, value, value, value, value, 6, 7};
-    MemStatus status = memset_cpu(data + 2, range, value);
+    MemStatus status = memset_cpu(data + 2, &value, range);
     assert_int_equal(status, MemStatus_Success);
     assert_memory_equal(data, expected, size);
 #undef SIZE

@@ -221,7 +221,7 @@ void test_my_itoa_positive_base10(void **state)
         string[i] = '\0';
         expected[i] = string[i];
     }
-    memmove_cpu((uint8_t *)"1023", (uint8_t *)expected, 4);
+    memmove_cpu((uint8_t *)expected, (uint8_t *)"1023", 4);
     uint32_t data = 1023;
     uint32_t base = 10;
     int8_t *junk = my_itoa(string, data, base);
@@ -244,7 +244,7 @@ void test_my_itoa_negative_base10(void **state)
         string[i] = '\0';
         expected[i] = string[i];
     }
-    memmove_cpu((uint8_t *)"-10325476", (uint8_t *)expected, 9);
+    memmove_cpu((uint8_t *)expected, (uint8_t *)"-10325476", 9);
     uint32_t data = -10325476;
     uint32_t base = 10;
     int8_t *junk = my_itoa(string, data, base);
@@ -268,7 +268,7 @@ void test_my_itoa_positive_base2(void **state)
         string[i] = '\0';
         expected[i] = string[i];
     }
-    memmove_cpu((uint8_t *)"1111110101", (uint8_t *)expected, 10);
+    memmove_cpu((uint8_t *)expected, (uint8_t *)"1111110101", 10);
 
     uint32_t data = 1013;
     uint32_t base = 2;
@@ -292,7 +292,7 @@ void test_my_itoa_negative_base16(void **state)
         string[i] = '\0';
         expected[i] = string[i];
     }
-    memmove_cpu((uint8_t *)"-9d8de4", (uint8_t *)expected, 7);
+    memmove_cpu((uint8_t *)expected, (uint8_t *)"-9d8de4", 7);
 
     uint32_t data = -10325476;
     uint32_t base = 16;

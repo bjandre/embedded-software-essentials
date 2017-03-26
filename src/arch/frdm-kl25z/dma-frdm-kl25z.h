@@ -36,14 +36,16 @@ void frdm_kl25z_initialize_dma(void);
  * The source and destination locations must have at least length bytes of
  * properly allocated memory.
  *
- * \param[in] source pointer to a list of bytes to be moved.
  * \param[out] destination pointer to a destination location.
- * \param[in] length the number of bytes to be moved
+ * \param[in] source pointer to a list of bytes to be moved.
+ * \param[in] num_items the number of items to be moved
+ * \param[in] bytes_per_item number of bytes per item. Valid values: 1, 2, or 4
  *
  * \return MemStatus flag indicating success or type of error tha occured.
  *
  */
-MemStatus memmove_dma(uint8_t *source, uint8_t *destination, uint32_t length);
+MemStatus memmove_dma(uint8_t *destination, uint8_t *source, uint32_t num_items,
+                      uint8_t bytes_per_item);
 
 /**
  * Take a pointer to a destination memory location, a number of items, a source
@@ -51,14 +53,14 @@ MemStatus memmove_dma(uint8_t *source, uint8_t *destination, uint32_t length);
  * memory to the specified value.
  *
  * \param[in,out] destination pointer to a list of items
- * \param[in] num_items the number of items to be moved
  * \param[in] source pointer to a list of items
+ * \param[in] num_items the number of items to be moved
  * \param[in] bytes_per_item number of bytes per item. Valid values: 1, 2, or 4
  *
  * \returns MemStatus flag indicating success or type of error tha occured.
  *
  */
-MemStatus memset_dma(uint8_t *destination, uint32_t length, uint8_t *source,
+MemStatus memset_dma(uint8_t *destination, uint8_t *source, uint32_t num_items,
                      uint8_t bytes_per_item);
 
 

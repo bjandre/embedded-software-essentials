@@ -27,7 +27,7 @@ POSTstatus post_dma_memset_1byte(void)
     for (size_t i = 0; i < dest_size; i++) {
         *(dma_dest + i) = initial_condition;
     }
-    memset_dma((uint8_t *)dma_dest, dest_size, (uint8_t *)&expected,
+    memset_dma((uint8_t *)dma_dest, (uint8_t *)&expected, dest_size,
                sizeof(expected));
     // have to poll to verify success.
     bool dma_complete = false;
@@ -54,7 +54,7 @@ POSTstatus post_dma_memset_4byte(void)
     for (size_t i = 0; i < dest_size; i++) {
         *(dma_dest + i) = initial_condition;
     }
-    memset_dma((uint8_t *)dma_dest, dest_size, (uint8_t *)&expected,
+    memset_dma((uint8_t *)dma_dest, (uint8_t *)&expected, dest_size,
                sizeof(expected));
     // have to poll to verify success.
     bool dma_complete = false;

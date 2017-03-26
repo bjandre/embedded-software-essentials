@@ -31,26 +31,28 @@
  * The source and destination locations must have at least length bytes of
  * properly allocated memory.
  *
- * \param[in] source pointer to a list of bytes to be moved.
  * \param[out] destination pointer to a destination location.
- * \param[in] length the number of bytes to be moved
+ * \param[in] source pointer to a list of bytes to be moved.
+ * \param[in] num_bytes the number of bytes to be moved
  *
  * \return MemStatus flag indicating success or type of error tha occured.
  *
  */
-MemStatus memmove_cpu(uint8_t *source, uint8_t *destination, uint32_t length);
+MemStatus memmove_cpu(uint8_t *destination, const uint8_t *const source,
+                      uint32_t num_bytes);
 
 /**
  * Take a pointer to a memory location, a length in
  * bytes and 1 byte value. Set all bytes of the memory to the specified value.
  *
- * \param[in,out] source pointer to a list of bytes
- * \param[in] length the number of bytes to be moved
- * \param[in] value 1 byte value to assign to all bytes.
+ * \param[out] destination pointer to a list of bytes
+ * \param[in] source pointer to the 1 byte value to assign to all bytes.
+ * \param[in] num_bytes the number of bytes to be moved
  *
  * \returns MemStatus flag indicating success or type of error tha occured.
  *
  */
-MemStatus memset_cpu(uint8_t *source, uint32_t length, uint8_t value);
+MemStatus memset_cpu(uint8_t *destination, const uint8_t *const source,
+                     uint32_t num_bytes);
 
 #endif /* ESE_UTIL_MEMORY_H_ */

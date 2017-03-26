@@ -15,13 +15,13 @@
 #include "memory-cpu.h"
 
 void swap(uint8_t *a, uint8_t *b);
-MemStatus my_memzero(uint8_t *source, uint32_t length)
+MemStatus my_memzero(uint8_t *destination, uint32_t length)
 {
-    if (NULL == source) {
+    if (NULL == destination) {
         return MemStatus_Null_Pointer;
     }
-
-    memset_cpu(source, length, 0);
+    const uint8_t zero = 0;
+    memset_cpu(destination, &zero, length);
     return MemStatus_Success;
 }
 

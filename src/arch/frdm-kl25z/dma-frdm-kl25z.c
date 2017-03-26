@@ -87,7 +87,8 @@ void frdm_kl25z_initialize_dma(void)
 
 }
 
-MemStatus memmove_dma(uint8_t *source, uint8_t *destination, uint32_t length)
+MemStatus memmove_dma(uint8_t *destination, uint8_t *source,
+                      uint32_t num_items, uint8_t bytes_per_item)
 {
     if (NULL == source || NULL == destination) {
         return MemStatus_Null_Pointer;
@@ -113,18 +114,18 @@ MemStatus memmove_dma(uint8_t *source, uint8_t *destination, uint32_t length)
 
     if (source == destination) {
         // do nothing
-    } else if (source < destination && destination < source + length) {
+    } else if (source < destination && destination < source + num_items) {
         // copy from end of source.
-        uint8_t *source_pt = source + length - 1;
-        uint8_t *destination_pt = destination + length - 1;
-        for (int i = 0; i < length; i++) {
+        uint8_t *source_pt = source + num_items - 1;
+        uint8_t *destination_pt = destination + num_items - 1;
+        for (int i = 0; i < num_items; i++) {
             *destination_pt = *source_pt;
             source_pt--;
             destination_pt--;
         }
     } else {
         // copy from begining of source.
-        for (uint32_t i = 0; i < length; i++) {
+        for (uint32_t i = 0; i < num_items; i++) {
             *(destination + i) = *(source + i);
         }
     }
@@ -132,9 +133,8 @@ MemStatus memmove_dma(uint8_t *source, uint8_t *destination, uint32_t length)
     return MemStatus_Success;
 }
 
-MemStatus memset_dma(uint8_t *destination,
-                     uint32_t num_items,
-                     uint8_t *source, uint8_t bytes_per_item)
+MemStatus memset_dma(uint8_t *destination, uint8_t *source,
+                     uint32_t num_items, uint8_t bytes_per_item)
 {
     if (NULL == destination || NULL == source) {
         return MemStatus_Null_Pointer;
