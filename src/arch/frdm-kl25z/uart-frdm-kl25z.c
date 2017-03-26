@@ -36,7 +36,6 @@ UartStatus frdm_kl25z_uart_initialize(const uint32_t baud)
     SIM->SCGC5 |= SIM_SCGC5_PORTA(1);
     SIM->SCGC4 |= SIM_SCGC4_UART0(1);  // enable uart0
 
-    SIM->SOPT2 &= ~SIM_SOPT2_PLLFLLSEL(1);
     SIM->SOPT2 |= SIM_SOPT2_UART0SRC(1); // use the MGC FLL or PLL/2
 
     // set the rx tx source to be the pins on port 1

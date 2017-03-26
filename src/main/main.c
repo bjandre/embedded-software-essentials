@@ -36,12 +36,21 @@ volatile BinaryLogger_t logger;
 volatile async_data_t global_async_data;
 
 #if (PLATFORM == PLATFORM_FRDM)
+#include "initialize-frdm-kl25z.h"
 #include "interrupts-frdm-kl25z.h"
 #include "gpio-frdm-kl25z.h"
 #include "dma-frdm-kl25z.h"
+#include "spi-frdm-kl25z.h"
 #else
 typedef enum GPIO_PINS {LED_PIN} GPIO_PINS;
 #endif
+
+/*
+  Generic routine to initialize hardware.
+
+  Wrapper around platform specific code.
+ */
+void initialize_hardware(void);
 
 /*
   Generic routine to initialize GPIO.
@@ -56,6 +65,13 @@ void initialize_interrupts(void);
   Wrapper around platform specific code.
  */
 void initialize_gpio(log_item_t *item);
+
+/*
+  Generic routine to initialize SPI.
+
+  Wrapper around platform specific code.
+ */
+void initialize_spi(log_item_t *item);
 
 /*
   Generic routine to initialize DMA.
@@ -78,6 +94,8 @@ int main(int argc, char **argv)
 
     set_global_async_data_available(false);
     set_global_async_dma_complete(false);
+
+    initialize_hardware();
 
     // NOTE(bja, 2017-03) logger uses interrupts on hardware where it is
     // supported. We need to enable them first to log the full initialization
@@ -105,6 +123,7 @@ int main(int argc, char **argv)
 
     initialize_gpio(item);
     initialize_dma(item);
+    initialize_spi(item);
 
     UpdateLogItemNoPayload(item, SYSTEM_INITIALIZED);
     log_item(item);
@@ -134,6 +153,12 @@ int main(int argc, char **argv)
 #ifdef DEBUG_UART
         uint8_t tx_or_rx = 1;
         debug_uart(tx_or_rx, buffer, buffer_size);
+#endif
+
+#define DEBUG_SPI 1
+#if DEBUG_SPI && (PLATFORM == PLATFORM_FRDM)
+        // FIXME(bja, 2017-03) need to abstract out for host!
+        frdm_kl25z_spi_transmit_byte(0x55);
 #endif
 
 #ifdef MOCK_RECEIVE_DATA_INTERRUPT
@@ -172,6 +197,13 @@ int main(int argc, char **argv)
     return 0;
 }
 
+void initialize_hardware(void)
+{
+#if (PLATFORM == PLATFORM_FRDM)
+    frdm_kl25z_initialize();
+#endif
+}
+
 void initialize_interrupts(void)
 {
 #if (PLATFORM == PLATFORM_FRDM)
@@ -185,6 +217,15 @@ void initialize_gpio(log_item_t *item)
     frdm_kl25z_initialize_gpio();
 #endif
     UpdateLogItemNoPayload(item, GPIO_INITIALIZED);
+    log_item(item);
+}
+
+void initialize_spi(log_item_t *item)
+{
+#if (PLATFORM == PLATFORM_FRDM)
+    frdm_kl25z_initialize_spi();
+#endif
+    UpdateLogItemNoPayload(item, SPI_INITIALIZED);
     log_item(item);
 }
 

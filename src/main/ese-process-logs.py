@@ -106,6 +106,7 @@ def translate_id_to_string(item_id):
     id_names = ["LOGGER_INITIALIZED",
                 "GPIO_INITIALIZED",
                 "DMA_INITIALIZED",
+                "SPI_INITIALIZED",
                 "SYSTEM_INITIALIZED",
                 "SYSTEM_HALTED",
                 "INFO",
