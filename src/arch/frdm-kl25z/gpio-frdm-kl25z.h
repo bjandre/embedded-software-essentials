@@ -51,5 +51,9 @@ void frdm_kl25z_initialize_port_d_output_pin(GPIO_PINS pin);
  */
 void frdm_kl25z_update_leds(void);
 
+/**
+  Platform specific code to turn on the blue LED
+ */
+void frdm_kl25z_blue_led_on(void);
 
 #endif // ESE_ARCH_GPIO_FRDM_KL25Z_H_

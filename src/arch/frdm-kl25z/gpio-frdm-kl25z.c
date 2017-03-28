@@ -36,9 +36,9 @@ void frdm_kl25z_initialize_gpio(void)
     frdm_kl25z_initialize_port_d_output_pin(LED_PIN_BLUE);
 
     // initial state of pins
-    GPIOB->PDOR &= ~(1 << LED_PIN_RED);
-    GPIOB->PDOR &= ~(1 << LED_PIN_GREEN);
-    GPIOD->PDOR |= (1 << LED_PIN_BLUE);
+    GPIOB->PCOR |= (1 << LED_PIN_RED);
+    GPIOB->PCOR |= (1 << LED_PIN_GREEN);
+    GPIOD->PSOR |= (1 << LED_PIN_BLUE);
 }
 
 void frdm_kl25z_initialize_port_b_output_pin(GPIO_PINS pin)
@@ -59,11 +59,15 @@ void frdm_kl25z_initialize_port_d_output_pin(GPIO_PINS pin)
 
 void frdm_kl25z_update_leds(void)
 {
-    for (uint32_t i = 0; i < 200000; i++) {
+    //for (uint32_t i = 0; i < 200000; i++) {
         // do nothing for a while.
-    }
+    //}
     // toggle led pins
     GPIOB->PTOR |= (1 << LED_PIN_RED);
     GPIOB->PTOR |= (1 << LED_PIN_GREEN);
 }
 
+void frdm_kl25z_blue_led_on(void)
+{
+	GPIOD->PCOR |= (1 << LED_PIN_BLUE);
+}
