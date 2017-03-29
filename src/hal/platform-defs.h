@@ -8,8 +8,8 @@
 ** with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
 */
 
-#ifndef ESE_ARCH_PLATFORM_DEFS_H_
-#define ESE_ARCH_PLATFORM_DEFS_H_
+#ifndef ESE_HAL_PLATFORM_DEFS_H_
+#define ESE_HAL_PLATFORM_DEFS_H_
 
 /**
    \file platform-defs.h
@@ -26,4 +26,4 @@
 #define LOGGER_POLLING (0) //!< macro for conditional compilation of logging via polling
 #define LOGGER_INTERRUPTS (1) //!< macro for conditional compilation of logging via interrupts
 
-#endif /* ESE_ARCH_PLATFORM_DEFS_H_ */
+#endif /* ESE_HAL_PLATFORM_DEFS_H_ */

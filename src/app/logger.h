@@ -8,8 +8,8 @@
 ** with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
 */
 
-#ifndef ESE_ARCH_LOGGER_H_
-#define ESE_ARCH_LOGGER_H_
+#ifndef ESE_APP_LOGGER_H_
+#define ESE_APP_LOGGER_H_
 
 /**
    \file logger.h
@@ -119,4 +119,4 @@ BinaryLoggerStatus log_flush(void);
  */
 BinaryLoggerStatus log_receive_data(logger_size_t num_bytes, uint8_t *buffer);
 
-#endif // ESE_ARCH_LOGGER_H_
+#endif // ESE_APP_LOGGER_H_

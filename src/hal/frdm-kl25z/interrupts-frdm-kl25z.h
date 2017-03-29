@@ -8,8 +8,8 @@
 ** with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
 */
 
-#ifndef ESE_ARCH_INTERRUPTS_FRDM_KL25Z_H_
-#define ESE_ARCH_INTERRUPTS_FRDM_KL25Z_H_
+#ifndef ESE_HAL_INTERRUPTS_FRDM_KL25Z_H_
+#define ESE_HAL_INTERRUPTS_FRDM_KL25Z_H_
 
 /**
    \file interrupts-frdm-kl25z.h
@@ -22,4 +22,4 @@
  */
 void frdm_kl25z_initialize_interrupts(void);
 
-#endif // ESE_ARCH_INTERRUPTS_FRDM_KL25Z_H_
+#endif // ESE_HAL_INTERRUPTS_FRDM_KL25Z_H_

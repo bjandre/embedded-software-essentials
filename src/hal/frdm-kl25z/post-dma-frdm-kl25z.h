@@ -8,8 +8,8 @@
 ** with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
 */
 
-#ifndef ESE_ARCH_POST_DMA_FRDM_KL25Z_H_
-#define ESE_ARCH_POST_DMA_FRDM_KL25Z_H_
+#ifndef ESE_HAL_POST_DMA_FRDM_KL25Z_H_
+#define ESE_HAL_POST_DMA_FRDM_KL25Z_H_
 
 #include "post-common.h"
 
@@ -39,4 +39,4 @@ POSTstatus post_dma_memmove_1byte(void);
  */
 POSTstatus post_dma_memmove_4byte(void);
 
-#endif // ESE_ARCH_POST_DMA_FRDM_KL25Z_H_
+#endif // ESE_HAL_POST_DMA_FRDM_KL25Z_H_

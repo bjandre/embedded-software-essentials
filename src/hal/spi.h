@@ -8,8 +8,8 @@
 ** with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
 */
 
-#ifndef ESE_ARCH_UART_H_
-#define ESE_ARCH_UART_H_
+#ifndef ESE_HAL_UART_H_
+#define ESE_HAL_UART_H_
 
 #include <stddef.h>
 #include <stdint.h>
@@ -89,4 +89,4 @@ UartStatus CreateUART(uart_t volatile *uart, UartFunction uart_func);
 
 
 
-#endif // ESE_ARCH_UART_H_
+#endif // ESE_HAL_UART_H_

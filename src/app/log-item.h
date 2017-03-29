@@ -8,8 +8,8 @@
 ** with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
 */
 
-#ifndef ESE_ARCH_LOG_ITEM_H_
-#define ESE_ARCH_LOG_ITEM_H_
+#ifndef ESE_APP_LOG_ITEM_H_
+#define ESE_APP_LOG_ITEM_H_
 
 /**
    \file log-item.h
@@ -129,4 +129,4 @@ BinaryLoggerStatus DestroyLogItem(log_item_t **item);
  */
 BinaryLoggerStatus log_item(const log_item_t *item);
 
-#endif // ESE_ARCH_LOG_ITEM_H_
+#endif // ESE_APP_LOG_ITEM_H_

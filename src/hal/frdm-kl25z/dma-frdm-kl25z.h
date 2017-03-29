@@ -15,8 +15,8 @@
  *
  */
 
-#ifndef ESE_ARCH_DMA_FRDM_KL25Z_H_
-#define ESE_ARCH_DMA_FRDM_KL25Z_H_
+#ifndef ESE_HAL_DMA_FRDM_KL25Z_H_
+#define ESE_HAL_DMA_FRDM_KL25Z_H_
 
 #include <stdint.h>
 
@@ -83,4 +83,4 @@ MemStatus memset_dma(uint8_t *destination, uint8_t *source, uint32_t num_items,
                      uint8_t bytes_per_item);
 
 
-#endif /* ESE_ARCH_DMA_FRDM_KL25Z_H_ */
+#endif /* ESE_HAL_DMA_FRDM_KL25Z_H_ */

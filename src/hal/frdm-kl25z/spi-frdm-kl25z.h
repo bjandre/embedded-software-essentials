@@ -14,8 +14,8 @@
  * SPI hardware specific implementation for FRDM-KL25Z dev board.
  */
 
-#ifndef ESE_ARCH_SPI_FRDM_KL25Z_H_
-#define ESE_ARCH_SPI_FRDM_KL25Z_H_
+#ifndef ESE_HAL_SPI_FRDM_KL25Z_H_
+#define ESE_HAL_SPI_FRDM_KL25Z_H_
 
 #include <stdint.h>
 
@@ -50,4 +50,4 @@ SPIstatus frdm_kl25z_spi_transmit_byte(const uint8_t byte);
  */
 SPIstatus frdm_kl25z_spi_receive_byte(uint8_t *byte);
 
-#endif /* ESE_ARCH_SPI_FRDM_KL25Z_H_ */
+#endif /* ESE_HAL_SPI_FRDM_KL25Z_H_ */

@@ -15,8 +15,8 @@
  *      Author: andreb
  */
 
-#ifndef ESE_ARCH_UART_FRDM_KL25Z_H_
-#define ESE_ARCH_UART_FRDM_KL25Z_H_
+#ifndef ESE_HAL_UART_FRDM_KL25Z_H_
+#define ESE_HAL_UART_FRDM_KL25Z_H_
 
 #include <stdint.h>
 
@@ -53,4 +53,4 @@ UartStatus frdm_kl25z_uart_transmit_byte(const uint8_t byte);
  */
 UartStatus frdm_kl25z_uart_receive_byte(uint8_t *byte);
 
-#endif /* ESE_ARCH_UART_FRDM_KL25Z_H_ */
+#endif /* ESE_HAL_UART_FRDM_KL25Z_H_ */

@@ -8,8 +8,8 @@
 ** with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
 */
 
-#ifndef ESE_ARCH_GPIO_FRDM_KL25Z_H_
-#define ESE_ARCH_GPIO_FRDM_KL25Z_H_
+#ifndef ESE_HAL_GPIO_FRDM_KL25Z_H_
+#define ESE_HAL_GPIO_FRDM_KL25Z_H_
 
 /**
    \file gpio-frdm-kl25z.c
@@ -56,4 +56,4 @@ void frdm_kl25z_update_leds(void);
  */
 void frdm_kl25z_blue_led_on(void);
 
-#endif // ESE_ARCH_GPIO_FRDM_KL25Z_H_
+#endif // ESE_HAL_GPIO_FRDM_KL25Z_H_

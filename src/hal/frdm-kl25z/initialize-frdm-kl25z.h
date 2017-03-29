@@ -14,8 +14,8 @@
  * Hardware specific initialization for FRDM-KL25Z dev board.
  */
 
-#ifndef ESE_ARCH_INITIALIZE_FRDM_KL25Z_H_
-#define ESE_ARCH_INITIALIZE_FRDM_KL25Z_H_
+#ifndef ESE_HAL_INITIALIZE_FRDM_KL25Z_H_
+#define ESE_HAL_INITIALIZE_FRDM_KL25Z_H_
 
 /**
    frdm-kl25z specific initialization.
@@ -25,4 +25,4 @@
  */
 void frdm_kl25z_initialize(void);
 
-#endif // ESE_ARCH_INITIALIZE_FRDM_KL25Z_H_
+#endif // ESE_HAL_INITIALIZE_FRDM_KL25Z_H_

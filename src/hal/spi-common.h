@@ -8,8 +8,8 @@
 ** with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
 */
 
-#ifndef ESE_ARCH_SPI_COMMON_H_
-#define ESE_ARCH_SPI_COMMON_H_
+#ifndef ESE_HAL_SPI_COMMON_H_
+#define ESE_HAL_SPI_COMMON_H_
 
 #include <stdint.h>
 
@@ -28,4 +28,4 @@ typedef enum SPIstatus {
 } SPIstatus;
 
 
-#endif // ESE_ARCH_SPI_COMMON_H_
+#endif // ESE_HAL_SPI_COMMON_H_

@@ -8,8 +8,8 @@
 ** with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
 */
 
-#ifndef ESE_ARCH_HOST_UART_H_
-#define ESE_ARCH_HOST_UART_H_
+#ifndef ESE_HAL_HOST_UART_H_
+#define ESE_HAL_HOST_UART_H_
 
 #include <stdint.h>
 
@@ -47,4 +47,4 @@ UartStatus host_uart_receive_byte(uint8_t *byte);
 
 
 
-#endif // ESE_ARCH_HOST_UART_H_
+#endif // ESE_HAL_HOST_UART_H_
