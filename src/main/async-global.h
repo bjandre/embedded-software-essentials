@@ -41,9 +41,9 @@
 
  */
 typedef struct AsynchronousData {
-    bool data_available; /*!< flag indicating data is available to be retreived
-                            from logger receive buffer */
     bool dma_complete; /*!< flag indicating a dma transfer has completed. */
+    bool logger_data_available; /*!< flag indicating data is available to be retreived
+                            from logger receive buffer */
     BinaryLogger_t logger; /*!< global logger */
 
 } async_data_t;
@@ -80,11 +80,11 @@ static inline void set_global_async_dma_complete(const bool dma_complete)
 
    \return data_available
  */
-static inline bool get_global_async_data_available(void)
+static inline bool get_global_async_logger_data_available(void)
 {
     extern volatile async_data_t global_async_data;
     start_critical_region();
-    bool data_available = global_async_data.data_available;
+    bool data_available = global_async_data.logger_data_available;
     end_critical_region();
     return data_available;
 }
@@ -93,11 +93,11 @@ static inline bool get_global_async_data_available(void)
    Thread / interrupt safe write data_available from the global_async_data struct
 
  */
-static inline void set_global_async_data_available(const bool data_available)
+static inline void set_global_async_logger_data_available(const bool data_available)
 {
     extern volatile async_data_t global_async_data;
     start_critical_region();
-    global_async_data.data_available = data_available;
+    global_async_data.logger_data_available = data_available;
     end_critical_region();
 }
 

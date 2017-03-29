@@ -151,7 +151,7 @@ extern void UART0_IRQHandler(void)
             // NOTE(bja, 2017-03) critical region accessing global data.
             cb_status = CircularBufferAddItem(global_async_data.logger.receive_buffer,
                                               &byte);
-            set_global_async_data_available(true);
+            set_global_async_logger_data_available(true);
         }
         if (CircularBuffer_Success == cb_status) {
             // do nothing? status flag is automatically reset

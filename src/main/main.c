@@ -64,7 +64,7 @@ int main(int argc, char **argv)
 {
     //PRINTF("Hello from Emebbed Software Essentials Project!\n");
 
-    set_global_async_data_available(false);
+    set_global_async_logger_data_available(false);
     set_global_async_dma_complete(false);
 
     log_item_t *item = NULL;
@@ -108,11 +108,11 @@ int main(int argc, char **argv)
 #endif
 
 #ifdef MOCK_RECEIVE_DATA_INTERRUPT
-        set_global_async_data_available(true);
+        set_global_async_logger_data_available(true);
 #endif
 
-        data_available = get_global_async_data_available();
-        set_global_async_data_available(false);
+        data_available = get_global_async_logger_data_available();
+        set_global_async_logger_data_available(false);
 
         if (data_available) {
             log_receive_data(1, &byte);
