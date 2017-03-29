@@ -19,7 +19,7 @@ SRCS = \
 	logger.c \
 	log-item.c
 
-INCLUDES = -I. -I../util -I../hal
+INCLUDES = -I. -I../util -I../hal -I../main
 
 ifeq ($(PLATFORM), $(PLATFORM_ENUM_HOST))
   INCLUDES += -I../host

@@ -16,6 +16,7 @@ LIB = \
 	libhal.a
 
 SRCS = \
+	hal.c \
 	uart.c
 
 

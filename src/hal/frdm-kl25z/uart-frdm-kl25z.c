@@ -8,11 +8,9 @@
 ** with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
 */
 
-/*
- * uart.c
+/**
+ * \file uart-frdm-kl25z.c
  *
- *  Created on: Mar 3, 2017
- *      Author: andreb
  */
 
 #include <stddef.h>
@@ -25,8 +23,14 @@
 
 #include "circular_buffer.h"
 
+#include "async-global.h"
+
+extern volatile async_data_t global_async_data;
+
 UartStatus frdm_kl25z_uart_initialize(const uint32_t baud)
 {
+    NVIC_EnableIRQ(UART0_IRQn);
+
     // UART0
     //   PTA1 - Port A, Pin 1, Alternate function 2, UART0_RX
     //   PTA2 - Port A, Pin 2, Alternate function 2, UART0_TX
@@ -133,4 +137,42 @@ UartStatus frdm_kl25z_uart_receive_n_bytes(const size_t num_bytes,
         frdm_kl25z_uart_receive_byte(bytes + n);
     }
     return status;
+}
+
+extern void UART0_IRQHandler(void)
+{
+    CircularBufferStatus cb_status = CircularBuffer_Success;
+    uint8_t byte;
+    // What triggered the interrupt...
+    if (UART0->S1 & UART0_S1_RDRF_MASK) {
+        // received data register full
+        byte = UART0->D;
+        {
+            // NOTE(bja, 2017-03) critical region accessing global data.
+            cb_status = CircularBufferAddItem(global_async_data.logger.receive_buffer,
+                                              &byte);
+            set_global_async_data_available(true);
+        }
+        if (CircularBuffer_Success == cb_status) {
+            // do nothing? status flag is automatically reset
+        } else {
+            // error handling?
+        }
+    } else if (UART0->S1 & UART0_S1_TDRE_MASK) {
+        // transmit data register empty
+        {
+            // NOTE(bja, 2017-03) critical region accessing global data.
+            cb_status = CircularBufferRemoveItem(global_async_data.logger.transmit_buffer,
+                                                 &byte);
+        }
+        if (CircularBuffer_Success == cb_status) {
+            // successfully removed item.
+            UART0->D = byte;
+        } else {
+            // nothing else to send
+            UART0->C2 &= ~UART0_C2_TIE(1);
+        }
+    } else {
+        // other interrupts to handle?
+    }
 }

@@ -24,26 +24,28 @@
 #define end_critical_region()
 #endif
 
-
+#include "logger.h"
 
 /**
    \file async-global.h
 
    Central location to declare all asynchronously accessed global variables
 
+   FIXME(bja, 2017-03) Need to implement status preservation for critical region
+   so nested calls work. This is needed to correctly wrap the logger calls.
+
  */
 
 /**
    Struct containing global data.
 
-   FIXME(bja, 2017-03) need to add logger instance here, but there are starting
-   to be circular dependencies between the libraries that need to be
-   straightened out....
  */
 typedef struct AsynchronousData {
     bool data_available; /*!< flag indicating data is available to be retreived
                             from logger receive buffer */
     bool dma_complete; /*!< flag indicating a dma transfer has completed. */
+    BinaryLogger_t logger; /*!< global logger */
+
 } async_data_t;
 
 

@@ -22,6 +22,9 @@
 #include <stdlib.h>
 
 #include "platform-defs.h"
+
+#include "hal.h"
+
 #include "logger.h"
 #include "log-item.h"
 
@@ -32,60 +35,29 @@
 #include "async-global.h"
 
 // Global, asynchronously accessed data instances
-volatile BinaryLogger_t logger;
 volatile async_data_t global_async_data;
 
 #if (PLATFORM == PLATFORM_FRDM)
-#include "initialize-frdm-kl25z.h"
-#include "interrupts-frdm-kl25z.h"
 #include "gpio-frdm-kl25z.h"
-#include "dma-frdm-kl25z.h"
 #include "spi-frdm-kl25z.h"
 #else
 typedef enum GPIO_PINS {LED_PIN} GPIO_PINS;
 #endif
 
-/*
-  Generic routine to initialize hardware.
+/**
+  Initialization sequence
 
-  Wrapper around platform specific code.
+  \param[out] item pointer to log item, should be null initially, a valid log
+  item will be created during initialization and returned.
  */
-void initialize_hardware(void);
+void initialize(log_item_t **item);
 
-/*
-  Generic routine to initialize GPIO.
-
-  Wrapper around platform specific code.
- */
-void initialize_interrupts(void);
-
-/*
-  Generic routine to initialize GPIO.
-
-  Wrapper around platform specific code.
- */
-void initialize_gpio(log_item_t *item);
-
-/*
-  Generic routine to initialize SPI.
-
-  Wrapper around platform specific code.
- */
-void initialize_spi(log_item_t *item);
-
-/*
-  Generic routine to initialize DMA.
-
-  Wrapper around platform specific code.
- */
-void initialize_dma(log_item_t *item);
-
-/*
+/**
   Generic routine to update led status.
 
   Wrapper around platform specific code.
  */
-void update_leds(void);
+void update_leds();
 
 
 int main(int argc, char **argv)
@@ -95,38 +67,9 @@ int main(int argc, char **argv)
     set_global_async_data_available(false);
     set_global_async_dma_complete(false);
 
-    initialize_hardware();
+    log_item_t *item = NULL;
 
-    // NOTE(bja, 2017-03) logger uses interrupts on hardware where it is
-    // supported. We need to enable them first to log the full initialization
-    // sequence. They may need to be disabled selectively.
-    initialize_interrupts();
-
-    BinaryLoggerStatus logger_status = BinaryLogger_Success;
-    uint8_t const buffer_size_bytes = 32;
-    logger_status = BinaryLoggerCreate(buffer_size_bytes);
-    if (BinaryLogger_Success != logger_status) {
-        abort();
-    }
-
-    InitializeLoggerForLogItems();
-    log_item_t *item;
-    logger_status = CreateLogItem(&item);
-    if (BinaryLogger_Success != logger_status) {
-        abort();
-    }
-    logger_status = UpdateLogItemNoPayload(item, LOGGER_INITIALIZED);
-    if (BinaryLogger_Success != logger_status) {
-        abort();
-    }
-    log_item(item);
-
-    initialize_gpio(item);
-    initialize_dma(item);
-    initialize_spi(item);
-
-    UpdateLogItemNoPayload(item, SYSTEM_INITIALIZED);
-    log_item(item);
+    initialize(&item);
 
     power_on_self_tests(item);
 
@@ -145,6 +88,8 @@ int main(int argc, char **argv)
 
     UpdateLogItemNoPayload(item, DATA_ANALYSIS_STARTED);
     log_item(item);
+
+    BinaryLoggerStatus logger_status = BinaryLogger_Success;
 
     while (1) { /* main event loop */
         __asm("NOP"); /* breakpoint to stop while looping */
@@ -198,45 +143,43 @@ int main(int argc, char **argv)
     return 0;
 }
 
-void initialize_hardware(void)
+void initialize(log_item_t **item)
 {
-#if (PLATFORM == PLATFORM_FRDM)
-    frdm_kl25z_initialize();
-#endif
-}
+    initialize_hardware();
 
-void initialize_interrupts(void)
-{
-#if (PLATFORM == PLATFORM_FRDM)
-    frdm_kl25z_initialize_interrupts();
-#endif
-}
+    BinaryLoggerStatus logger_status = BinaryLogger_Success;
+    uint8_t const buffer_size_bytes = 32;
+    logger_status = BinaryLoggerCreate(buffer_size_bytes);
+    if (BinaryLogger_Success != logger_status) {
+        abort();
+    }
 
-void initialize_gpio(log_item_t *item)
-{
-#if (PLATFORM == PLATFORM_FRDM)
-    frdm_kl25z_initialize_gpio();
-#endif
-    UpdateLogItemNoPayload(item, GPIO_INITIALIZED);
-    log_item(item);
-}
+    InitializeLoggerForLogItems();
+    logger_status = CreateLogItem(item);
+    if (BinaryLogger_Success != logger_status) {
+        abort();
+    }
+    logger_status = UpdateLogItemNoPayload(*item, LOGGER_INITIALIZED);
+    if (BinaryLogger_Success != logger_status) {
+        abort();
+    }
+    log_item(*item);
 
-void initialize_spi(log_item_t *item)
-{
-#if (PLATFORM == PLATFORM_FRDM)
-    frdm_kl25z_initialize_spi();
-#endif
-    UpdateLogItemNoPayload(item, SPI_INITIALIZED);
-    log_item(item);
-}
+    initialize_gpio();
+    UpdateLogItemNoPayload(*item, GPIO_INITIALIZED);
+    log_item(*item);
 
-void initialize_dma(log_item_t *item)
-{
-#if (PLATFORM == PLATFORM_FRDM)
-    frdm_kl25z_initialize_dma();
-#endif
-    UpdateLogItemNoPayload(item, DMA_INITIALIZED);
-    log_item(item);
+    initialize_dma();
+    UpdateLogItemNoPayload(*item, DMA_INITIALIZED);
+    log_item(*item);
+
+    initialize_spi();
+    UpdateLogItemNoPayload(*item, SPI_INITIALIZED);
+    log_item(*item);
+
+    UpdateLogItemNoPayload(*item, SYSTEM_INITIALIZED);
+    log_item(*item);
+
 }
 
 void update_leds(void)

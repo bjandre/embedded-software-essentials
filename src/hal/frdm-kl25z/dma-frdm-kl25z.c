@@ -80,6 +80,8 @@ uint8_t get_transfer_size_indicator(uint8_t bytes_per_item);
 
 void frdm_kl25z_initialize_dma(void)
 {
+    NVIC_EnableIRQ(DMA2_IRQn);
+
     // enable the clocks for the DMA multiplexer and the DMA.
     SIM->SCGC6 |= SIM_SCGC6_DMAMUX(1);
     SIM->SCGC7 |= SIM_SCGC7_DMA(1);

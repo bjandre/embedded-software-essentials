@@ -60,7 +60,7 @@ void frdm_kl25z_initialize_port_d_output_pin(GPIO_PINS pin)
 void frdm_kl25z_update_leds(void)
 {
     //for (uint32_t i = 0; i < 200000; i++) {
-        // do nothing for a while.
+    // do nothing for a while.
     //}
     // toggle led pins
     GPIOB->PTOR |= (1 << LED_PIN_RED);
@@ -69,5 +69,5 @@ void frdm_kl25z_update_leds(void)
 
 void frdm_kl25z_blue_led_on(void)
 {
-	GPIOD->PCOR |= (1 << LED_PIN_BLUE);
+    GPIOD->PCOR |= (1 << LED_PIN_BLUE);
 }

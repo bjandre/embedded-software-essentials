@@ -26,8 +26,9 @@
 #include "uart.h"
 #include "logger.h"
 
-extern BinaryLogger_t volatile
-logger; //!< extern reference to the global logger
+#include "async-global.h"
+
+volatile async_data_t global_async_data;
 
 static const uint32_t debugger_baud = 115200u; //!< UART debugger baud
 static const logger_size_t bytes_per_item = sizeof(
@@ -38,22 +39,25 @@ BinaryLoggerStatus BinaryLoggerCreate(logger_size_t num_bytes)
     BinaryLoggerStatus status = BinaryLogger_Success;
     CircularBufferStatus cb_status;
     logger_size_t num_buffer_items = num_bytes / bytes_per_item;
-    cb_status = CircularBufferNew(&(logger.transmit_buffer), num_buffer_items,
+    cb_status = CircularBufferNew(&(global_async_data.logger.transmit_buffer),
+                                  num_buffer_items,
                                   bytes_per_item);
     if (CircularBuffer_Success != cb_status) {
         return BinaryLogger_Error;
     }
-    cb_status = CircularBufferNew(&(logger.receive_buffer), num_buffer_items,
+    cb_status = CircularBufferNew(&(global_async_data.logger.receive_buffer),
+                                  num_buffer_items,
                                   bytes_per_item);
     if (CircularBuffer_Success != cb_status) {
         return BinaryLogger_Error;
     }
 
-    UartStatus uart_status = CreateUART(&(logger.uart), UartDebugger);
+    UartStatus uart_status = CreateUART(&(global_async_data.logger.uart),
+                                        UartDebugger);
     if (UART_Status_Success != uart_status) {
         abort();
     }
-    logger.uart.initialize(debugger_baud);
+    global_async_data.logger.uart.initialize(debugger_baud);
     if (UART_Status_Success != uart_status) {
         abort();
     }
@@ -69,9 +73,11 @@ BinaryLoggerStatus log_data(logger_size_t num_bytes, uint8_t *buffer)
         bool is_full;
         do {
             // poll the transmit buffer to see if in can accept data.
-            cb_status = CircularBufferIsFull(logger.transmit_buffer, &is_full);
+            cb_status = CircularBufferIsFull(global_async_data.logger.transmit_buffer,
+                                             &is_full);
         } while (is_full);
-        cb_status = CircularBufferAddItem(logger.transmit_buffer, buffer + n);
+        cb_status = CircularBufferAddItem(global_async_data.logger.transmit_buffer,
+                                          buffer + n);
         if (CircularBuffer_Success != cb_status) {
             abort();
         }
@@ -88,13 +94,17 @@ BinaryLoggerStatus log_data(logger_size_t num_bytes, uint8_t *buffer)
 #else // LOGGER_ALGORITHM == LOGGER_POLLING
         // no interrupts, just write all available data
         bool is_empty;
-        cb_status = CircularBufferIsEmpty(logger.transmit_buffer, &is_empty);
+        cb_status = CircularBufferIsEmpty(global_async_data.logger.transmit_buffer,
+                                          &is_empty);
         while (!is_empty) {
             uint8_t byte;
-            cb_status = CircularBufferRemoveItem(logger.transmit_buffer, &byte);
-            UartStatus uart_status = uart_status = logger.uart.transmit_byte(byte);
+            cb_status = CircularBufferRemoveItem(global_async_data.logger.transmit_buffer,
+                                                 &byte);
+            UartStatus uart_status = uart_status =
+                                         global_async_data.logger.uart.transmit_byte(byte);
 
-            cb_status = CircularBufferIsEmpty(logger.transmit_buffer, &is_empty);
+            cb_status = CircularBufferIsEmpty(global_async_data.logger.transmit_buffer,
+                                              &is_empty);
         }
 #endif
     }
@@ -133,7 +143,8 @@ BinaryLoggerStatus log_flush(void)
 
     bool is_empty = false;
     do {
-        cb_status = CircularBufferIsEmpty(logger.transmit_buffer, &is_empty);
+        cb_status = CircularBufferIsEmpty(global_async_data.logger.transmit_buffer,
+                                          &is_empty);
         if (CircularBuffer_Success != cb_status) {
             status = BinaryLogger_Error;
             break;
@@ -155,11 +166,12 @@ BinaryLoggerStatus log_receive_data(logger_size_t num_bytes, uint8_t *buffer)
 #else // LOGGER_ALGORITHM == LOGGER_POLLING
     for (logger_size_t n = 0; n < num_bytes; n++) {
         uint8_t byte;
-        uart_status = logger.uart.receive_byte(&byte);
+        uart_status = global_async_data.logger.uart.receive_byte(&byte);
         if (UART_Status_Success != uart_status) {
             status = BinaryLogger_Error;
         }
-        cb_status = CircularBufferAddItem(logger.receive_buffer, &byte);
+        cb_status = CircularBufferAddItem(global_async_data.logger.receive_buffer,
+                                          &byte);
         if (CircularBuffer_Success != cb_status) {
             abort();
         }
@@ -169,7 +181,8 @@ BinaryLoggerStatus log_receive_data(logger_size_t num_bytes, uint8_t *buffer)
     logger_size_t num_received = 0;
     while (num_received < num_bytes) {
         uint8_t byte;
-        cb_status = CircularBufferRemoveItem(logger.receive_buffer, (void *)(&byte));
+        cb_status = CircularBufferRemoveItem(global_async_data.logger.receive_buffer,
+                                             (void *)(&byte));
         if (CircularBuffer_Success == cb_status) {
             *(buffer + num_received) = byte;
             num_received++;
