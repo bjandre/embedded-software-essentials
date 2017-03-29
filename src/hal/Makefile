@@ -13,7 +13,7 @@ MAKERULES = $(abspath $(WORKSPACE_PATH)/makerules)
 include $(MAKERULES)/config.makefile
 
 LIB = \
-	libarch.a
+	libhal.a
 
 SRCS = \
 	uart.c \

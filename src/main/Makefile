@@ -26,41 +26,41 @@ SRCS = \
 OBJS = $(SRCS:%.c=%.o)
 
 INCLUDES = \
-	-I../arch \
+	-I../hal \
 	-I../util \
 	-I../project-1
 
 DEPEND_LIBS += \
 	../project-1/libproject1.a \
-	../arch/libarch.a
+	../hal/libhal.a
 
 LIBS += \
 	-L../project-1 -lproject1 \
-	-L../arch -larch
+	-L../hal -lhal
 
 ifeq ($(PLATFORM), $(PLATFORM_ENUM_FRDM))
   INCLUDES += \
-	-I../arch/frdm-kl25z
+	-I../hal/frdm-kl25z
   DEPEND_STARTUP += \
-	../arch/frdm-kl25z/libfrdm_startup.a
+	../hal/frdm-kl25z/libfrdm_startup.a
   DEPEND_LIBS += \
-	../arch/frdm-kl25z/libesefrdm.a 
+	../hal/frdm-kl25z/libesefrdm.a 
   LIBS += \
-	-L../arch/frdm-kl25z -lesefrdm
+	-L../hal/frdm-kl25z -lesefrdm
 else ifeq ($(PLATFORM), $(PLATFORM_ENUM_HOST))
   INCLUDES += \
-	-I../arch/host
+	-I../hal/host
   DEPEND_LIBS += \
-	../arch/host/libesehost.a
+	../hal/host/libesehost.a
   LIBS += \
-	-L../arch/host -lesehost
+	-L../hal/host -lesehost
 else ifeq ($(PLATFORM), $(PLATFORM_ENUM_BBB))
   INCLUDES += \
-	-I../arch/host
+	-I../hal/host
   DEPEND_LIBS += \
-	../arch/host/libesehost.a
+	../hal/host/libesehost.a
   LIBS += \
-	-L../arch/host -lesehost
+	-L../hal/host -lesehost
 endif
 
 LIBS += \

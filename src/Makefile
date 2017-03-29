@@ -16,7 +16,7 @@ include $(MAKERULES)/config.makefile
 # subdirectories that will be built in order.
 SUBDIRS = \
 	util \
-	arch \
+	hal \
 	project-1 \
 	main
 

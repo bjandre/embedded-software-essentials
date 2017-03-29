@@ -28,7 +28,7 @@ SRCS = \
 
 OBJS = $(SRCS:%.c=%.o)
 
-INCLUDES = -I../arch \
+INCLUDES = -I../hal \
 	 -I$(CMOCKA_INCLUDE_DIR)
 
 
