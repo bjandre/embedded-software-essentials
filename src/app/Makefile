@@ -16,6 +16,7 @@ LIB = \
 	libapp.a
 
 SRCS = \
+	analyze-data.c \
 	logger.c \
 	log-item.c
 

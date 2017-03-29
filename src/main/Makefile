@@ -19,7 +19,6 @@ BIN = $(EXE:%.$(EXE_EXTENSION)=%.$(BIN_EXTENSION))
 SRCS = \
 	main.c \
 	async-global.c \
-	analyze-data.c \
 	debug-uart-data.c \
 	post.c
 

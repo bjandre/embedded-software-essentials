@@ -79,17 +79,8 @@ int main(int argc, char **argv)
     uint8_t *buffer = malloc(buffer_size);
 #endif
 
-    uint8_t byte;
-    uint8_t const num_required = 16;
-    uint8_t num_received = 0;
     data_summary_t data_summary;
-    bool data_available;
-    clear_data_summary(&data_summary);
-
-    UpdateLogItemNoPayload(item, DATA_ANALYSIS_STARTED);
-    log_item(item);
-
-    BinaryLoggerStatus logger_status = BinaryLogger_Success;
+    initialize_logger_data_analysis(&data_summary, item);
 
     while (1) { /* main event loop */
         __asm("NOP"); /* breakpoint to stop while looping */
@@ -107,39 +98,13 @@ int main(int argc, char **argv)
         frdm_kl25z_spi_transmit_byte(0x55);
 #endif
 
-#ifdef MOCK_RECEIVE_DATA_INTERRUPT
-        set_global_async_logger_data_available(true);
-#endif
+        analyze_logger_data_event(&data_summary, item);
 
-        data_available = get_global_async_logger_data_available();
-        set_global_async_logger_data_available(false);
-
-        if (data_available) {
-            log_receive_data(1, &byte);
-            logger_status = UpdateLogItem(item, DATA_RECEIVED, 1, &byte);
-            if (BinaryLogger_Success != logger_status) {
-                abort();
-            }
-            log_item(item);
-            num_received++;
-            process_data(&data_summary, byte);
-        }
-
-        if (num_received == num_required) {
-            log_data_analysis(item, &data_summary);
-            UpdateLogItemNoPayload(item, DATA_ANALYSIS_COMPLETED);
-            log_item(item);
-            clear_data_summary(&data_summary);
-            num_received = 0;
-#ifdef MOCK_RECEIVE_DATA_INTERRUPT
-            exit(EXIT_SUCCESS);
-#endif
-        }
     }
 #ifdef DEBUG_UART
     free(buffer);
 #endif
-    logger_status = DestroyLogItem(&item);
+    DestroyLogItem(&item);
     return 0;
 }
 

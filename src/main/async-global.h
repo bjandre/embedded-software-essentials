@@ -93,7 +93,8 @@ static inline bool get_global_async_logger_data_available(void)
    Thread / interrupt safe write data_available from the global_async_data struct
 
  */
-static inline void set_global_async_logger_data_available(const bool data_available)
+static inline void set_global_async_logger_data_available(
+    const bool data_available)
 {
     extern volatile async_data_t global_async_data;
     start_critical_region();
