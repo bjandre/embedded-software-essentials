@@ -16,9 +16,8 @@ LIB = \
 	libhal.a
 
 SRCS = \
-	uart.c \
-	logger.c \
-	log-item.c
+	uart.c
+
 
 INCLUDES = -I. -I../util
 

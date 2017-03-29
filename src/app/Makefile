@@ -12,39 +12,31 @@ MAKERULES = $(abspath $(WORKSPACE_PATH)/makerules)
 
 include $(MAKERULES)/config.makefile
 
-ifeq ($(PLATFORM), $(PLATFORM_ENUM_FRDM))
 LIB = \
-	libesefrdm.a
+	libapp.a
 
 SRCS = \
-	initialize-frdm-kl25z.c \
-	dma-frdm-kl25z.c \
-	post-dma-frdm-kl25z.c \
-	uart-frdm-kl25z.c \
-	spi-frdm-kl25z.c \
-	interrupts-frdm-kl25z.c \
-	gpio-frdm-kl25z.c
+	logger.c \
+	log-item.c
 
-STARTUP_LIB = libfrdm_startup.a
-STARTUP_SRCS = system_MKL25Z4.c
-STARTUP_OBJS = $(STARTUP_SRCS:%.c=%.o)
-ASM_SRCS = startup_MKL25Z4.S
-ASM_OBJS = $(ASM_SRCS:%.S=%.o)
+INCLUDES = -I. -I../util -I../hal
+
+ifeq ($(PLATFORM), $(PLATFORM_ENUM_HOST))
+  INCLUDES += -I../host
+else ifeq ($(PLATFORM), $(PLATFORM_ENUM_BBB))
+  INCLUDES += -I../host
+else ifeq ($(PLATFORM), $(PLATFORM_ENUM_FRDM))
+  INCLUDES += -I../hal/frdm-kl25z
+endif
 
 OBJS = $(SRCS:%.c=%.o)
 
-INCLUDES = \
-	-I../../main \
-	-I../../app \
-	-I../../util \
-	-I.. \
-	-I.
 
-endif
+#
+# macro for executing TARGET in all SUBDIRS
+#
 
 include $(MAKERULES)/generic.makefile
-
-
 
 
 

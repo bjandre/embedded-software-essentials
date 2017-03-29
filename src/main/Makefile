@@ -26,16 +26,19 @@ SRCS = \
 OBJS = $(SRCS:%.c=%.o)
 
 INCLUDES = \
+	-I../app \
 	-I../hal \
 	-I../util \
 	-I../project-1
 
 DEPEND_LIBS += \
 	../project-1/libproject1.a \
+	../app/libapp.a \
 	../hal/libhal.a
 
 LIBS += \
 	-L../project-1 -lproject1 \
+	-L../app -lapp \
 	-L../hal -lhal
 
 ifeq ($(PLATFORM), $(PLATFORM_ENUM_FRDM))

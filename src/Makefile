@@ -17,6 +17,7 @@ include $(MAKERULES)/config.makefile
 SUBDIRS = \
 	util \
 	hal \
+	app \
 	project-1 \
 	main
 
