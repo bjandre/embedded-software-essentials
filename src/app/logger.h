@@ -64,6 +64,13 @@ typedef uint8_t logger_size_t;
 BinaryLoggerStatus BinaryLoggerCreate(logger_size_t num_bytes);
 
 /**
+   Destroy the global binary logger and free all internal memory
+
+   \return status of the operation
+ */
+void BinaryLoggerDestroy(void);
+
+/**
    Log the specified number of bytes from the provided buffer.
 
    \param[in] num_bytes - number of bytes to log

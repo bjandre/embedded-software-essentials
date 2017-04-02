@@ -143,15 +143,17 @@ extern void UART0_IRQHandler(void)
 {
     CircularBufferStatus cb_status = CircularBuffer_Success;
     uint8_t byte;
+    uint32_t interrupt_state;
     // What triggered the interrupt...
     if (UART0->S1 & UART0_S1_RDRF_MASK) {
         // received data register full
         byte = UART0->D;
         {
-            // NOTE(bja, 2017-03) critical region accessing global data.
-            cb_status = CircularBufferAddItem(global_async_data.logger.receive_buffer,
+            interrupt_state = start_critical_region();
+            cb_status = CircularBufferAddItem(global_async_data.logger->receive_buffer,
                                               &byte);
             set_global_async_logger_data_available(true);
+            end_critical_region(interrupt_state);
         }
         if (CircularBuffer_Success == cb_status) {
             // do nothing? status flag is automatically reset
@@ -161,9 +163,10 @@ extern void UART0_IRQHandler(void)
     } else if (UART0->S1 & UART0_S1_TDRE_MASK) {
         // transmit data register empty
         {
-            // NOTE(bja, 2017-03) critical region accessing global data.
-            cb_status = CircularBufferRemoveItem(global_async_data.logger.transmit_buffer,
+            interrupt_state = start_critical_region();
+            cb_status = CircularBufferRemoveItem(global_async_data.logger->transmit_buffer,
                                                  &byte);
+            end_critical_region(interrupt_state);
         }
         if (CircularBuffer_Success == cb_status) {
             // successfully removed item.

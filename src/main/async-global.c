@@ -16,3 +16,13 @@ extern bool get_global_async_logger_data_available(void);
 extern void set_global_async_logger_data_available(const bool data_available);
 
 
+void initialize_global_async_data(void)
+{
+    extern volatile async_data_t global_async_data;
+    uint32_t original_state = start_critical_region();
+    set_global_async_logger_data_available(false);
+    set_global_async_dma_complete(false);
+    set_global_async_logger(NULL);
+    end_critical_region(original_state);
+}
+

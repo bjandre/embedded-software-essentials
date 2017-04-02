@@ -26,7 +26,8 @@
 
    \return original state of the primask.
  */
-__attribute__( ( always_inline ) ) __STATIC_INLINE uint32_t start_critical_region(void)
+__attribute__( ( always_inline ) ) __STATIC_INLINE uint32_t
+start_critical_region(void)
 {
     uint32_t original_state = __get_PRIMASK();
     __disable_irq();
@@ -40,14 +41,15 @@ __attribute__( ( always_inline ) ) __STATIC_INLINE uint32_t start_critical_regio
 
    \param original_state original state of the primask.
 */
-__attribute__( ( always_inline ) ) __STATIC_INLINE void end_critical_region(uint32_t original_state)
+__attribute__( ( always_inline ) ) __STATIC_INLINE void end_critical_region(
+    uint32_t original_state)
 {
     if (PRIMASK_IE == original_state) {
         __enable_irq();
     }
 }
 #undef PRIMASK_IE
-#undef PRIMASK_ID 
+#undef PRIMASK_ID
 #else
 /* platform without interrupts or threads */
 #define start_critical_region() 0U;
@@ -74,10 +76,16 @@ typedef struct AsynchronousData {
     bool dma_complete; /*!< flag indicating a dma transfer has completed. */
     bool logger_data_available; /*!< flag indicating data is available to be retreived
                             from logger receive buffer */
-    BinaryLogger_t logger; /*!< global logger */
+    BinaryLogger_t *logger; /*!< global logger */
 
 } async_data_t;
 
+
+/**
+   Initialize the global data state
+
+ */
+void initialize_global_async_data(void);
 
 /**
    Thread / interrupt safe read dma_complete from the global_async_data struct
@@ -129,6 +137,18 @@ static inline void set_global_async_logger_data_available(
     extern volatile async_data_t global_async_data;
     uint32_t interrupt_status = start_critical_region();
     global_async_data.logger_data_available = data_available;
+    end_critical_region(interrupt_status);
+}
+
+/**
+   Thread / interrupt safe write of logger from the global_async_data struct
+
+ */
+static inline void set_global_async_logger(BinaryLogger_t *logger)
+{
+    extern volatile async_data_t global_async_data;
+    uint32_t interrupt_status = start_critical_region();
+    global_async_data.logger = logger;
     end_critical_region(interrupt_status);
 }
 
