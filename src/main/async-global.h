@@ -17,11 +17,41 @@
 
 #if (PLATFORM == PLATFORM_FRDM)
 #include "MKL25Z4.h"
-#define start_critical_region() __disable_irq()
-#define end_critical_region() __enable_irq()
+#define PRIMASK_IE 0U
+#define PRIMASK_ID 1U
+/**
+   save the original state of the interrupt status from the PRIMASK register,
+   then disable interrupts. This allows enabling and disabling of interrupts
+   safely within nested critical regions.
+
+   \return original state of the primask.
+ */
+__attribute__( ( always_inline ) ) __STATIC_INLINE uint32_t start_critical_region(void)
+{
+    uint32_t original_state = __get_PRIMASK();
+    __disable_irq();
+    return original_state;
+}
+
+/**
+   restore the global interrupt status from a saved version of the PRIMASK
+   register. This allows enabling and disabling of interrupts safely within
+   nested critical regions.
+
+   \param original_state original state of the primask.
+*/
+__attribute__( ( always_inline ) ) __STATIC_INLINE void end_critical_region(uint32_t original_state)
+{
+    if (PRIMASK_IE == original_state) {
+        __enable_irq();
+    }
+}
+#undef PRIMASK_IE
+#undef PRIMASK_ID 
 #else
-#define start_critical_region()
-#define end_critical_region()
+/* platform without interrupts or threads */
+#define start_critical_region() 0U;
+#define end_critical_region(state) (void)state;
 #endif
 
 #include "logger.h"
@@ -57,9 +87,9 @@ typedef struct AsynchronousData {
 static inline bool get_global_async_dma_complete(void)
 {
     extern volatile async_data_t global_async_data;
-    start_critical_region();
+    uint32_t interrupt_status = start_critical_region();
     bool dma_complete = global_async_data.dma_complete;
-    end_critical_region();
+    end_critical_region(interrupt_status);
     return dma_complete;
 }
 
@@ -70,9 +100,9 @@ static inline bool get_global_async_dma_complete(void)
 static inline void set_global_async_dma_complete(const bool dma_complete)
 {
     extern volatile async_data_t global_async_data;
-    start_critical_region();
+    uint32_t interrupt_status = start_critical_region();
     global_async_data.dma_complete = dma_complete;
-    end_critical_region();
+    end_critical_region(interrupt_status);
 }
 
 /**
@@ -83,9 +113,9 @@ static inline void set_global_async_dma_complete(const bool dma_complete)
 static inline bool get_global_async_logger_data_available(void)
 {
     extern volatile async_data_t global_async_data;
-    start_critical_region();
+    uint32_t interrupt_status = start_critical_region();
     bool data_available = global_async_data.logger_data_available;
-    end_critical_region();
+    end_critical_region(interrupt_status);
     return data_available;
 }
 
@@ -97,9 +127,9 @@ static inline void set_global_async_logger_data_available(
     const bool data_available)
 {
     extern volatile async_data_t global_async_data;
-    start_critical_region();
+    uint32_t interrupt_status = start_critical_region();
     global_async_data.logger_data_available = data_available;
-    end_critical_region();
+    end_critical_region(interrupt_status);
 }
 
 #endif // ESE_MAIN_ASYNC_GLOBAL_H_

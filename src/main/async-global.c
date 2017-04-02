@@ -12,7 +12,7 @@
 
 extern bool get_global_async_dma_complete(void);
 extern void set_global_async_dma_complete(const bool dma_complete);
-extern bool get_global_async_data_available(void);
-extern void set_global_async_data_available(const bool data_available);
+extern bool get_global_async_logger_data_available(void);
+extern void set_global_async_logger_data_available(const bool data_available);
 
 
