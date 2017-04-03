@@ -23,7 +23,8 @@
 #include "memory-cpu.h"
 #include "data.h"
 #include "circular_buffer.h"
-#include "uart.h"
+#include "communication-peripheral.h"
+#include "communication-peripheral-factory.h"
 #include "logger.h"
 #include "async-global.h"
 
@@ -65,13 +66,13 @@ BinaryLoggerStatus BinaryLoggerCreate(logger_size_t num_bytes)
         return BinaryLogger_Error;
     }
 
-    UartStatus uart_status = CreateUART(&(logger->uart),
-                                        UartDebugger);
-    if (UART_Status_Success != uart_status) {
+    CommStatus comm_status = CommCreate(&(logger->comm),
+                                        UART_Logger);
+    if (Comm_Status_Success != comm_status) {
         abort();
     }
-    logger->uart.initialize(debugger_baud);
-    if (UART_Status_Success != uart_status) {
+    logger->comm.initialize(debugger_baud);
+    if (Comm_Status_Success != comm_status) {
         abort();
     }
 
@@ -87,7 +88,7 @@ void BinaryLoggerDestroy(void)
         if (NULL != logger) {
             CircularBufferDestroy(&(logger->transmit_buffer));
             CircularBufferDestroy(&(logger->receive_buffer));
-            UARTdestroy(&(logger->uart));
+            CommDestroy(&(logger->comm));
         }
         end_critical_region(interrupt_state);
     }
@@ -124,7 +125,7 @@ BinaryLoggerStatus log_data(logger_size_t num_bytes, uint8_t *buffer)
 #if (PLATFORM == PLATFORM_FRDM) && (LOGGER_ALGORITHM == LOGGER_INTERRUPTS)
         {
             interrupt_state = start_critical_region();
-            global_async_data.logger->uart.begin_async_transmit();
+            global_async_data.logger->comm.begin_async_transmit();
             end_critical_region(interrupt_state);
         }
 #else // LOGGER_ALGORITHM == LOGGER_POLLING
@@ -154,7 +155,7 @@ void logger_polling_transmit_byte(void)
             cb_status = CircularBufferRemoveItem(global_async_data.logger->transmit_buffer,
                                                  &byte);
             if (CircularBuffer_Success == cb_status) {
-                global_async_data.logger->uart.transmit_byte(byte);
+                global_async_data.logger->comm.transmit_byte(byte);
             }
 
             CircularBufferIsEmpty(global_async_data.logger->transmit_buffer, &is_empty);
@@ -213,8 +214,8 @@ BinaryLoggerStatus log_receive_data(logger_size_t num_bytes, uint8_t *buffer)
     CircularBufferStatus cb_status = CircularBuffer_Success;
 
 #if (PLATFORM == PLATFORM_FRDM) && (LOGGER_ALGORITHM == LOGGER_INTERRUPTS)
-    // extraction from uart receive data register and pack into the circular
-    // buffer is done by the UART0 interrupt handler
+    // extraction from comm receive data register and pack into the circular
+    // buffer is done by the communication peripheral interrupt handler
 #else // LOGGER_ALGORITHM == LOGGER_POLLING
     status = logger_polling_receive(num_bytes);
 #endif
@@ -245,8 +246,8 @@ BinaryLoggerStatus logger_polling_receive(logger_size_t num_bytes)
         uint8_t byte;
         {
             uint32_t interrupt_state = start_critical_region();
-            UartStatus uart_status = global_async_data.logger->uart.receive_byte(&byte);
-            if (UART_Status_Success != uart_status) {
+            CommStatus comm_status = global_async_data.logger->comm.receive_byte(&byte);
+            if (Comm_Status_Success != comm_status) {
                 status = BinaryLogger_Error;
             }
             cb_status = CircularBufferAddItem(global_async_data.logger->receive_buffer,

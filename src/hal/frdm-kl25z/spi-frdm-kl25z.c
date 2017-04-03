@@ -20,12 +20,12 @@
 #include "MKL25Z4.h"
 #include "system_MKL25Z4.h"
 
-#include "spi-common.h"
+#include "communication-peripheral.h"
 #include "spi-frdm-kl25z.h"
 
 #include "circular_buffer.h"
 
-SPIstatus frdm_kl25z_initialize_spi(void)
+CommStatus frdm_kl25z_initialize_spi(void)
 {
     /*
 
@@ -54,7 +54,7 @@ SPIstatus frdm_kl25z_initialize_spi(void)
     */
 
     // enable the clock for port d pins
-    SPIstatus status = SPI_Status_Success;
+    CommStatus status = Comm_Status_Success;
     SIM->SCGC5 |= SIM_SCGC5_PORTD(1);
     // enable clock for SPI1 internal peripheral
     SIM->SCGC4 |= SIM_SCGC4_SPI1(1);
@@ -103,9 +103,9 @@ SPIstatus frdm_kl25z_initialize_spi(void)
     return status;
 }
 
-SPIstatus frdm_kl25z_spi_transmit_byte(const uint8_t byte)
+CommStatus frdm_kl25z_spi_transmit_byte(const uint8_t byte)
 {
-    SPIstatus status = SPI_Status_Success;
+    CommStatus status = Comm_Status_Success;
 
     // poll the status register until empty. SPTEF == 1 --> empty
     bool transmit_buffer_empty = 0;
@@ -119,28 +119,9 @@ SPIstatus frdm_kl25z_spi_transmit_byte(const uint8_t byte)
     return status;
 }
 
-SPIstatus frdm_kl25z_spi_transmit_n_bytes(const size_t num_bytes,
-        uint8_t *bytes)
+CommStatus frdm_kl25z_spi_receive_byte(uint8_t *byte)
 {
-    SPIstatus status = SPI_Status_Success;
-    for (size_t n = 0; n < num_bytes; n++) {
-        frdm_kl25z_spi_transmit_byte(*(bytes + n));
-    }
+    CommStatus status = Comm_Status_Success;
     return status;
 }
 
-SPIstatus frdm_kl25z_spi_receive_byte(uint8_t *byte)
-{
-    SPIstatus status = SPI_Status_Success;
-    return status;
-}
-
-SPIstatus frdm_kl25z_spi_receive_n_bytes(const size_t num_bytes,
-        uint8_t *bytes)
-{
-    SPIstatus status = SPI_Status_Success;
-    for (size_t n = 0; n < num_bytes; n++) {
-        frdm_kl25z_spi_receive_byte(bytes + n);
-    }
-    return status;
-}

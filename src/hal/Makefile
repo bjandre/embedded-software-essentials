@@ -17,7 +17,8 @@ LIB = \
 
 SRCS = \
 	hal.c \
-	uart.c
+	communication-peripheral-generic.c \
+	communication-peripheral-factory.c
 
 
 INCLUDES = -I. -I../util

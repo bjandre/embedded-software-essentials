@@ -20,42 +20,59 @@
 
 #include <stdint.h>
 
-#include "uart-common.h"
+#include "communication-peripheral.h"
+
+typedef communication_peripheral_t communication_peripheral_t;
 
 /**
    frdm-kl25z specific initialization for the uart. Conforms to the call
-   signature of the initialization routine in the uart_t defined in uart.h
+   signature of the initialization routine in the communication_peripheral_t
+   defined in communication-peripheral.h
 
    \param[in] baud - required baud
 
    \return status of the operation
  */
-UartStatus frdm_kl25z_uart_initialize(const uint32_t baud);
+CommStatus frdm_kl25z_uart_initialize(const uint32_t baud);
 
 /**
    frdm-kl25z specific initialization for the uart_transmit_byte. Conforms to
-   the call signature of the transmit_byte routine in the uart_t defined in
-   uart.h
+   the call signature of the transmit_byte routine in the
+   communication_peripheral_t defined in communication-peripheral.h
 
    \param[in] byte - the byte to be sent
 
    \return status of the operation
  */
-UartStatus frdm_kl25z_uart_transmit_byte(const uint8_t byte);
+CommStatus frdm_kl25z_uart_transmit_byte(const uint8_t byte);
 
 /**
    frdm-kl25z specific initialization for the uart_receive_byte. Conforms to the
-   call signature of the receive_byte routine in the uart_t defined in uart.h
+   call signature of the receive_byte routine in the communication_peripheral_t
+   defined in communication-peripheral.h
 
    \param[out] byte - location to store the received byte.
 
    \return status of the operation
  */
-UartStatus frdm_kl25z_uart_receive_byte(uint8_t *byte);
+CommStatus frdm_kl25z_uart_receive_byte(uint8_t *byte);
 
 /**
-   frdm-kl25z specific initiation of an asynchronous tranmission
+   frdm-kl25z specific initiation of an asynchronous tranmission. Conforms to
+   the call signature of the begin_async_transmit routine in the
+   communication_peripheral_t defined in communication_peripheral.h
  */
 void frdm_kl25z_uart_begin_async_transmit(void);
+
+/**
+   frdm-kl25z specific initialization for the
+   uart_flush_transmit_buffer. Conforms to the call signature of the
+   flush_transmit_buffer routine in the communication_peripheral_t defined in
+   communication-peripheral.h
+
+   \return status of the operation
+ */
+CommStatus frdm_kl25z_uart_flush_transmit_buffer(communication_peripheral_t
+        *comm);
 
 #endif /* ESE_HAL_UART_FRDM_KL25Z_H_ */

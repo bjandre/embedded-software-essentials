@@ -11,28 +11,28 @@
 #include <stdint.h>
 #include <stdio.h>
 
-#include "uart-common.h"
+#include "communication-peripheral.h"
 #include "uart-host.h"
 
 
-UartStatus host_uart_initialize(const uint32_t baud)
+CommStatus host_uart_initialize(const uint32_t baud)
 {
     // nothing to do
-    UartStatus status = UART_Status_Success;
+    CommStatus status = Comm_Status_Success;
     return status;
 }
 
-UartStatus host_uart_transmit_byte(const uint8_t byte)
+CommStatus host_uart_transmit_byte(const uint8_t byte)
 {
-    UartStatus status = UART_Status_Success;
+    CommStatus status = Comm_Status_Success;
     fprintf(stdout, "%.2x", byte);
     //putc(byte, stdout);
     return status;
 }
 
-UartStatus host_uart_receive_byte(uint8_t *byte)
+CommStatus host_uart_receive_byte(uint8_t *byte)
 {
-    UartStatus status = UART_Status_Success;
+    CommStatus status = Comm_Status_Success;
     *byte = fgetc(stdin);
     // fgetc reads a single character. Terminal input will contain an extra
     // character for the newline. Need to remove it with another fgetc.

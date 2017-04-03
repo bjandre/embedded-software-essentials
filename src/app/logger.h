@@ -15,7 +15,8 @@
    \file logger.h
 
    Binary Logger implemenation. Implementation is flexible and works on a
-   generic 'uart', which can be hardware uart or software (printf/getc).
+   generic communication peripheral, which can be hardware uart, spi or software
+   (printf/getc).
 
    The logger is global and accessed in critical regions, e.g. interrupts.  All
    instances must be volatile.
@@ -26,15 +27,15 @@
 #include <stdint.h>
 
 #include "circular_buffer.h"
-#include "uart.h"
+#include "communication-peripheral.h"
 
 /**
-   Buffers and UART associated with the logger
+   Buffers and communication peripheral associated with the logger
  */
 typedef struct BinaryLogger {
     CircularBuffer_t volatile *transmit_buffer;
     CircularBuffer_t volatile *receive_buffer;
-    uart_t uart;
+    communication_peripheral_t comm;
 } BinaryLogger_t;
 
 /**
