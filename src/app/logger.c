@@ -265,7 +265,7 @@ BinaryLoggerStatus logger_polling_receive(logger_size_t num_bytes)
 // simply return status OK. These may be removed by the linker when link
 // time optimization in enabled. If profiling shows that they are not, we
 // can replace them with a macro that substitutes status ok.
-BinaryLoggerStatus BinaryLoggerInitialize(logger_size_t num_bytes)
+BinaryLoggerStatus BinaryLoggerCreate(logger_size_t num_bytes)
 {
     (void)num_bytes;
     return BinaryLogger_Success;

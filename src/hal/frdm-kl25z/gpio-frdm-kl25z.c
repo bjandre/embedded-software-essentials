@@ -15,9 +15,6 @@
 
 #include "gpio-frdm-kl25z.h"
 
-#include "logger.h"
-#include "log-item.h"
-
 /**
    \file gpio-frdm-kl25z.c
 

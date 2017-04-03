@@ -40,7 +40,7 @@ typedef enum _CommFunction {
    \return status of the create operation
  */
 CommStatus CommCreate(communication_peripheral_t volatile *comm,
-                      CommFunction comm_func);
+                      CommFunction comm_function);
 
 
 /**
