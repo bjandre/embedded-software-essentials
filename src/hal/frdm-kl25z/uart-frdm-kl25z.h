@@ -53,4 +53,9 @@ UartStatus frdm_kl25z_uart_transmit_byte(const uint8_t byte);
  */
 UartStatus frdm_kl25z_uart_receive_byte(uint8_t *byte);
 
+/**
+   frdm-kl25z specific initiation of an asynchronous tranmission
+ */
+void frdm_kl25z_uart_begin_async_transmit(void);
+
 #endif /* ESE_HAL_UART_FRDM_KL25Z_H_ */

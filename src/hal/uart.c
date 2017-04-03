@@ -22,8 +22,6 @@
 #endif
 
 /**
-   uart_transmit_n_bytes()
-
    Platform independent routine to loop over n bytes and transmit them.
 
    Params: uart - pointer to the uart data structure with platform specific
@@ -38,8 +36,6 @@ UartStatus uart_transmit_n_bytes(uart_t *uart,
 
 
 /**
-   uart_receive_n_bytes()
-
    Platform independent routine to stort n bytes from the uart receiver
 
    Params: uart - pointer to the uart data structure with platform specific
@@ -54,8 +50,6 @@ UartStatus uart_receive_n_bytes(uart_t *uart,
 
 
 /**
-   uartSetupDebugger()
-
    Setup the platform specific UART for the debugging logger.
 
    Params: uart - pointer to the uart data structure with platform specific
@@ -66,13 +60,26 @@ UartStatus uart_receive_n_bytes(uart_t *uart,
 UartStatus uartSetupDebugger(uart_t volatile *uart);
 
 
+/**
+   Generic function to begin an asynchronous tranmit on uart. Does nothing for
+   the case when interrupts are not available.
+ */
+void uart_begin_async_transmit(void)
+{
+    /* do nothing to do for the generic case. Platform specific implementations
+       will use interrupts or threads. */
+}
 
 UartStatus uart_transmit_n_bytes(uart_t *uart,
                                  const size_t num_bytes, uint8_t *bytes)
 {
     UartStatus status = UART_Status_Success;
-    for (size_t n = 0; n < num_bytes; n++) {
-        uart->transmit_byte(*(bytes + n));
+    if (NULL == uart) {
+        status = UART_Status_Error;
+    } else {
+        for (size_t n = 0; n < num_bytes; n++) {
+            uart->transmit_byte(*(bytes + n));
+        }
     }
     return status;
 }
@@ -81,8 +88,12 @@ UartStatus uart_receive_n_bytes(uart_t *uart, const size_t num_bytes,
                                 uint8_t *bytes)
 {
     UartStatus status = UART_Status_Success;
-    for (size_t n = 0; n < num_bytes; n++) {
-        uart->receive_byte(bytes + n);
+    if (NULL == uart) {
+        status = UART_Status_Error;
+    } else {
+        for (size_t n = 0; n < num_bytes; n++) {
+            uart->receive_byte(bytes + n);
+        }
     }
     return status;
 }
@@ -91,17 +102,20 @@ UartStatus uart_receive_n_bytes(uart_t *uart, const size_t num_bytes,
 UartStatus CreateUART(uart_t volatile *uart, UartFunction uart_function)
 {
     UartStatus status = UART_Status_Success;
-
-    uart->transmit_n_bytes = &uart_transmit_n_bytes;
-    uart->receive_n_bytes = &uart_receive_n_bytes;
-    if (UartDebugger == uart_function) {
-        uartSetupDebugger(uart);
+    if (NULL == uart) {
+        status = UART_Status_Error;
     } else {
-        // FIXME(bja, 2017-03) Additional UART functionality not supported at
-        // this time.
-        abort();
+        uart->transmit_n_bytes = &uart_transmit_n_bytes;
+        uart->receive_n_bytes = &uart_receive_n_bytes;
+        uart->begin_async_transmit = &uart_begin_async_transmit;
+        if (UartDebugger == uart_function) {
+            uartSetupDebugger(uart);
+        } else {
+            // FIXME(bja, 2017-03) Additional UART functionality not supported at
+            // this time.
+            abort();
+        }
     }
-
     return status;
 }
 
@@ -116,8 +130,21 @@ UartStatus uartSetupDebugger(uart_t volatile *uart)
     uart->initialize = &frdm_kl25z_uart_initialize;
     uart->transmit_byte = &frdm_kl25z_uart_transmit_byte;
     uart->receive_byte = &frdm_kl25z_uart_receive_byte;
+    uart->begin_async_transmit = &frdm_kl25z_uart_begin_async_transmit;
 #else
 #error "ERROR: UART not implemented for unknown PLATFORM " PLATFORM
 #endif
     return status;
+}
+
+void UARTdestroy(uart_t volatile *uart)
+{
+    if (NULL != uart) {
+        uart->initialize = NULL;
+        uart->transmit_byte = NULL;
+        uart->receive_byte = NULL;
+        uart->transmit_n_bytes = NULL;
+        uart->receive_n_bytes = NULL;
+        uart->begin_async_transmit = NULL;
+    }
 }

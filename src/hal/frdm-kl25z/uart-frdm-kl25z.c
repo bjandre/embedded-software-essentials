@@ -106,14 +106,13 @@ UartStatus frdm_kl25z_uart_transmit_byte(const uint8_t byte)
     return status;
 }
 
-UartStatus frdm_kl25z_uart_transmit_n_bytes(const size_t num_bytes,
-        uint8_t *bytes)
+void frdm_kl25z_uart_begin_async_transmit(void)
 {
-    UartStatus status = UART_Status_Success;
-    for (size_t n = 0; n < num_bytes; n++) {
-        frdm_kl25z_uart_transmit_byte(*(bytes + n));
+    // make sure transmit buffer empty interrupt is on
+    if (UART0->S1 & UART0_S1_TDRE_MASK) {
+        // transmit buffer empty, turn on interrupts
+        UART0->C2 |= UART0_C2_TIE(1);
     }
-    return status;
 }
 
 UartStatus frdm_kl25z_uart_receive_byte(uint8_t *byte)
@@ -126,16 +125,6 @@ UartStatus frdm_kl25z_uart_receive_byte(uint8_t *byte)
             RX_BUFFER_EMPTY); // ensure the receive data register is empty
     *byte = UART0->D; // receive a character
     //while ((UART0->S1 & UART0_S1_RDRF_MASK) == RX_BUFFER_FULL); // ensure the receive data register is empty
-    return status;
-}
-
-UartStatus frdm_kl25z_uart_receive_n_bytes(const size_t num_bytes,
-        uint8_t *bytes)
-{
-    UartStatus status = UART_Status_Success;
-    for (size_t n = 0; n < num_bytes; n++) {
-        frdm_kl25z_uart_receive_byte(bytes + n);
-    }
     return status;
 }
 

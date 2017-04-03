@@ -53,6 +53,12 @@ struct uart_t {
                                    uint8_t *bytes);
 
     /**
+       Pointer to the function to begin an asynchronous tranmit on the uart
+
+    */
+    void (*begin_async_transmit)(void);
+
+    /**
        Pointer to the function for receiving a byte from the specified UART.
 
        \param[out] *byte - pointer to location to store the received byte
@@ -76,7 +82,7 @@ struct uart_t {
 
 
 /**
-   Create a uart data strucure with pointers to the correct functions for th
+   Create a uart data strucure with pointers to the correct functions for the
    desired functionality, e.g. logger uart, and platform.
 
    Params: uart - pointer to the struct of function pointers.
@@ -88,5 +94,9 @@ struct uart_t {
 UartStatus CreateUART(uart_t volatile *uart, UartFunction uart_func);
 
 
+/**
+   Destroy a UART object.
+ */
+void UARTdestroy(uart_t volatile *uart);
 
 #endif // ESE_HAL_UART_H_
