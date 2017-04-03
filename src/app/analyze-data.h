@@ -13,7 +13,6 @@
 
 #include <stdint.h>
 
-#include "logger.h"
 #include "log-item.h"
 
 /**

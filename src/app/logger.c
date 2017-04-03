@@ -14,9 +14,6 @@
 #include <stdlib.h>
 
 #include "platform-defs.h"
-#if (PLATFORM == PLATFORM_FRDM)
-#include "MKL25Z4.h"
-#endif
 
 #ifdef LOGGING_ENABLED
 

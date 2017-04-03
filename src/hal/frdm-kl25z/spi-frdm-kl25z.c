@@ -14,7 +14,7 @@
    Hardware specific SPI implementation for FRDM-KL25Z dev board
  */
 
-#include <stddef.h>
+#include <stdbool.h>
 #include <stdint.h>
 
 #include "MKL25Z4.h"

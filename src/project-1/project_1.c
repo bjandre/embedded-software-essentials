@@ -10,10 +10,8 @@
 
 #include <assert.h>
 #include <inttypes.h>
-#include <limits.h>
 #include <stdint.h>
 #include <stdio.h>
-#include <stdlib.h>
 
 #include "data.h"
 #include "data-set.h"

@@ -8,9 +8,11 @@
 ** with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
 */
 
+#include <stddef.h>
 #include <stdint.h>
 #include <stdlib.h>
 
+#include "memory-common.h"
 #include "memory-cpu.h"
 
 #include "logger.h"

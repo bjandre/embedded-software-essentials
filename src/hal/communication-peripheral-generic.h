@@ -11,7 +11,6 @@
 #ifndef ESE_HAL_COMMUNICATION_PERIPHERAL_GENERIC_H_
 #define ESE_HAL_COMMUNICATION_PERIPHERAL_GENERIC_H_
 
-#include <stddef.h>
 #include <stdint.h>
 
 #include "communication-peripheral.h"

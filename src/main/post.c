@@ -8,6 +8,8 @@
 ** with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
 */
 
+#include <stdint.h>
+
 #include "platform-defs.h"
 #include "post-common.h"
 #include "post.h"

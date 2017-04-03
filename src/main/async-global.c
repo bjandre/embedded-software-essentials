@@ -8,6 +8,8 @@
 ** with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
 */
 
+#include <stddef.h>
+
 #include "async-global.h"
 
 extern bool get_global_async_dma_complete(void);

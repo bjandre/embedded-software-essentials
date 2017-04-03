@@ -12,6 +12,8 @@
 #define ESE_UTIL_CIRCULAR_BUFFER_H_
 
 #include <stdbool.h>
+#include <stddef.h>
+
 /**
    \file circular_buffer.h
 

@@ -12,11 +12,13 @@
 #define ESE_MAIN_ASYNC_GLOBAL_H_
 
 #include <stdbool.h>
+#include <stdint.h>
 
 #include "platform-defs.h"
 
 #if (PLATFORM == PLATFORM_FRDM)
 #include "MKL25Z4.h"
+#include "cmsis_gcc.h"
 #define PRIMASK_IE 0U
 #define PRIMASK_ID 1U
 /**

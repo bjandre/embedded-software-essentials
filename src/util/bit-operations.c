@@ -8,11 +8,8 @@
 ** with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
 */
 
-#include <assert.h>
-#include <limits.h>
 #include <stdbool.h>
 #include <stdint.h>
-#include <stdio.h>
 
 #include "bit-operations.h"
 

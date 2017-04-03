@@ -8,9 +8,6 @@
 ** with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
 */
 
-#include <stdint.h>
-#include <stdlib.h>
-
 #include "MKL25Z4.h"
 
 #include "gpio-frdm-kl25z.h"
