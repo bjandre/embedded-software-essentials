@@ -29,6 +29,7 @@
 #include "analyze-data.h"
 #include "debug-uart-data.h"
 #include "post.h"
+#include "heartbeat.h"
 
 #include "async-global.h"
 
@@ -80,7 +81,12 @@ int main(int argc, char **argv)
 
     while (1) { /* main event loop */
         __asm("NOP"); /* breakpoint to stop while looping */
-        update_leds();
+        bool heartbeat_available = get_global_async_heartbeat_available();
+        if (heartbeat_available) {
+            uint32_t heartbeat_timestamp = get_global_async_heartbeat_timestamp();
+            set_global_async_heartbeat_available(false);
+            heartbeat(item, heartbeat_timestamp);
+        }
 
 #ifdef DEBUG_UART
         uint8_t tx_or_rx = 1;
@@ -129,6 +135,8 @@ void initialize(log_item_t **item)
     initialize_gpio();
     UpdateLogItemNoPayload(*item, GPIO_INITIALIZED);
     log_item(*item);
+
+    initialize_rtc();
 
     initialize_dma();
     UpdateLogItemNoPayload(*item, DMA_INITIALIZED);

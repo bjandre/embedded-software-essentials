@@ -36,6 +36,7 @@ typedef enum BinaryLoggerID {
     SPI_INITIALIZED,
     SYSTEM_INITIALIZED,
     SYSTEM_HALTED,
+    HEARTBEAT,
     INFO,
     WARNING,
     ERROR,

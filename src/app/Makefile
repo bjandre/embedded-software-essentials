@@ -17,6 +17,7 @@ LIB = \
 
 SRCS = \
 	analyze-data.c \
+	heartbeat.c \
 	logger.c \
 	log-item.c
 

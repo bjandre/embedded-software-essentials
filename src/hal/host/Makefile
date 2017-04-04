@@ -17,12 +17,15 @@ LIB = \
 	libesehost.a
 
 SRCS = \
-	uart-host.c
+	uart-host.c \
+	rtc-host.c
 
 OBJS = $(SRCS:%.c=%.o)
 
 INCLUDES = \
 	-I../../util \
+	-I../../main \
+	-I../../app \
 	-I..
 
 else ifeq ($(PLATFORM), $(PLATFORM_ENUM_BBB))

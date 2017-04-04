@@ -22,6 +22,8 @@ void frdm_kl25z_initialize_gpio(void)
 {
     // enable clock for gpio for red and green led pins.
     SIM->SCGC5 |= SIM_SCGC5_PORTB(1);
+    // enable clock for RTC
+    SIM->SCGC5 |= SIM_SCGC5_PORTC(1);
     // enable clock for gpio for blue led pin.
     SIM->SCGC5 |= SIM_SCGC5_PORTD(1);
 
@@ -43,6 +45,22 @@ void frdm_kl25z_initialize_port_b_output_pin(GPIO_PINS pin)
     GPIOB->PDDR |= (1 << pin);
 }
 
+void frdm_kl25z_initialize_port_c_output_pin(GPIO_PINS pin, uint8_t mux)
+{
+    // Initialize the gpio pin for desired function
+    PORTC->PCR[pin] |= PORT_PCR_MUX(mux);
+    // set pin to output
+    GPIOC->PDDR |= (1 << pin);
+}
+
+void frdm_kl25z_initialize_port_c_input_pin(GPIO_PINS pin, uint8_t mux)
+{
+    // Initialize the gpio pin for desired function
+    PORTC->PCR[pin] |= PORT_PCR_MUX(mux);
+    // set pin to output
+    GPIOC->PDDR &= ~(1 << pin);
+}
+
 void frdm_kl25z_initialize_port_d_output_pin(GPIO_PINS pin)
 {
     // Initialize the gpio pin desired function
@@ -61,7 +79,7 @@ void frdm_kl25z_toggle_green_led(void)
     GPIOB->PTOR |= (1 << PTB_GPIO_LED_GREEN);
 }
 
-void frdm_kl25z_blue_led_on(void)
+void frdm_kl25z_heartbeat_led(void)
 {
-    GPIOD->PCOR |= (1 << PTD_GPIO_LED_BLUE);
+    GPIOD->PTOR |= (1 << PTD_GPIO_LED_BLUE);
 }

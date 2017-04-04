@@ -26,6 +26,11 @@ typedef uint8_t GPIO_PINS;
 static const GPIO_PINS PTB_GPIO_LED_RED = 18; //!< built in red led, port b
 static const GPIO_PINS PTB_GPIO_LED_GREEN = 19; //!< built in green led, port b
 
+static const GPIO_PINS PTC_RTC_CLOCKIN =
+    1; //!< alternate function 1, RTC clock input line
+static const GPIO_PINS PTC_MCG_CLOCKOUT =
+    3; //!< alternate function 5, MCG clock output line
+
 static const GPIO_PINS PTD_GPIO_LED_BLUE = 1; //!< built in blue led, port d
 static const GPIO_PINS PTD_SPI1_CS =
     4; //!< Alternate function 2 - SPI1_PCS0 - slave select
@@ -35,7 +40,6 @@ static const GPIO_PINS PTD_SPI1_MOSI =
     6; //!< Alternate function 2 - SPI1_MOSI - Master Out Slave In
 static const GPIO_PINS PTD_SPI1_MISO =
     7; //!< Alternate function 2 - SPI1_MISO - Master In Slave Out
-
 
 /**
   Platform specific GPIO initialization
@@ -49,6 +53,24 @@ void frdm_kl25z_initialize_gpio(void);
 
  */
 void frdm_kl25z_initialize_port_b_output_pin(GPIO_PINS pin);
+
+/**
+  Platform specific code to initialize GPIO pins as output on port c.
+
+  \param[in] pin gpio output pin
+  \param[in] mux pin mux functionality
+
+ */
+void frdm_kl25z_initialize_port_c_output_pin(GPIO_PINS pin, uint8_t mux);
+
+/**
+  Platform specific code to initialize GPIO pins as input on port c.
+
+  \param[in] pin gpio output pin
+  \param[in] mux pin mux functionality
+
+ */
+void frdm_kl25z_initialize_port_c_input_pin(GPIO_PINS pin, uint8_t mux);
 
 /**
   Platform specific code to initialize GPIO pins as output on port d.
@@ -69,9 +91,9 @@ void frdm_kl25z_toggle_red_led(void);
 void frdm_kl25z_toggle_green_led(void);
 
 /**
-   Platform specific code to turn on the blue LED
-*/
-void frdm_kl25z_blue_led_on(void);
+  Platform specific code to turn on the heartbeat LED
+ */
+void frdm_kl25z_heartbeat_led(void);
 
 
 #endif // ESE_HAL_GPIO_FRDM_KL25Z_H_

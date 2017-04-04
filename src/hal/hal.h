@@ -19,11 +19,11 @@
 void initialize_hardware(void);
 
 /*
-  Generic routine to initialize GPIO.
+  Generic routine to initialize RTC.
 
   Wrapper around platform specific code.
  */
-void initialize_interrupts(void);
+void initialize_rtc(void);
 
 /*
   Generic routine to initialize GPIO.

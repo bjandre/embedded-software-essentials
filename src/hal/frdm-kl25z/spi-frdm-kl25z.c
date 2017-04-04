@@ -60,7 +60,7 @@ CommStatus frdm_kl25z_initialize_spi(void)
     SIM->SCGC4 |= SIM_SCGC4_SPI1(1);
 
     // set the port d pins to alternate function 2
-    PORTD->PCR[4] |= PORT_PCR_MUX(2);
+    //PORTD->PCR[4] |= PORT_PCR_MUX(2);
     PORTD->PCR[5] |= PORT_PCR_MUX(2);
     PORTD->PCR[6] |= PORT_PCR_MUX(2);
     PORTD->PCR[7] |= PORT_PCR_MUX(2);

@@ -13,6 +13,7 @@
 
 #include <stdbool.h>
 #include <stdint.h>
+#include <time.h>
 
 #include "platform-defs.h"
 
@@ -79,6 +80,8 @@ typedef struct AsynchronousData {
     bool logger_data_available; /*!< flag indicating data is available to be retreived
                             from logger receive buffer */
     BinaryLogger_t *logger; /*!< global logger */
+    bool heartbeat_available;
+    time_t heartbeat_timestamp; /*!< heartbeat timestamp */
 
 } async_data_t;
 
@@ -152,6 +155,54 @@ static inline void set_global_async_logger(BinaryLogger_t *logger)
     uint32_t interrupt_status = start_critical_region();
     global_async_data.logger = logger;
     end_critical_region(interrupt_status);
+}
+
+/**
+   Thread / interrupt safe set heartbeat_available in the global_async_data struct
+ */
+static inline void set_global_async_heartbeat_available(
+    bool heartbeat_available)
+{
+    extern volatile async_data_t global_async_data;
+    uint32_t interrupt_status = start_critical_region();
+    global_async_data.heartbeat_available = heartbeat_available;
+    end_critical_region(interrupt_status);
+}
+
+/**
+   Thread / interrupt safe get the heartbeat_available flag from the global_async_data struct
+ */
+static inline bool get_global_async_heartbeat_available(void)
+{
+    extern volatile async_data_t global_async_data;
+    uint32_t interrupt_status = start_critical_region();
+    bool heartbeat_available = global_async_data.heartbeat_available;
+    end_critical_region(interrupt_status);
+    return heartbeat_available;
+}
+
+/**
+   Thread / interrupt safe set heartbeat_timestamp in the global_async_data struct
+ */
+static inline void set_global_async_heartbeat_timestamp(
+    time_t heartbeat_timestamp)
+{
+    extern volatile async_data_t global_async_data;
+    uint32_t interrupt_status = start_critical_region();
+    global_async_data.heartbeat_timestamp = heartbeat_timestamp;
+    end_critical_region(interrupt_status);
+}
+
+/**
+   Thread / interrupt safe get the heartbeat_available from the global_async_data struct
+ */
+static inline time_t get_global_async_heartbeat_timestamp(void)
+{
+    extern volatile async_data_t global_async_data;
+    uint32_t interrupt_status = start_critical_region();
+    time_t heartbeat_timestamp = global_async_data.heartbeat_timestamp;
+    end_critical_region(interrupt_status);
+    return heartbeat_timestamp;
 }
 
 #endif // ESE_MAIN_ASYNC_GLOBAL_H_

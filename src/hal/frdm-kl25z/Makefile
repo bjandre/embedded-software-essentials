@@ -18,6 +18,7 @@ LIB = \
 
 SRCS = \
 	initialize-frdm-kl25z.c \
+	rtc-frdm-kl25z.c \
 	dma-frdm-kl25z.c \
 	post-dma-frdm-kl25z.c \
 	uart-frdm-kl25z.c \
@@ -38,6 +39,9 @@ INCLUDES = \
 	-I../../util \
 	-I.. \
 	-I.
+
+EPOCH_TIME := $(shell date +%s)
+CFLAGS += -DEPOCH_TIME=$(EPOCH_TIME)
 
 endif
 
