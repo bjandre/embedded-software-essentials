@@ -25,43 +25,43 @@ void frdm_kl25z_initialize_gpio(void)
     // enable clock for gpio for blue led pin.
     SIM->SCGC5 |= SIM_SCGC5_PORTD(1);
 
-    frdm_kl25z_initialize_port_b_output_pin(LED_PIN_RED);
-    frdm_kl25z_initialize_port_b_output_pin(LED_PIN_GREEN);
-    frdm_kl25z_initialize_port_d_output_pin(LED_PIN_BLUE);
+    frdm_kl25z_initialize_port_b_output_pin(PTB_GPIO_LED_RED);
+    frdm_kl25z_initialize_port_b_output_pin(PTB_GPIO_LED_GREEN);
+    frdm_kl25z_initialize_port_d_output_pin(PTD_GPIO_LED_BLUE);
 
     // initial state of pins
-    GPIOB->PCOR |= (1 << LED_PIN_RED);
-    GPIOB->PCOR |= (1 << LED_PIN_GREEN);
-    GPIOD->PSOR |= (1 << LED_PIN_BLUE);
+    frdm_kl25z_toggle_red_led();
+    frdm_kl25z_toggle_green_led();
+    GPIOD->PTOR |= (1 << PTD_GPIO_LED_BLUE);
 }
 
 void frdm_kl25z_initialize_port_b_output_pin(GPIO_PINS pin)
 {
-    // Initialize the gpio pin for the led
-    PORTB->PCR[pin] = PORT_PCR_MUX(1);
+    // Initialize the gpio pin for desired function
+    PORTB->PCR[pin] |= PORT_PCR_MUX(1);
     // set pin to output
     GPIOB->PDDR |= (1 << pin);
 }
 
 void frdm_kl25z_initialize_port_d_output_pin(GPIO_PINS pin)
 {
-    // Initialize the gpio pin for the led
-    PORTD->PCR[pin] = PORT_PCR_MUX(1);
+    // Initialize the gpio pin desired function
+    PORTD->PCR[pin] |= PORT_PCR_MUX(1);
     // set pin to output
     GPIOD->PDDR |= (1 << pin);
 }
 
-void frdm_kl25z_update_leds(void)
+void frdm_kl25z_toggle_red_led(void)
 {
-    //for (uint32_t i = 0; i < 200000; i++) {
-    // do nothing for a while.
-    //}
-    // toggle led pins
-    GPIOB->PTOR |= (1 << LED_PIN_RED);
-    GPIOB->PTOR |= (1 << LED_PIN_GREEN);
+    GPIOB->PTOR |= (1 << PTB_GPIO_LED_RED);
+}
+
+void frdm_kl25z_toggle_green_led(void)
+{
+    GPIOB->PTOR |= (1 << PTB_GPIO_LED_GREEN);
 }
 
 void frdm_kl25z_blue_led_on(void)
 {
-    GPIOD->PCOR |= (1 << LED_PIN_BLUE);
+    GPIOD->PCOR |= (1 << PTD_GPIO_LED_BLUE);
 }

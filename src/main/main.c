@@ -90,7 +90,7 @@ int main(int argc, char **argv)
 #define DEBUG_SPI 1
 #if DEBUG_SPI && (PLATFORM == PLATFORM_FRDM)
         // FIXME(bja, 2017-03) need to abstract out for host!
-        frdm_kl25z_blue_led_on();
+        frdm_kl25z_toggle_green_led();
         frdm_kl25z_spi_transmit_byte(0x55);
 #endif
 
@@ -146,7 +146,7 @@ void initialize(log_item_t **item)
 void update_leds(void)
 {
 #if (PLATFORM == PLATFORM_FRDM)
-    frdm_kl25z_update_leds();
+    frdm_kl25z_toggle_red_led();
 #endif
 }
 
