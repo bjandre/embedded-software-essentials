@@ -13,7 +13,7 @@
 #include <stdlib.h>
 
 #ifndef BARE_METAL
-#define MOCK_RECEIVE_DATA_INTERRUPT
+#define TESTING_MOCK_INTERRUPT
 #endif
 
 #include "logger.h"
@@ -39,7 +39,7 @@ void analyze_logger_data_event(data_summary_t *data_summary, log_item_t *item)
     bool data_available = false;
     BinaryLoggerStatus logger_status = BinaryLogger_Success;
 
-#ifdef MOCK_RECEIVE_DATA_INTERRUPT
+#ifdef TESTING_MOCK_INTERRUPT
     set_global_async_logger_data_available(true);
 #endif
 
@@ -63,7 +63,7 @@ void analyze_logger_data_event(data_summary_t *data_summary, log_item_t *item)
         log_item(item);
         clear_data_summary(data_summary);
         data_summary->num_received = 0;
-#ifdef MOCK_RECEIVE_DATA_INTERRUPT
+#ifdef TESTING_MOCK_INTERRUPT
         exit(EXIT_SUCCESS);
 #endif
     }

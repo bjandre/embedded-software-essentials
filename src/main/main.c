@@ -11,7 +11,7 @@
 #ifdef BARE_METAL
 #define PRINTF(X)
 #else
-#define MOCK_RECEIVE_DATA_INTERRUPT
+#define TESTING_MOCK_INTERRUPT
 #define PRINTF(ARGS) printf(ARGS)
 #include <stdio.h>
 #endif
@@ -48,7 +48,7 @@ typedef enum GPIO_PINS {LED_PIN} GPIO_PINS;
 
   \param[out] item pointer to log item, should be null initially, a valid log
   item will be created during initialization and returned.
- */
+; */
 void initialize(log_item_t **item);
 
 /**
@@ -79,14 +79,14 @@ int main(int argc, char **argv)
     data_summary_t data_summary;
     initialize_logger_data_analysis(&data_summary, item);
 
+#ifdef TESTING_MOCK_INTERRUPT
+    set_global_async_heartbeat_available(true);
+    uint32_t testing_timestamp = 1491352432U;
+    set_global_async_heartbeat_timestamp(testing_timestamp);
+#endif
     while (1) { /* main event loop */
         __asm("NOP"); /* breakpoint to stop while looping */
-        bool heartbeat_available = get_global_async_heartbeat_available();
-        if (heartbeat_available) {
-            uint32_t heartbeat_timestamp = get_global_async_heartbeat_timestamp();
-            set_global_async_heartbeat_available(false);
-            heartbeat(item, heartbeat_timestamp);
-        }
+        heartbeat(item);
 
 #ifdef DEBUG_UART
         uint8_t tx_or_rx = 1;

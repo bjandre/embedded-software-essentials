@@ -19,12 +19,19 @@
 #include "gpio-frdm-kl25z.h"
 #endif
 
-void heartbeat(log_item_t *item, uint32_t heartbeat_timestamp)
+#include "async-global.h"
+
+void heartbeat(log_item_t *item)
 {
-    UpdateLogItem(item, HEARTBEAT, sizeof(heartbeat_timestamp),
-                  &heartbeat_timestamp);
-    log_item(item);
+    bool heartbeat_available = get_global_async_heartbeat_available();
+    if (heartbeat_available) {
+        uint32_t heartbeat_timestamp = get_global_async_heartbeat_timestamp();
+        set_global_async_heartbeat_available(false);
+        UpdateLogItem(item, HEARTBEAT, sizeof(heartbeat_timestamp),
+                      &heartbeat_timestamp);
+        log_item(item);
 #if (PLATFORM == PLATFORM_FRDM)
-    frdm_kl25z_heartbeat_led();
+        frdm_kl25z_heartbeat_led();
 #endif
+    }
 }

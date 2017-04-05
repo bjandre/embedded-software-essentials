@@ -27,6 +27,7 @@ import argparse
 import os
 import struct
 import sys
+import time
 import traceback
 
 from configparser import ConfigParser
@@ -183,11 +184,18 @@ def convert_logger_bytes_to_string():
 
         byte_stream = bytes.fromhex(sys.stdin.read(payload_size*2))
         payload = byte_stream.hex()
-        if item_name == "POST_ERROR":
+        if item_name == "POST_STATUS" or item_name == "POST_ERROR":
             fmt = ">{0}s".format(payload_size)
             msg = struct.unpack(fmt, byte_stream)[0]
-
             payload = "{0} : {1}".format(payload, msg.decode('utf-8'))
+
+        if item_name == "HEARTBEAT":
+            epoch_time = int.from_bytes(byte_stream, byteorder='little')
+            timestamp = time.strftime("%Y-%m-%d %H:%M:%S",
+                                      time.gmtime(epoch_time))
+            payload = "{0} : epoch {1} : {2}".format(payload, epoch_time,
+                                                     timestamp)
+
         print("{0}({1}) size = {2} : {3}".format(item_name, item_id,
                                                  payload_size, payload))
 

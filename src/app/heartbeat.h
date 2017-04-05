@@ -26,6 +26,6 @@
    \param item log item to use for logging
    \param heartbeat_timestamp timestamp to be logged.
  */
-void heartbeat(log_item_t *item, uint32_t heartbeat_timestamp);
+void heartbeat(log_item_t *item);
 
 #endif // ESE_APP_HEARTBEAT_H_
