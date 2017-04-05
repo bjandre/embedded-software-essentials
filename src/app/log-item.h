@@ -23,6 +23,7 @@
  */
 
 #include <stdint.h>
+#include <time.h>
 
 #include "logger.h"
 
@@ -60,6 +61,7 @@ typedef enum BinaryLoggerID {
 */
 typedef struct BinaryLoggerItem {
     BinaryLoggerID id;
+    time_t timestamp;
     logger_size_t payload_num_bytes;
     uint8_t *payload;
 } log_item_t;

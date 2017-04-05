@@ -64,6 +64,11 @@ int main(int argc, char **argv)
     //PRINTF("Hello from Emebbed Software Essentials Project!\n");
     initialize_global_async_data();
 
+#ifdef TESTING_MOCK_INTERRUPT
+    uint32_t testing_timestamp = 1491352432U;
+    set_global_async_heartbeat_timestamp(testing_timestamp);
+#endif
+
     log_item_t *item = NULL;
 
     initialize(&item);
@@ -81,9 +86,10 @@ int main(int argc, char **argv)
 
 #ifdef TESTING_MOCK_INTERRUPT
     set_global_async_heartbeat_available(true);
-    uint32_t testing_timestamp = 1491352432U;
+    testing_timestamp++;
     set_global_async_heartbeat_timestamp(testing_timestamp);
 #endif
+
     while (1) { /* main event loop */
         __asm("NOP"); /* breakpoint to stop while looping */
         heartbeat(item);

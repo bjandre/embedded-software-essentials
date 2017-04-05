@@ -126,7 +126,13 @@ def translate_id_to_string(item_id):
                 "DATA_MISC_COUNT",
                 "DATA_ANALYSIS_COMPLETED",
                 ]
-    return id_names[item_id]
+    try:
+        name = id_names[item_id]
+    except IndexError as e:
+        msg = "Invalid logger ID: {0}".format(item_id)
+        print(msg)
+        raise e
+    return name
 
 
 def format_string_from_num_bytes(num_bytes, name):
@@ -163,11 +169,16 @@ def convert_logger_bytes_to_string():
     id_fmt = format_string_from_num_bytes(sizeof_id, "ID")
 
     byte_stream = bytes.fromhex(sys.stdin.read(2))
+    sizeof_time = struct.unpack(">B", byte_stream)[0]
+    print("sizeof(timestamp): {0}".format(sizeof_time))
+
+    byte_stream = bytes.fromhex(sys.stdin.read(2))
     sizeof_size = struct.unpack(">B", byte_stream)[0]
     print("sizeof(size): {0}".format(sizeof_size))
     size_fmt = format_string_from_num_bytes(sizeof_size, "data")
 
     num_id_chars = sizeof_id * 2
+    num_time_chars = sizeof_time * 2
     num_size_chars = sizeof_size * 2
     # print("num chars per id = {0}".format(num_id_chars))
     # print("num chars per size = {0}".format(num_size_chars))
@@ -178,6 +189,9 @@ def convert_logger_bytes_to_string():
         byte_stream = bytes.fromhex(char_data)
         item_id = struct.unpack(id_fmt, byte_stream)[0]
         item_name = translate_id_to_string(item_id)
+
+        byte_stream = bytes.fromhex(sys.stdin.read(num_time_chars))
+        timestamp = int.from_bytes(byte_stream, byteorder='little')
 
         byte_stream = bytes.fromhex(sys.stdin.read(num_size_chars))
         payload_size = struct.unpack(size_fmt, byte_stream)[0]
@@ -190,14 +204,12 @@ def convert_logger_bytes_to_string():
             payload = "{0} : {1}".format(payload, msg.decode('utf-8'))
 
         if item_name == "HEARTBEAT":
-            epoch_time = int.from_bytes(byte_stream, byteorder='little')
-            timestamp = time.strftime("%Y-%m-%d %H:%M:%S",
-                                      time.gmtime(epoch_time))
-            payload = "{0} : epoch {1} : {2}".format(payload, epoch_time,
-                                                     timestamp)
+            epoch_time = time.strftime("%Y-%m-%d %H:%M:%S",
+                                      time.gmtime(timestamp))
+            payload = "{0}".format(epoch_time)
 
-        print("{0}({1}) size = {2} : {3}".format(item_name, item_id,
-                                                 payload_size, payload))
+        print("{0}({1}) : {2} : size = {3} : {4}".format(
+            item_name, item_id, timestamp, payload_size, payload))
 
 
 # -------------------------------------------------------------------------------

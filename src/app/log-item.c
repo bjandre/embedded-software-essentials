@@ -11,6 +11,7 @@
 #include <stddef.h>
 #include <stdint.h>
 #include <stdlib.h>
+#include <time.h>
 
 #include "memory-common.h"
 #include "memory-cpu.h"
@@ -19,6 +20,8 @@
 #include "log-item.h"
 
 #ifdef LOGGING_ENABLED
+
+#include "async-global.h"
 
 // define some reusable constants
 static const logger_size_t max_payload_bytes =
@@ -33,6 +36,8 @@ BinaryLoggerStatus InitializeLoggerForLogItems(void)
     uint16_t magic_number = 0x4577u;
     log_data(sizeof(magic_number), (uint8_t *)(&magic_number));
     uint8_t data = sizeof(BinaryLoggerID);
+    log_data(sizeof(data), (uint8_t *)(&data));
+    data = sizeof(time_t);
     log_data(sizeof(data), (uint8_t *)(&data));
     data = sizeof(logger_size_t);
     log_data(sizeof(data), (uint8_t *)(&data));
@@ -74,6 +79,7 @@ BinaryLoggerStatus UpdateLogItem(log_item_t *item, BinaryLoggerID id,
 
     if (BinaryLogger_Success == status) {
         item->id = id;
+        item->timestamp = get_global_async_heartbeat_timestamp();
         // FIXME(bja, 2017-03) what's the best error handling for a size greater
         // than our buffer...? Return an error, or just log what we can....
         num_bytes = num_bytes > max_payload_bytes ? max_payload_bytes : num_bytes;
@@ -101,6 +107,7 @@ BinaryLoggerStatus log_item(const log_item_t *item)
         status = BinaryLogger_Null_Item;
     } else {
         log_data(sizeof(item->id), (uint8_t *)(&(item->id)));
+        log_data(sizeof(item->timestamp), (uint8_t *)(&(item->timestamp)));
         log_data(sizeof(item->payload_num_bytes),
                  (uint8_t *)(&item->payload_num_bytes));
         if (item->payload_num_bytes > 0) {
