@@ -66,9 +66,6 @@ __attribute__( ( always_inline ) ) __STATIC_INLINE void end_critical_region(
 
    Central location to declare all asynchronously accessed global variables
 
-   FIXME(bja, 2017-03) Need to implement status preservation for critical region
-   so nested calls work. This is needed to correctly wrap the logger calls.
-
  */
 
 /**
