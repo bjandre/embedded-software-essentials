@@ -85,7 +85,7 @@ int main(int argc, char **argv)
     initialize_logger_data_analysis(&data_summary, item);
 
 #ifdef TESTING_MOCK_INTERRUPT
-    set_global_async_heartbeat_available(true);
+    set_global_async_heartbeat_occurred(true);
     testing_timestamp++;
     set_global_async_heartbeat_timestamp(testing_timestamp);
 #endif

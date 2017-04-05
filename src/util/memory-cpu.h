@@ -35,7 +35,7 @@
  * \param[in] source pointer to a list of bytes to be moved.
  * \param[in] num_bytes the number of bytes to be moved
  *
- * \return MemStatus flag indicating success or type of error tha occured.
+ * \return MemStatus flag indicating success or type of error tha occurred.
  *
  */
 MemStatus memmove_cpu(uint8_t *destination, const uint8_t *const source,
@@ -49,7 +49,7 @@ MemStatus memmove_cpu(uint8_t *destination, const uint8_t *const source,
  * \param[in] source pointer to the 1 byte value to assign to all bytes.
  * \param[in] num_bytes the number of bytes to be moved
  *
- * \returns MemStatus flag indicating success or type of error tha occured.
+ * \returns MemStatus flag indicating success or type of error tha occurred.
  *
  */
 MemStatus memset_cpu(uint8_t *destination, const uint8_t *const source,

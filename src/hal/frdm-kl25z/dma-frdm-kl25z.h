@@ -41,7 +41,7 @@ void frdm_kl25z_initialize_dma(void);
  * \param[in] num_items the number of items to be moved
  * \param[in] bytes_per_item number of bytes per item. Valid values: 1, 2, or 4
  *
- * \return MemStatus flag indicating success or type of error tha occured.
+ * \return MemStatus flag indicating success or type of error tha occurred.
  *
  * Check for overlapped regions. Note that there are five possible overlap patterns:
  *
@@ -76,7 +76,7 @@ MemStatus memmove_dma(uint8_t *destination, uint8_t *source, uint32_t num_items,
  * \param[in] num_items the number of items to be moved
  * \param[in] bytes_per_item number of bytes per item. Valid values: 1, 2, or 4
  *
- * \returns MemStatus flag indicating success or type of error tha occured.
+ * \returns MemStatus flag indicating success or type of error tha occurred.
  *
  */
 MemStatus memset_dma(uint8_t *destination, uint8_t *source, uint32_t num_items,

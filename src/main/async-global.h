@@ -77,7 +77,7 @@ typedef struct AsynchronousData {
     bool logger_data_available; /*!< flag indicating data is available to be retreived
                             from logger receive buffer */
     BinaryLogger_t *logger; /*!< global logger */
-    bool heartbeat_available;
+    bool heartbeat_occurred;
     time_t heartbeat_timestamp; /*!< heartbeat timestamp */
 
 } async_data_t;
@@ -155,27 +155,28 @@ static inline void set_global_async_logger(BinaryLogger_t *logger)
 }
 
 /**
-   Thread / interrupt safe set heartbeat_available in the global_async_data struct
+   Thread / interrupt safe set heartbeat_occurred in the global_async_data struct
  */
-static inline void set_global_async_heartbeat_available(
-    bool heartbeat_available)
+static inline void set_global_async_heartbeat_occurred(
+    bool heartbeat_occurred)
 {
     extern volatile async_data_t global_async_data;
     uint32_t interrupt_status = start_critical_region();
-    global_async_data.heartbeat_available = heartbeat_available;
+    global_async_data.heartbeat_occurred = heartbeat_occurred;
     end_critical_region(interrupt_status);
 }
 
 /**
-   Thread / interrupt safe get the heartbeat_available flag from the global_async_data struct
+   Thread / interrupt safe get the heartbeat_occurred flag from the global_async_data struct
+   \return bool indicationg if a heartbeat has occurred.
  */
-static inline bool get_global_async_heartbeat_available(void)
+static inline bool get_global_async_heartbeat_occurred(void)
 {
     extern volatile async_data_t global_async_data;
     uint32_t interrupt_status = start_critical_region();
-    bool heartbeat_available = global_async_data.heartbeat_available;
+    bool heartbeat_occurred = global_async_data.heartbeat_occurred;
     end_critical_region(interrupt_status);
-    return heartbeat_available;
+    return heartbeat_occurred;
 }
 
 /**
@@ -191,7 +192,8 @@ static inline void set_global_async_heartbeat_timestamp(
 }
 
 /**
-   Thread / interrupt safe get the heartbeat_available from the global_async_data struct
+   Thread / interrupt safe get the heartbeat_occurred from the global_async_data struct
+   \return timestamp of last heartbeat
  */
 static inline time_t get_global_async_heartbeat_timestamp(void)
 {

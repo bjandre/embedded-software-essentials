@@ -23,9 +23,9 @@
 
 void heartbeat(log_item_t *item)
 {
-    bool heartbeat_available = get_global_async_heartbeat_available();
-    if (heartbeat_available) {
-        set_global_async_heartbeat_available(false);
+    bool heartbeat_occurred = get_global_async_heartbeat_occurred();
+    if (heartbeat_occurred) {
+        set_global_async_heartbeat_occurred(false);
         UpdateLogItemNoPayload(item, HEARTBEAT);
         log_item(item);
 #if (PLATFORM == PLATFORM_FRDM)

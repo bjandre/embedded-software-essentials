@@ -37,7 +37,7 @@ typedef enum MemoryStatus {
  * \param[in,out] destination pointer to a list of bytes
  * \param[in] length the number of bytes to be zeroed
  *
- * \return MemStatus flag indicating success or type of error tha occured.
+ * \return MemStatus flag indicating success or type of error that occurred.
  *
  */
 MemStatus my_memzero(uint8_t *destination, uint32_t length);
@@ -49,7 +49,7 @@ MemStatus my_memzero(uint8_t *destination, uint32_t length);
  * \param[in,out] source pointer to a list of bytes
  * \param[in] length the number of bytes to be moved
  *
- * \return MemStatus flag indicating success or type of error tha occured.
+ * \return MemStatus flag indicating success or type of error that occurred.
  *
  */
 MemStatus my_reverse(uint8_t *source, uint32_t length);
