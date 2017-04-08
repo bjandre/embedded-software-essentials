@@ -80,6 +80,8 @@ typedef struct AsynchronousData {
     bool heartbeat_occurred;
     time_t heartbeat_timestamp; /*!< heartbeat timestamp */
 
+    uint32_t profiling_counter_overflow;
+
 } async_data_t;
 
 
@@ -202,6 +204,30 @@ static inline time_t get_global_async_heartbeat_timestamp(void)
     time_t heartbeat_timestamp = global_async_data.heartbeat_timestamp;
     end_critical_region(interrupt_status);
     return heartbeat_timestamp;
+}
+
+/**
+   Thread / interrupt safe increment profiling_overflow in the global_async_data struct
+ */
+static inline void increment_global_async_profiling_overflow(void)
+{
+    extern volatile async_data_t global_async_data;
+    uint32_t interrupt_status = start_critical_region();
+    global_async_data.profiling_counter_overflow++;
+    end_critical_region(interrupt_status);
+}
+
+/**
+   Thread / interrupt safe get the profiling_overflow from the global_async_data struct
+   \return profiling timer overflow counter
+ */
+static inline time_t get_global_async_profiling_overflow(void)
+{
+    extern volatile async_data_t global_async_data;
+    uint32_t interrupt_status = start_critical_region();
+    time_t profiling_overflow = global_async_data.profiling_counter_overflow;
+    end_critical_region(interrupt_status);
+    return profiling_overflow;
 }
 
 #endif // ESE_MAIN_ASYNC_GLOBAL_H_

@@ -14,53 +14,70 @@
 #include "post-common.h"
 #include "post.h"
 
+#include "post-profiler.h"
+
 #if (PLATFORM == PLATFORM_FRDM)
 #include "post-dma-frdm-kl25z.h"
 #endif
+
+typedef struct _suite_status {
+    size_t num_tests_run;
+    size_t num_tests_pass;
+} suite_status_t;
+
+typedef POSTstatus (*post_test)(void);
+
+void run_test(log_item_t *item, post_test test, const char *name,
+              size_t name_size, suite_status_t *suite_status);
+
+void run_test(log_item_t *item, post_test test, const char *name,
+              size_t name_size, suite_status_t *suite_status)
+{
+    suite_status->num_tests_run++;
+    POSTstatus status = (*test)();
+    if (POST_PASS != status) {
+        UpdateLogItem(item, POST_ERROR, name_size, (uint8_t *)name);
+        log_item(item);
+    } else {
+        suite_status->num_tests_pass++;
+    }
+}
 
 void power_on_self_tests(log_item_t *item)
 {
     UpdateLogItemNoPayload(item, POST_START);
     log_item(item);
 
-    POSTstatus status = POST_ALL_SKIPPED;
+    suite_status_t suite_status;
+    suite_status.num_tests_run = 0;
+    suite_status.num_tests_pass = 0;
+
+    {
+        const char name[] = "post_profiler_nop";
+        run_test(item, &post_profiler_nop, name, sizeof(name), &suite_status);
+    }
+
 #if (PLATFORM == PLATFORM_FRDM)
-    status = post_dma_memmove_1byte();
-    if (POST_PASS != status) {
-        const char name[] = "post_dma_memmov_1byte";
-        UpdateLogItem(item, POST_ERROR, sizeof(name), (uint8_t *)name);
-        log_item(item);
+    {
+        const char name[] = "post_dma_memmove_1byte";
+        run_test(item, &post_dma_memmove_1byte, name, sizeof(name), &suite_status);
     }
-
-    status = post_dma_memmove_4byte();
-    if (POST_PASS != status) {
+    {
         const char name[] = "post_dma_memmove_4byte";
-        UpdateLogItem(item, POST_ERROR, sizeof(name), (uint8_t *)name);
-        log_item(item);
+        run_test(item, &post_dma_memmove_4byte, name, sizeof(name), &suite_status);
     }
-
-    status = post_dma_memset_1byte();
-    if (POST_PASS != status) {
+    {
         const char name[] = "post_dma_memset_1byte";
-        UpdateLogItem(item, POST_ERROR, sizeof(name), (uint8_t *)name);
-        log_item(item);
+        run_test(item, &post_dma_memset_1byte, name, sizeof(name), &suite_status);
     }
-
-    status = post_dma_memset_4byte();
-    if (POST_PASS != status) {
+    {
         const char name[] = "post_dma_memset_4byte";
-        UpdateLogItem(item, POST_ERROR, sizeof(name), (uint8_t *)name);
-        log_item(item);
-    }
-#else
-    // running on a host system.
-    if (POST_ALL_SKIPPED == status) {
-        const char name[] = "host system - all POST skipped";
-        UpdateLogItem(item, POST_STATUS, sizeof(name), (uint8_t *)name);
-        log_item(item);
+        run_test(item, &post_dma_memset_4byte, name, sizeof(name), &suite_status);
     }
 #endif
 
-    UpdateLogItemNoPayload(item, POST_COMPLETE);
+    UpdateLogItem(item, POST_COMPLETE, sizeof(size_t),
+                  &suite_status.num_tests_pass);
     log_item(item);
+    // FIXME(bja, 2017-04) log num tests passed and num tests run!
 }

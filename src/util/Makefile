@@ -19,6 +19,7 @@ LIB = \
 	libutil.a
 
 SRCS = \
+	math-util.c \
 	memory-common.c \
 	memory-cpu.c \
 	data.c \
@@ -33,6 +34,7 @@ INCLUDES = -I../hal \
 
 
 TEST_SRCS = \
+	test_math-util.c \
 	test_memory.c \
 	test_data.c \
 	test_circular_buffer.c \

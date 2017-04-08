@@ -30,6 +30,7 @@
 #include "debug-uart-data.h"
 #include "post.h"
 #include "heartbeat.h"
+#include "profiler.h"
 
 #include "async-global.h"
 
@@ -61,7 +62,10 @@ void update_leds();
 
 int main(int argc, char **argv)
 {
-    //PRINTF("Hello from Emebbed Software Essentials Project!\n");
+    /*
+      system initialization
+    */
+
     initialize_global_async_data();
 
 #ifdef TESTING_MOCK_INTERRUPT
@@ -73,8 +77,13 @@ int main(int argc, char **argv)
 
     initialize(&item);
 
+    initialize_profiler();
+
     power_on_self_tests(item);
 
+    /*
+      application initialization
+     */
 #undef DEBUG_UART
 #ifdef DEBUG_UART
     size_t const buffer_size = 32 * sizeof(uint8_t);

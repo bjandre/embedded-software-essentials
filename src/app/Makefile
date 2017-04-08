@@ -18,10 +18,12 @@ LIB = \
 SRCS = \
 	analyze-data.c \
 	heartbeat.c \
+	profiler.c \
+	post-profiler.c \
 	logger.c \
 	log-item.c
 
-INCLUDES = -I. -I../util -I../hal -I../main
+INCLUDES = -I. -I../util -I../hal -I../hal/host -I../hal/frdm-kl25z -I../main
 
 ifeq ($(PLATFORM), $(PLATFORM_ENUM_HOST))
   INCLUDES += -I../host

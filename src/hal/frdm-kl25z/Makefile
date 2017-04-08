@@ -18,6 +18,7 @@ LIB = \
 
 SRCS = \
 	initialize-frdm-kl25z.c \
+	profiling-timer-frdm-kl25z.c \
 	rtc-frdm-kl25z.c \
 	dma-frdm-kl25z.c \
 	post-dma-frdm-kl25z.c \

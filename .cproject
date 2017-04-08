@@ -133,7 +133,7 @@
 						</toolChain>
 					</folderInfo>
 					<sourceEntries>
-						<entry excluding="src/hal/host|src/arch/host|src/arch/uart-host.c|3rd-party|src/hw3|src/project-2|src/util/test_utils.c|src/util/test_memory.c|src/util/test_data.c|src/util/test_circular_buffer.c|src/util/test_bit-operations.c" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
+						<entry excluding="src/util/test_math-util.c|src/hal/host|src/arch/host|src/arch/uart-host.c|3rd-party|src/hw3|src/project-2|src/util/test_utils.c|src/util/test_memory.c|src/util/test_data.c|src/util/test_circular_buffer.c|src/util/test_bit-operations.c" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>
@@ -533,7 +533,7 @@
 						</toolChain>
 					</folderInfo>
 					<sourceEntries>
-						<entry excluding="src/hal/host|src/arch/host|src/arch/uart-host.c|3rd-party|src/hw3|src/project-2|src/util/test_utils.c|src/util/test_memory.c|src/util/test_data.c|src/util/test_circular_buffer.c|src/util/test_bit-operations.c" flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name=""/>
+						<entry excluding="src/util/test_math-util.c|src/hal/host|src/arch/host|src/arch/uart-host.c|3rd-party|src/hw3|src/project-2|src/util/test_utils.c|src/util/test_memory.c|src/util/test_data.c|src/util/test_circular_buffer.c|src/util/test_bit-operations.c" flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name=""/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>

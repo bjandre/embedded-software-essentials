@@ -125,6 +125,7 @@ def translate_id_to_string(item_id):
                 "DATA_PUNCTUATION_COUNT",
                 "DATA_MISC_COUNT",
                 "DATA_ANALYSIS_COMPLETED",
+                "PROFILING",
                 ]
     try:
         name = id_names[item_id]
@@ -198,18 +199,24 @@ def convert_logger_bytes_to_string():
 
         byte_stream = bytes.fromhex(sys.stdin.read(payload_size*2))
         payload = byte_stream.hex()
+        translated_payload = ''
         if item_name == "POST_STATUS" or item_name == "POST_ERROR":
             fmt = ">{0}s".format(payload_size)
             msg = struct.unpack(fmt, byte_stream)[0]
-            payload = "{0} : {1}".format(payload, msg.decode('utf-8'))
+            translated_payload = "{0}".format(msg.decode('utf-8'))
 
-        if item_name == "HEARTBEAT":
+        elif item_name == "HEARTBEAT":
             epoch_time = time.strftime("%Y-%m-%d %H:%M:%S",
-                                      time.gmtime(timestamp))
+                                       time.gmtime(timestamp))
             payload = "{0}".format(epoch_time)
 
-        print("{0}({1}) : {2} : size = {3} : {4}".format(
-            item_name, item_id, timestamp, payload_size, payload))
+        elif item_name == "PROFILING":
+            fmt = format_string_from_num_bytes(payload_size, 'data')
+            profile_time = struct.unpack(fmt, byte_stream)[0]
+            translated_payload = "{0}".format(profile_time)
+
+        print("{0}({1}) : {2} : size = {3} : {4} : {5}".format(
+            item_name, item_id, timestamp, payload_size, payload, translated_payload))
 
 
 # -------------------------------------------------------------------------------
