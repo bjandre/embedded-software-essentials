@@ -112,7 +112,7 @@ int main(int argc, char **argv)
 #if DEBUG_SPI && (PLATFORM == PLATFORM_FRDM)
         // FIXME(bja, 2017-03) need to abstract out for host!
         frdm_kl25z_toggle_green_led();
-        frdm_kl25z_spi_transmit_byte(0x55);
+        frdm_kl25z_spi_transmit_byte(0xFF, PTD_SPI1_CS_NRF24);
 #endif
 
         analyze_logger_data_event(&data_summary, item);

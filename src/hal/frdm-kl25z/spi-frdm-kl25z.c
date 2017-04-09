@@ -20,6 +20,7 @@
 #include "MKL25Z4.h"
 #include "system_MKL25Z4.h"
 
+#include "gpio-frdm-kl25z.h"
 #include "communication-peripheral.h"
 #include "spi-frdm-kl25z.h"
 
@@ -41,7 +42,8 @@ CommStatus frdm_kl25z_initialize_spi(void)
        KL25 family reference manual - Section 10.3.1 and FRDM-KL25Z valid pinout
        chart.
 
-       PTD4 - Alternate function 2 - SPI1_PCS0 - slave select
+       PTD3 - Alternate function 1 - GPIO - device enable, manually controlled
+       PTD4 - Alternate function 1 - GPIO - slave select, manually controlled
        PTD5 - Alternate function 2 - SPI1_SCK - clock
        PTD6 - Alternate function 2 - SPI1_MOSI - Master Out Slave In
        PTD7 - Alternate function 2 - SPI1_MISO - Master In Slave Out
@@ -59,11 +61,18 @@ CommStatus frdm_kl25z_initialize_spi(void)
     // enable clock for SPI1 internal peripheral
     SIM->SCGC4 |= SIM_SCGC4_SPI1(1);
 
-    // set the port d pins to alternate function 2
-    //PORTD->PCR[4] |= PORT_PCR_MUX(2);
-    PORTD->PCR[5] |= PORT_PCR_MUX(2);
-    PORTD->PCR[6] |= PORT_PCR_MUX(2);
-    PORTD->PCR[7] |= PORT_PCR_MUX(2);
+    // set the port d pins to alternate function 1, GPIO, for manually controlled pins:
+    PORTD->PCR[PTD_NRF24_ENABLE] |= PORT_PCR_MUX(1); // FIXME(bja, 2017-04) radio enable line, active high. Not SPI, needs to be moved!
+    frdm_kl25z_initialize_port_d_output_pin(PTD_NRF24_ENABLE);
+    GPIOD->PSOR |= (1 << PTD_NRF24_ENABLE);
+
+    PORTD->PCR[PTD_SPI1_CS_NRF24] |= PORT_PCR_MUX(1); // chip select
+    frdm_kl25z_initialize_port_d_output_pin(PTD_SPI1_CS_NRF24);
+
+    // set the port d pins to alternate function 2 for peripheral controlled pins
+    PORTD->PCR[PTD_SPI1_CLK] |= PORT_PCR_MUX(2);
+    PORTD->PCR[PTD_SPI1_MOSI] |= PORT_PCR_MUX(2);
+    PORTD->PCR[PTD_SPI1_MISO] |= PORT_PCR_MUX(2);
 
     // clear control registers
     SPI1->C1 = 0x0U;
@@ -103,19 +112,26 @@ CommStatus frdm_kl25z_initialize_spi(void)
     return status;
 }
 
-CommStatus frdm_kl25z_spi_transmit_byte(const uint8_t byte)
+CommStatus frdm_kl25z_spi_transmit_byte(const uint8_t byte, const GPIO_PINS pin)
 {
     CommStatus status = Comm_Status_Success;
-
+    // set chip select, inactive high, active low
+    GPIOD->PCOR |= (1 << pin);
     // poll the status register until empty. SPTEF == 1 --> empty
-    bool transmit_buffer_empty = 0;
+    bool transmit_buffer_empty = false;
     while (!transmit_buffer_empty) {
         transmit_buffer_empty = SPI1->S & SPI_S_SPTEF(1);
     }
 
     // send a character
     SPI1->D = byte;
-
+    transmit_buffer_empty = false;
+    // white until transmit buffer is empty
+    while (!transmit_buffer_empty) {
+        transmit_buffer_empty = SPI1->S & SPI_S_SPTEF(1);
+    }
+    // clear chip select, inactive high
+    GPIOD->PSOR |= (1 << pin);
     return status;
 }
 
