@@ -40,6 +40,8 @@ volatile async_data_t global_async_data;
 #if (PLATFORM == PLATFORM_FRDM)
 #include "gpio-frdm-kl25z.h"
 #include "spi-frdm-kl25z.h"
+#include "red-led-timer-frdm-kl25z.h"
+#include "hw5-3-interrupt-latency-frdm-kl25z.h"
 #else
 typedef enum GPIO_PINS {LED_PIN} GPIO_PINS;
 #endif
@@ -68,6 +70,10 @@ int main(int argc, char **argv)
 
     initialize_global_async_data();
 
+    extern uint32_t __START_STATIC_BUFFER;
+    uint8_t *ptr = (uint8_t *)&__START_STATIC_BUFFER;
+    (void)ptr;
+
 #ifdef TESTING_MOCK_INTERRUPT
     uint32_t testing_timestamp = 1491352432U;
     set_global_async_heartbeat_timestamp(testing_timestamp);
@@ -89,6 +95,10 @@ int main(int argc, char **argv)
     size_t const buffer_size = 32 * sizeof(uint8_t);
     uint8_t *buffer = malloc(buffer_size);
 #endif
+
+    frdm_kl25z_initialize_red_led_pin();
+    frdm_kl25z_initialize_red_led_timer();
+    interrupt_latency_frdm_kl25z(item);
 
     data_summary_t data_summary;
     initialize_logger_data_analysis(&data_summary, item);

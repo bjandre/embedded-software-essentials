@@ -54,6 +54,8 @@ HEAP_SIZE  = DEFINED(__heap_size__)  ? __heap_size__  : 0x0400;
 STACK_SIZE = DEFINED(__stack_size__) ? __stack_size__ : 0x0400;
 M_VECTOR_RAM_SIZE = DEFINED(__ram_vector_table__) ? 0x0200 : 0x0;
 
+STATIC_BUFFER_SIZE = 0x0200;
+
 /* Specify the memory areas */
 MEMORY
 {
@@ -228,6 +230,16 @@ SECTIONS
     . = ALIGN(4);
     __bss_end__ = .;
     __END_BSS = .;
+  } > m_data
+
+  .static_buffer :
+  {
+    . = ALIGN(4);
+    __START_STATIC_BUFFER = .;
+    __static_buffer_start__ = .;
+    . += STATIC_BUFFER_SIZE;
+    __static_buffer_end__ = .;
+    __END_STATIC_BUFFER = .;
   } > m_data
 
   .heap :

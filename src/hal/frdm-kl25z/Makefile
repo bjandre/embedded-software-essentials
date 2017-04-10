@@ -17,6 +17,7 @@ LIB = \
 	libesefrdm.a
 
 SRCS = \
+	red-led-timer-frdm-kl25z.c \
 	initialize-frdm-kl25z.c \
 	profiling-timer-frdm-kl25z.c \
 	rtc-frdm-kl25z.c \

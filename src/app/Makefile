@@ -16,6 +16,7 @@ LIB = \
 	libapp.a
 
 SRCS = \
+	hw5-3-interrupt-latency-frdm-kl25z.c \
 	analyze-data.c \
 	heartbeat.c \
 	profiler.c \
