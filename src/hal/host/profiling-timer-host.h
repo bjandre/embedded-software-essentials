@@ -16,12 +16,19 @@
 
 #include "profiling-timer-data.h"
 
+static uint32_t clock_t_max;
+
 /*
   Platform specific routine to initialize the profiling timer
  */
 __attribute__( ( always_inline ) ) static inline void
 host_initialize_profiling_timer(void)
 {
+    // FIXME(bja, 2017-04) assumes that clock_t is unsigned!
+    clock_t_max = 0;
+    for (uint8_t n = 0; n < sizeof(clock_t); n += 2) {
+        clock_t_max |= (0xFF << n);
+    }
 }
 
 /*
@@ -34,7 +41,7 @@ __attribute__( ( always_inline ) ) static inline void host_get_profile_timer(
 {
     timer_data->timer_count = (uint32_t)clock();
     timer_data->overflow_count = 0;
-    timer_data->timer_bytes = sizeof(clock_t);
+    timer_data->max_timer_value = clock_t_max;
 }
 
 

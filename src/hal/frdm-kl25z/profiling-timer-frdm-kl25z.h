@@ -33,9 +33,9 @@ void frdm_kl25z_initialize_profiling_timer(void);
 __attribute__( ( always_inline ) ) static inline void
 frdm_kl25z_get_profile_timer(profiling_timer_data_t *timer_data)
 {
-    timer_data->timer_count = TPM0->CNT;
+    timer_data->timer_count = (uint32_t)(TPM0->CNT);
     timer_data->overflow_count = get_global_async_profiling_overflow();
-    timer_data->timer_bytes = sizeof(uint16_t); //!< 16 bit counter
+    timer_data->max_timer_value = UINT16_MAX;
 }
 
 

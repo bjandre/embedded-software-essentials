@@ -36,12 +36,24 @@ endif
 OBJS = $(SRCS:%.c=%.o)
 
 
+INCLUDES += -I$(CMOCKA_INCLUDE_DIR)
+
+TEST_SRCS = \
+	test_profiler.c \
+	test_app.c
+
+TEST_OBJS = $(TEST_SRCS:%.c=%.o)
+TEST_EXE = test_app.out
+TEST_DEPEND_LIBS = $(CMOCKA_LIBRARY) 
+
 #
 # macro for executing TARGET in all SUBDIRS
 #
 
 include $(MAKERULES)/generic.makefile
 
+$(TEST_EXE) : profiler.o $(TEST_OBJS)
+	$(CC) $(CFLAGS) $(CMOCKA_INCLUDES) -O0 -g -U NDEBUG -o $@ $^ $(TEST_DEPEND_LIBS)
 
 
 

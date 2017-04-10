@@ -23,17 +23,18 @@ void get_timer(profiling_timer_data_t *timer_data)
     get_profiling_timer(timer_data);
 }
 
-uint32_t elapsed_time(profiling_timer_data_t *start_time)
+uint32_t elapsed_time(profiling_timer_data_t const *const start_time,
+                      profiling_timer_data_t const *const end_time)
 {
-    profiling_timer_data_t end_time;
-    get_timer(&end_time);
-    assert(end_time.timer_bytes == start_time->timer_bytes);
+    assert(end_time->max_timer_value == start_time->max_timer_value);
 
-    uint32_t delta_time = end_time.timer_count - start_time->timer_count;
-    uint32_t delta_overflow = end_time.overflow_count - start_time->overflow_count;
-    delta_time += delta_overflow * (end_time.timer_bytes * CHAR_BIT);
+    // NOTE(bja, 2017-04) When overflow has occurred, end - start can
+    // meaningfully be a negative value!
+    int32_t delta_time = end_time->timer_count - start_time->timer_count;
+    int32_t delta_overflow = end_time->overflow_count - start_time->overflow_count;
+    delta_time += delta_overflow * end_time->max_timer_value;
 
     // FIXME(bja, 2017-03) need to handle timer overflow.
-    return delta_time;
+    return (uint32_t)delta_time;
 }
 

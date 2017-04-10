@@ -22,10 +22,11 @@ POSTstatus post_profiler_nop()
         Too much inconsistency to report direct values for testing, so we need
         to just check a range.
     */
-    profiling_timer_data_t start_time;
+    profiling_timer_data_t start_time, end_time;
     get_timer(&start_time);
     __asm("NOP");
-    uint32_t profile_time = elapsed_time(&start_time);
+    get_timer(&end_time);
+    uint32_t profile_time = elapsed_time(&start_time, &end_time);
     POSTstatus status = POST_PASS;
     if (profile_time > 5 || profile_time < 1) {
         status = POST_FAIL;

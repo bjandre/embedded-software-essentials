@@ -29,9 +29,11 @@ void get_timer(profiling_timer_data_t *timer_data);
   Get the elapsed time since a start value
 
   \param[in] start_time starting timer value
+  \param[in] end_time ending timer value
 
   \return elapsed time since timer start
  */
-uint32_t elapsed_time(profiling_timer_data_t *start_time);
+uint32_t elapsed_time(profiling_timer_data_t const *const start_time,
+                      profiling_timer_data_t const *const end_time);
 
 #endif // ESE_APP_PROFILER_H_
