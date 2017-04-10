@@ -29,11 +29,11 @@ uint32_t elapsed_time(profiling_timer_data_t *start_time)
     get_timer(&end_time);
     assert(end_time.timer_bytes == start_time->timer_bytes);
 
-    uint32_t delta_time = end_time.timer_count - start_time->timer_count;
-    uint32_t delta_overflow = end_time.overflow_count - start_time->overflow_count;
-    delta_time += delta_overflow * (end_time.timer_bytes * CHAR_BIT);
+    int32_t delta_time = end_time.timer_count - start_time->timer_count;
+    int32_t delta_overflow = end_time.overflow_count - start_time->overflow_count;
+    delta_time += delta_overflow * UINT16_MAX;
 
     // FIXME(bja, 2017-03) need to handle timer overflow.
-    return delta_time;
+    return (uint32_t)delta_time;
 }
 

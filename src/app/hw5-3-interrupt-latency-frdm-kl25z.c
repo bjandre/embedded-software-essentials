@@ -14,7 +14,7 @@
 
 static uint32_t total_latency;
 static profiling_timer_data_t start_time;
-static const uint32_t pin = 10;
+static const uint32_t pin = 0;
 
 void interrupt_latency_frdm_kl25z(log_item_t *item)
 {
@@ -22,8 +22,7 @@ void interrupt_latency_frdm_kl25z(log_item_t *item)
     // trigger an interrupt via a port
     PORTD->PCR[pin] |= PORT_PCR_MUX(1);
     // interrupt when logic 1, 1100
-    PORTD->PCR[pin] |= PORT_PCR_IRQC(12);
-    PORTD->ISFR |= (1 << pin);
+    PORTD->PCR[pin] |= PORT_PCR_IRQC(0b1100);
     // set pin to output
     GPIOD->PDDR |= (1 << pin);
     // clear the pin

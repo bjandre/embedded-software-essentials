@@ -112,7 +112,7 @@ ifeq ($(release), $(filter unset 0 '', $(release)))
   RELEASE_CFLAGS = -g -O0 -UNDEBUG -DLOGGING_ENABLED
 #  RELEASE_CFLAGS = -DNDEBUG
 else
-  RELEASE_CFLAGS = -Os -DNDEBUG -ULOGGING_ENABLED
+  RELEASE_CFLAGS = -O3 -DNDEBUG -DLOGGING_ENABLED
 endif
 
 # Defines used elsewhere, e.g. adding the PROJECT macro. But could
