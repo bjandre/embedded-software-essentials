@@ -22,8 +22,6 @@ void frdm_kl25z_initialize_gpio(void)
 {
     // enable clock for gpio for red and green led pins.
     SIM->SCGC5 |= SIM_SCGC5_PORTB(1);
-    // enable clock for RTC
-    SIM->SCGC5 |= SIM_SCGC5_PORTC(1);
     // enable clock for gpio for blue led pin.
     SIM->SCGC5 |= SIM_SCGC5_PORTD(1);
 
@@ -47,6 +45,8 @@ void frdm_kl25z_initialize_port_b_output_pin(GPIO_PINS pin)
 
 void frdm_kl25z_initialize_port_c_output_pin(GPIO_PINS pin, uint8_t mux)
 {
+    // enable clock for port C
+    SIM->SCGC5 |= SIM_SCGC5_PORTC(1);
     // Initialize the gpio pin for desired function
     PORTC->PCR[pin] |= PORT_PCR_MUX(mux);
     // set pin to output
@@ -55,6 +55,8 @@ void frdm_kl25z_initialize_port_c_output_pin(GPIO_PINS pin, uint8_t mux)
 
 void frdm_kl25z_initialize_port_c_input_pin(GPIO_PINS pin, uint8_t mux)
 {
+    // enable clock for port C
+    SIM->SCGC5 |= SIM_SCGC5_PORTC(1);
     // Initialize the gpio pin for desired function
     PORTC->PCR[pin] |= PORT_PCR_MUX(mux);
     // set pin to output

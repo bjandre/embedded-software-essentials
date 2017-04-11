@@ -147,11 +147,13 @@ void initialize(log_item_t **item)
     }
     log_item(*item);
 
+    initialize_rtc();
+    UpdateLogItemNoPayload(*item, RTC_INITIALIZED);
+    log_item(*item);
+
     initialize_gpio();
     UpdateLogItemNoPayload(*item, GPIO_INITIALIZED);
     log_item(*item);
-
-    initialize_rtc();
 
     initialize_dma();
     UpdateLogItemNoPayload(*item, DMA_INITIALIZED);

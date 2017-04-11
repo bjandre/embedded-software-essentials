@@ -52,6 +52,7 @@ void frdm_kl25z_initialize_rtc(void)
 
     // set the time seconds register with the compile time epoch
     RTC->TSR = EPOCH_TIME;
+    set_global_async_heartbeat_timestamp((time_t)(RTC->TSR));
 
     // start counting
     RTC->SR |= RTC_SR_TCE(1);

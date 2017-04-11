@@ -105,6 +105,7 @@ def translate_id_to_string(item_id):
     """Look up the name of the ID
     """
     id_names = ["LOGGER_INITIALIZED",
+                "RTC_INITIALIZED",
                 "GPIO_INITIALIZED",
                 "DMA_INITIALIZED",
                 "SPI_INITIALIZED",
