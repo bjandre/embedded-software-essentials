@@ -153,7 +153,8 @@ def format_string_from_num_bytes(num_bytes, name):
         size_fmt = "<Q"
     else:
         msg = ("Error: incorrect number of bytes for {0} size. "
-               "Received {1}. Valid values {1, 2, 4, 8}.")
+               "Received {1}. Valid values [1, 2, 4, 8].".format(
+                   name, num_bytes))
         raise RuntimeError(msg)
     return size_fmt
 

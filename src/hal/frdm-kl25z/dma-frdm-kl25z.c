@@ -211,7 +211,7 @@ MemStatus frdm_kl25z_memset_dma(
     DMA0->DMA[channel_m2m].DCR |= DMA_DCR_EINT(1);
     // no source increment
     DMA0->DMA[channel_m2m].DCR &= ~DMA_DCR_SINC(1);
-    uint8_t size_indicator = get_transfer_size_indicator(bytes_per_item);
+    uint8_t size_indicator = get_transfer_size_indicator(1);
     // one byte source size
     DMA0->DMA[channel_m2m].DCR |= DMA_DCR_SSIZE(size_indicator);
     // one byte destination increment
