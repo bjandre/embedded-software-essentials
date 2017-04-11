@@ -34,12 +34,16 @@ LIB = \
 	libesehost.a
 
 SRCS = \
-	uart-host.c
+	dma-host.c \
+	uart-host.c \
+	rtc-host.c
 
 OBJS = $(SRCS:%.c=%.o)
 
 INCLUDES = \
 	-I../../util \
+	-I../../main \
+	-I../../app \
 	-I..
 endif
 
