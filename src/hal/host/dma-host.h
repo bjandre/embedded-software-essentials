@@ -9,14 +9,15 @@
 */
 
 /**
- * \file dma-frdm-kl25z.h
+ * \file dma-host.h
  *
- * Platform specific memory functions using DMA
+ * Platform specific memory functions using DMA. Since the host does not have
+ * DMA, this is just a wrapper around the standard library calls.
  *
  */
 
-#ifndef ESE_HAL_DMA_FRDM_KL25Z_H_
-#define ESE_HAL_DMA_FRDM_KL25Z_H_
+#ifndef ESE_HAL_DMA_HOST_H_
+#define ESE_HAL_DMA_HOST_H_
 
 #include <stdint.h>
 
@@ -25,7 +26,7 @@
 /**
    Initialize the DMA.
  */
-void frdm_kl25z_initialize_dma(void);
+void host_initialize_dma(void);
 
 /**
  * Takes one source pointer, one destination pointer and a length of bytes to
@@ -63,9 +64,8 @@ void frdm_kl25z_initialize_dma(void);
  *
  *   * do nothing
  */
-MemStatus frdm_kl25z_memmove_dma(
-    uint8_t *destination, uint8_t const *const source,
-    uint32_t const num_items, uint8_t const bytes_per_item);
+MemStatus host_memmove_dma(uint8_t *destination, uint8_t const *const source,
+                           uint32_t const num_items, uint8_t const bytes_per_item);
 
 /**
  * Take a pointer to a destination memory location, a number of items, a source
@@ -80,9 +80,8 @@ MemStatus frdm_kl25z_memmove_dma(
  * \returns MemStatus flag indicating success or type of error tha occurred.
  *
  */
-MemStatus frdm_kl25z_memset_dma(
-    uint8_t *destination, uint8_t const *const source,
-    uint32_t const num_items, uint8_t const bytes_per_item);
+MemStatus host_memset_dma(uint8_t *destination, uint8_t const *const source,
+                          uint32_t const num_items, uint8_t const bytes_per_item);
 
 
-#endif /* ESE_HAL_DMA_FRDM_KL25Z_H_ */
+#endif /* ESE_HAL_DMA_HOST_H_ */

@@ -21,7 +21,6 @@ SRCS = \
 	profiling-timer-frdm-kl25z.c \
 	rtc-frdm-kl25z.c \
 	dma-frdm-kl25z.c \
-	post-dma-frdm-kl25z.c \
 	uart-frdm-kl25z.c \
 	spi-frdm-kl25z.c \
 	gpio-frdm-kl25z.c

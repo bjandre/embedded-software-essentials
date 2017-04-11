@@ -16,12 +16,14 @@ LIB = \
 	libhal.a
 
 SRCS = \
+	memory-dma.c \
+	post-dma.c \
 	hal.c \
 	communication-peripheral-generic.c \
 	communication-peripheral-factory.c
 
 
-INCLUDES = -I. -I../util
+INCLUDES = -I. -I../util -I../main -I../app
 
 ifeq ($(PLATFORM), $(PLATFORM_ENUM_HOST))
   INCLUDES += -Ihost

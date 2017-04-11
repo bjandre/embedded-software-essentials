@@ -17,6 +17,7 @@ LIB = \
 	libesehost.a
 
 SRCS = \
+	dma-host.c \
 	uart-host.c \
 	rtc-host.c
 

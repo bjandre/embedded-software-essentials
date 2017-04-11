@@ -111,8 +111,9 @@ uint8_t get_transfer_size_indicator(uint8_t bytes_per_item)
 }
 
 
-MemStatus memmove_dma(uint8_t *destination, uint8_t *source,
-                      uint32_t num_items, uint8_t bytes_per_item)
+MemStatus frdm_kl25z_memmove_dma(
+    uint8_t *destination, uint8_t const *const source,
+    uint32_t const num_items, uint8_t const bytes_per_item)
 {
     if (NULL == destination || NULL == source) {
         return MemStatus_Null_Pointer;
@@ -171,8 +172,9 @@ MemStatus memmove_dma(uint8_t *destination, uint8_t *source,
     return MemStatus_Success;
 }
 
-MemStatus memset_dma(uint8_t *destination, uint8_t *source,
-                     uint32_t num_items, uint8_t bytes_per_item)
+MemStatus frdm_kl25z_memset_dma(
+    uint8_t *destination, uint8_t const *const source,
+    uint32_t const num_items, uint8_t const bytes_per_item)
 {
     if (NULL == destination || NULL == source) {
         return MemStatus_Null_Pointer;

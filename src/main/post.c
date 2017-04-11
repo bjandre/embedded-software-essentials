@@ -10,15 +10,12 @@
 
 #include <stdint.h>
 
-#include "platform-defs.h"
 #include "post-common.h"
 #include "post.h"
 
 #include "post-profiler.h"
+#include "post-dma.h"
 
-#if (PLATFORM == PLATFORM_FRDM)
-#include "post-dma-frdm-kl25z.h"
-#endif
 
 typedef struct _suite_status {
     size_t num_tests_run;
@@ -57,7 +54,6 @@ void power_on_self_tests(log_item_t *item)
         run_test(item, &post_profiler_nop, name, sizeof(name), &suite_status);
     }
 
-#if (PLATFORM == PLATFORM_FRDM)
     {
         const char name[] = "post_dma_memmove_1byte";
         run_test(item, &post_dma_memmove_1byte, name, sizeof(name), &suite_status);
@@ -74,7 +70,6 @@ void power_on_self_tests(log_item_t *item)
         const char name[] = "post_dma_memset_4byte";
         run_test(item, &post_dma_memset_4byte, name, sizeof(name), &suite_status);
     }
-#endif
 
     UpdateLogItem(item, POST_COMPLETE, sizeof(size_t),
                   &suite_status.num_tests_pass);
