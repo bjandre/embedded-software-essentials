@@ -62,7 +62,8 @@ CommStatus frdm_kl25z_initialize_spi(void)
     SIM->SCGC4 |= SIM_SCGC4_SPI1(1);
 
     // set the port d pins to alternate function 1, GPIO, for manually controlled pins:
-    PORTD->PCR[PTD_NRF24_ENABLE] |= PORT_PCR_MUX(1); // FIXME(bja, 2017-04) radio enable line, active high. Not SPI, needs to be moved!
+    // FIXME(bja, 2017-04) radio enable line, active high. Not SPI, needs to be moved!
+    PORTD->PCR[PTD_NRF24_ENABLE] |= PORT_PCR_MUX(1);
     frdm_kl25z_initialize_port_d_output_pin(PTD_NRF24_ENABLE);
     GPIOD->PSOR |= (1 << PTD_NRF24_ENABLE);
 

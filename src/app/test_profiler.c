@@ -50,7 +50,7 @@ void test_profiler_elapsed_time_zero_overflow(void **state)
     end_time.timer_count = 200;
     end_time.overflow_count = 1;
     end_time.max_timer_value = 0xFF;
-    
+
     uint32_t expected = 100;
 
     uint32_t received = elapsed_time(&start_time, &end_time);
@@ -68,7 +68,7 @@ void test_profiler_elapsed_time_one_overflow(void **state)
     end_time.timer_count = 45;
     end_time.overflow_count = 2;
     end_time.max_timer_value = 0xFF;
-    
+
     uint32_t expected = 100;
 
     uint32_t received = elapsed_time(&start_time, &end_time);
@@ -85,7 +85,7 @@ void test_profiler_elapsed_time_two_overflow(void **state)
     end_time.timer_count = 45;
     end_time.overflow_count = 3;
     end_time.max_timer_value = 0xFF;
-    
+
     uint32_t expected = 355;
 
     uint32_t received = elapsed_time(&start_time, &end_time);

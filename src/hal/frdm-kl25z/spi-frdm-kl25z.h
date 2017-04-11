@@ -39,7 +39,8 @@ CommStatus frdm_kl25z_initialize_spi(void);
 
    \return status of the operation
  */
-CommStatus frdm_kl25z_spi_transmit_byte(const uint8_t byte, const GPIO_PINS pin);
+CommStatus frdm_kl25z_spi_transmit_byte(const uint8_t byte,
+                                        const GPIO_PINS pin);
 
 /**
    frdm-kl25z specific initialization for the spi receive_byte. Conforms to the
