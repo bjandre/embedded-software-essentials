@@ -31,6 +31,7 @@
 #include "post.h"
 #include "heartbeat.h"
 #include "profiler.h"
+#include "memory-profile.h"
 
 #include "async-global.h"
 
@@ -89,6 +90,8 @@ int main(int argc, char **argv)
     size_t const buffer_size = 32 * sizeof(uint8_t);
     uint8_t *buffer = malloc(buffer_size);
 #endif
+
+    memory_profile(item);
 
     data_summary_t data_summary;
     initialize_logger_data_analysis(&data_summary, item);

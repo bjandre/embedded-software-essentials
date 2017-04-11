@@ -53,7 +53,9 @@ typedef enum BinaryLoggerID {
     DATA_PUNCTUATION_COUNT,
     DATA_MISC_COUNT,
     DATA_ANALYSIS_COMPLETED,
-    PROFILING,
+    PROFILING_START,
+    PROFILING_VALUE,
+    PROFILING_END,
 } BinaryLoggerID;
 
 /**

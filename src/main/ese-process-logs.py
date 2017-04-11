@@ -126,7 +126,9 @@ def translate_id_to_string(item_id):
                 "DATA_PUNCTUATION_COUNT",
                 "DATA_MISC_COUNT",
                 "DATA_ANALYSIS_COMPLETED",
-                "PROFILING",
+                "PROFILING_START",
+                "PROFILING_VALUE",
+                "PROFILING_END",
                 ]
     try:
         name = id_names[item_id]
@@ -201,7 +203,8 @@ def convert_logger_bytes_to_string():
         byte_stream = bytes.fromhex(sys.stdin.read(payload_size*2))
         payload = byte_stream.hex()
         translated_payload = ''
-        if item_name == "POST_STATUS" or item_name == "POST_ERROR":
+        if (item_name == "POST_STATUS" or item_name == "POST_ERROR" or
+            item_name == "PROFILING_START" or item_name == "PROFILING_END"):
             fmt = ">{0}s".format(payload_size)
             msg = struct.unpack(fmt, byte_stream)[0]
             translated_payload = "{0}".format(msg.decode('utf-8'))
@@ -211,7 +214,7 @@ def convert_logger_bytes_to_string():
                                        time.gmtime(timestamp))
             payload = "{0}".format(epoch_time)
 
-        elif item_name == "PROFILING":
+        elif item_name == "PROFILING_VALUE":
             fmt = format_string_from_num_bytes(payload_size, 'data')
             profile_time = struct.unpack(fmt, byte_stream)[0]
             translated_payload = "{0}".format(profile_time)

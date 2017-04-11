@@ -60,7 +60,7 @@ __attribute__( ( always_inline ) ) __STATIC_INLINE void end_critical_region(
 #endif
 
 #include "logger.h"
-
+#include "profiling-timer-data.h"
 /**
    \file async-global.h
 
@@ -80,7 +80,11 @@ typedef struct AsynchronousData {
     bool heartbeat_occurred;
     time_t heartbeat_timestamp; /*!< heartbeat timestamp */
 
-    uint32_t profiling_counter_overflow;
+    bool profiling_active; /*!< global flag indicating that profiling is active for interrupts */
+    uint32_t profiling_counter_overflow; /*<! global counter for profiling timer 
+                                           overflows */
+    profiling_timer_data_t profiling_end_time; /*<! profiling end time that can be accessed in 
+                                                interrupts */
 
 } async_data_t;
 
@@ -207,6 +211,41 @@ static inline time_t get_global_async_heartbeat_timestamp(void)
 }
 
 /**
+   Thread / interrupt safe enable profiling_active in the global_async_data struct
+ */
+static inline void enable_global_async_profiling_active(void)
+{
+    extern volatile async_data_t global_async_data;
+    uint32_t interrupt_status = start_critical_region();
+    global_async_data.profiling_active = true;
+    end_critical_region(interrupt_status);
+}
+
+/**
+   Thread / interrupt safe disable profiling_active in the global_async_data struct
+ */
+static inline void disable_global_async_profiling_active(void)
+{
+    extern volatile async_data_t global_async_data;
+    uint32_t interrupt_status = start_critical_region();
+    global_async_data.profiling_active = false;
+    end_critical_region(interrupt_status);
+}
+
+/**
+   Thread / interrupt safe get the profiling_active from the global_async_data struct
+   \return profiling timer overflow counter
+ */
+static inline time_t get_global_async_profiling_active(void)
+{
+    extern volatile async_data_t global_async_data;
+    uint32_t interrupt_status = start_critical_region();
+    bool profiling_active = global_async_data.profiling_active;
+    end_critical_region(interrupt_status);
+    return profiling_active;
+}
+
+/**
    Thread / interrupt safe increment profiling_overflow in the global_async_data struct
  */
 static inline void increment_global_async_profiling_overflow(void)
@@ -228,6 +267,32 @@ static inline time_t get_global_async_profiling_overflow(void)
     time_t profiling_overflow = global_async_data.profiling_counter_overflow;
     end_critical_region(interrupt_status);
     return profiling_overflow;
+}
+
+/**
+   Thread / interrupt safe set profiling_end_time in the global_async_data struct
+ */
+static inline void set_global_async_profiling_end_time(profiling_timer_data_t end_time)
+{
+    /* NOTE(bja, 2017-04) copying struct, assumes no dynamically allocated memory! */
+    extern volatile async_data_t global_async_data;
+    uint32_t interrupt_status = start_critical_region();
+    global_async_data.profiling_end_time = end_time;
+    end_critical_region(interrupt_status);
+}
+
+/**
+   Thread / interrupt safe get the profiling_overflow from the global_async_data struct
+   \return profiling timer overflow counter
+ */
+static inline profiling_timer_data_t get_global_async_profiling_end_time(void)
+{
+    /* NOTE(bja, 2017-04) copying struct, assumes no dynamically allocated memory! */
+    extern volatile async_data_t global_async_data;
+    uint32_t interrupt_status = start_critical_region();
+    profiling_timer_data_t profiling_end_time = global_async_data.profiling_end_time;
+    end_critical_region(interrupt_status);
+    return profiling_end_time;
 }
 
 #endif // ESE_MAIN_ASYNC_GLOBAL_H_

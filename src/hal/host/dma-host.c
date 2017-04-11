@@ -15,6 +15,8 @@
 
 #include "memory-common.h"
 #include "dma-host.h"
+#include "profiler.h"
+#include "profiling-timer-data.h"
 #include "async-global.h"
 
 void dummy_DMA2_IRQHandler(void);
@@ -59,4 +61,10 @@ MemStatus host_memset_dma(uint8_t *destination, uint8_t const *const source,
 void dummy_DMA2_IRQHandler(void)
 {
     set_global_async_dma_complete(true);
+    bool profiling_active = get_global_async_profiling_active();
+    if (profiling_active) {
+        profiling_timer_data_t end_time;
+        get_timer(&end_time);
+        set_global_async_profiling_end_time(end_time);
+    }
 }

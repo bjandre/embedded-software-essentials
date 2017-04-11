@@ -17,7 +17,9 @@
 #include "memory-common.h"
 #include "memory-cpu.h"
 #include "dma-frdm-kl25z.h"
+#include "profiling-timer-data.h"
 #include "async-global.h"
+#include "profiler.h"
 
 /**
    DMA MUX sources are defined in the KL25Z subfamily reference manual section
@@ -241,4 +243,10 @@ extern void DMA2_IRQHandler(void)
     DMA0->DMA[channel_m2m].DSR_BCR |= DMA_DSR_BCR_DONE(1);
 
     set_global_async_dma_complete(true);
+    bool profiling_active = get_global_async_profiling_active();
+    if (profiling_active) {
+        profiling_timer_data_t end_time;
+        get_timer(&end_time);
+        set_global_async_profiling_end_time(end_time);
+    }
 }
