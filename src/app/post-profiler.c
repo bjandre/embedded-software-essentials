@@ -11,6 +11,7 @@
 #include <stdint.h>
 
 #include "profiler.h"
+#include "log-item.h"
 
 #include "post-common.h"
 #include "post-profiler.h"
@@ -18,7 +19,7 @@
 // Assign some reasonable platform specific limits to ensure things are working sanely.
 #include "platform-defs.h"
 #if (PLATFORM == PLATFORM_FRDM)
-static const uint32_t profile_time_min = 30;  // lower bound for optimized builds, typical about 38?
+static const uint32_t profile_time_min = 20;  // lower bound for optimized builds, typical about 38 debug, 22 optimized?
 static const uint32_t profile_time_max = 510;  // upper bound for debug builds, typical about 500?
 #else
 static const uint32_t profile_time_min = 1;
@@ -39,6 +40,11 @@ POSTstatus post_profiler_nop()
     POSTstatus status = POST_PASS;
     if (profile_time > profile_time_max ||
         profile_time < profile_time_min) {
+        log_item_t *item;
+        CreateLogItem(&item);
+        UpdateLogItem(item, WARNING, sizeof(profile_time), &profile_time);
+        log_item(item);
+        DestroyLogItem(&item);
         status = POST_FAIL;
     }
     return status;
