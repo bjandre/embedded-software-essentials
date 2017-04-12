@@ -16,6 +16,7 @@
 #include <stdio.h>
 #endif
 
+#include <assert.h>
 #include <stdint.h>
 #include <stdlib.h>
 
@@ -115,7 +116,13 @@ int main(int argc, char **argv)
 #if DEBUG_SPI && (PLATFORM == PLATFORM_FRDM)
         // FIXME(bja, 2017-03) need to abstract out for host!
         frdm_kl25z_toggle_green_led();
-        frdm_kl25z_spi_transmit_byte(0xFF, PTD_SPI1_CS_NRF24);
+        uint16_t data = 0xFFFF;
+        frdm_kl25z_spi_transmit_byte((uint8_t)data, PTD_SPI1_CS_NRF24);
+        frdm_kl25z_spi_receive_byte((uint8_t*)&data, PTD_SPI1_CS_NRF24);
+        assert((uint8_t)data == 0x0E);
+        data = 0xFF00; // request read of config register
+        frdm_kl25z_spi_transmit_n_bytes((uint8_t *)&data, sizeof(data), PTD_SPI1_CS_NRF24);
+        frdm_kl25z_spi_receive_byte((uint8_t*)&data, PTD_SPI1_CS_NRF24);
 #endif
 
         analyze_logger_data_event(&data_summary, item);

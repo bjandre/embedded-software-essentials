@@ -69,6 +69,8 @@ CommStatus frdm_kl25z_initialize_spi(void)
 
     PORTD->PCR[PTD_SPI1_CS_NRF24] |= PORT_PCR_MUX(1); // chip select
     frdm_kl25z_initialize_port_d_output_pin(PTD_SPI1_CS_NRF24);
+    // set inactive high.
+    GPIOD->PSOR |= (1 << PTD_SPI1_CS_NRF24);
 
     // set the port d pins to alternate function 2 for peripheral controlled pins
     PORTD->PCR[PTD_SPI1_CLK] |= PORT_PCR_MUX(2);
@@ -116,7 +118,11 @@ CommStatus frdm_kl25z_initialize_spi(void)
 CommStatus frdm_kl25z_spi_transmit_byte(const uint8_t byte, const GPIO_PINS pin)
 {
     CommStatus status = Comm_Status_Success;
-    // set chip select, inactive high, active low
+    spi_state_t state;
+    // preserve the current state so we can restore it at the end.
+    frdm_kl25z_get_spi_state(&state, pin);
+    
+    // set chip select active so we can write, inactive high, active low
     GPIOD->PCOR |= (1 << pin);
     // poll the status register until empty. SPTEF == 1 --> empty
     bool transmit_buffer_empty = false;
@@ -131,14 +137,52 @@ CommStatus frdm_kl25z_spi_transmit_byte(const uint8_t byte, const GPIO_PINS pin)
     while (!transmit_buffer_empty) {
         transmit_buffer_empty = SPI1->S & SPI_S_SPTEF(1);
     }
-    // clear chip select, inactive high
+    // restore original state
+    frdm_kl25z_set_spi_state(&state, pin);
+    return status;
+}
+
+CommStatus frdm_kl25z_spi_transmit_n_bytes(uint8_t const *const byte, const size_t num_bytes,
+                                           const GPIO_PINS pin)
+{
+    CommStatus status = Comm_Status_Success;
+    // set CS active low.
+    GPIOD->PCOR |= (1 << pin);
+
+    for (size_t i = 0; i < num_bytes; i++) {
+        frdm_kl25z_spi_transmit_byte(*(byte + i), pin);
+    }
+        
+    // set CS inactive high.
     GPIOD->PSOR |= (1 << pin);
     return status;
 }
 
-CommStatus frdm_kl25z_spi_receive_byte(uint8_t *byte)
+CommStatus frdm_kl25z_spi_receive_byte(uint8_t *byte, const GPIO_PINS pin)
 {
     CommStatus status = Comm_Status_Success;
+    // poll the status register until full. SPTEF == 1 --> empty
+    bool receive_buffer_full = false;
+    while (!receive_buffer_full) {
+        receive_buffer_full = SPI1->S & SPI_S_SPRF(1);
+    }
+    *byte = SPI1->D;
     return status;
 }
 
+void frdm_kl25z_get_spi_state(spi_state_t *state, const GPIO_PINS pin)
+{
+    // set chip select, inactive high, active low
+    state->chip_select = GPIOD->PDOR & (1 << pin);
+}
+
+void frdm_kl25z_set_spi_state(spi_state_t *state, const GPIO_PINS pin)
+{
+    if (state->chip_select == 0) {
+        // active low
+        GPIOD->PCOR |= (1 << pin);
+    } else {
+        // inactive high
+        GPIOD->PSOR |= (1 << pin);
+    }
+}
