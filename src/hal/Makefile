@@ -20,7 +20,8 @@ SRCS = \
 	post-dma.c \
 	hal.c \
 	communication-peripheral-generic.c \
-	communication-peripheral-factory.c
+	communication-peripheral-factory.c \
+	spi-peripheral-factory.c
 
 
 INCLUDES = -I. -I../util -I../main -I../app

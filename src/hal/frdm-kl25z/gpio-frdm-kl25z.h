@@ -13,6 +13,8 @@
 
 #include <stdint.h>
 
+#include "gpio-common.h"
+
 /**
    \file gpio-frdm-kl25z.c
    platform specific code for the frdm-kl25z
@@ -21,7 +23,6 @@
 /**
    define the pins used for various gpio tasks
 */
-typedef uint8_t GPIO_PINS;
 
 static const GPIO_PINS PTB_GPIO_LED_RED = 18; //!< built in red led, port b
 static const GPIO_PINS PTB_GPIO_LED_GREEN = 19; //!< built in green led, port b

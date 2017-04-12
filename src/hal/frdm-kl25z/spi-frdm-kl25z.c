@@ -26,7 +26,7 @@
 
 #include "circular_buffer.h"
 
-CommStatus frdm_kl25z_initialize_spi(void)
+SPIStatus frdm_kl25z_spi_initialize(spi_peripheral_t *this, const uint32_t baud)
 {
     /*
 
@@ -56,7 +56,7 @@ CommStatus frdm_kl25z_initialize_spi(void)
     */
 
     // enable the clock for port d pins
-    CommStatus status = Comm_Status_Success;
+    SPIStatus status = SPI_Status_Success;
     SIM->SCGC5 |= SIM_SCGC5_PORTD(1);
     // enable clock for SPI1 internal peripheral
     SIM->SCGC4 |= SIM_SCGC4_SPI1(1);
@@ -67,10 +67,11 @@ CommStatus frdm_kl25z_initialize_spi(void)
     frdm_kl25z_initialize_port_d_output_pin(PTD_NRF24_ENABLE);
     GPIOD->PSOR |= (1 << PTD_NRF24_ENABLE);
 
-    PORTD->PCR[PTD_SPI1_CS_NRF24] |= PORT_PCR_MUX(1); // chip select
-    frdm_kl25z_initialize_port_d_output_pin(PTD_SPI1_CS_NRF24);
+    this->CS_pin = PTD_SPI1_CS_NRF24;
+    PORTD->PCR[this->CS_pin] |= PORT_PCR_MUX(1); // chip select
+    frdm_kl25z_initialize_port_d_output_pin(this->CS_pin);
     // set inactive high.
-    GPIOD->PSOR |= (1 << PTD_SPI1_CS_NRF24);
+    GPIOD->PSOR |= (1 << this->CS_pin);
 
     // set the port d pins to alternate function 2 for peripheral controlled pins
     PORTD->PCR[PTD_SPI1_CLK] |= PORT_PCR_MUX(2);
@@ -115,15 +116,16 @@ CommStatus frdm_kl25z_initialize_spi(void)
     return status;
 }
 
-CommStatus frdm_kl25z_spi_transmit_byte(const uint8_t byte, const GPIO_PINS pin)
+SPIStatus frdm_kl25z_spi_transmit_byte(spi_peripheral_t *this,
+                                       const uint8_t byte)
 {
-    CommStatus status = Comm_Status_Success;
+    SPIStatus status = SPI_Status_Success;
     spi_state_t state;
     // preserve the current state so we can restore it at the end.
-    frdm_kl25z_get_spi_state(&state, pin);
+    frdm_kl25z_get_spi_state(&state, this->CS_pin);
 
     // set chip select active so we can write, inactive high, active low
-    GPIOD->PCOR |= (1 << pin);
+    GPIOD->PCOR |= (1 << this->CS_pin);
     // poll the status register until empty. SPTEF == 1 --> empty
     bool transmit_buffer_empty = false;
     while (!transmit_buffer_empty) {
@@ -138,30 +140,29 @@ CommStatus frdm_kl25z_spi_transmit_byte(const uint8_t byte, const GPIO_PINS pin)
         transmit_buffer_empty = SPI1->S & SPI_S_SPTEF(1);
     }
     // restore original state
-    frdm_kl25z_set_spi_state(&state, pin);
+    frdm_kl25z_set_spi_state(&state, this->CS_pin);
     return status;
 }
 
-CommStatus frdm_kl25z_spi_transmit_n_bytes(uint8_t const *const byte,
-        const size_t num_bytes,
-        const GPIO_PINS pin)
+SPIStatus frdm_kl25z_spi_transmit_n_bytes(spi_peripheral_t *this,
+        uint8_t const *const byte, const size_t num_bytes)
 {
-    CommStatus status = Comm_Status_Success;
+    SPIStatus status = SPI_Status_Success;
     // set CS active low.
-    GPIOD->PCOR |= (1 << pin);
+    GPIOD->PCOR |= (1 << this->CS_pin);
 
     for (size_t i = 0; i < num_bytes; i++) {
-        frdm_kl25z_spi_transmit_byte(*(byte + i), pin);
+        frdm_kl25z_spi_transmit_byte(this, *(byte + i));
     }
 
     // set CS inactive high.
-    GPIOD->PSOR |= (1 << pin);
+    GPIOD->PSOR |= (1 << this->CS_pin);
     return status;
 }
 
-CommStatus frdm_kl25z_spi_receive_byte(uint8_t *byte, const GPIO_PINS pin)
+SPIStatus frdm_kl25z_spi_receive_byte(spi_peripheral_t *this, uint8_t *byte)
 {
-    CommStatus status = Comm_Status_Success;
+    SPIStatus status = SPI_Status_Success;
     // poll the status register until full. SPTEF == 1 --> empty
     bool receive_buffer_full = false;
     while (!receive_buffer_full) {
@@ -169,6 +170,24 @@ CommStatus frdm_kl25z_spi_receive_byte(uint8_t *byte, const GPIO_PINS pin)
     }
     *byte = SPI1->D;
     return status;
+}
+
+
+SPIStatus frdm_kl25z_spi_receive_n_bytes(spi_peripheral_t *this, uint8_t *byte,
+        const size_t num_bytes)
+{
+    SPIStatus status = SPI_Status_Success;
+    return status;
+}
+
+SPIStatus frdm_kl25z_spi_flush_transmit_buffer(spi_peripheral_t *this)
+{
+    SPIStatus status = SPI_Status_Success;
+    return status;
+}
+
+void frdm_kl25z_spi_begin_async_transmit(void)
+{
 }
 
 void frdm_kl25z_get_spi_state(spi_state_t *state, const GPIO_PINS pin)

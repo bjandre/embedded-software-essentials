@@ -20,20 +20,84 @@
 #include <stdbool.h>
 #include <stdint.h>
 
-#include "communication-peripheral.h"
-
-typedef struct _spi_state {
-    bool chip_select; /*<! state of the SPI CS pin */
-} spi_state_t;
+#include "spi-peripheral.h"
+#include "gpio-frdm-kl25z.h"
 
 /**
    frdm-kl25z specific initialization for the spi. Conforms to the call
-   signature of the initialization routine in the communication_peripheral_t
+   signature of the initialization routine in the spi_peripheral_t
    defined in communication-peripheral.h
 
    \return status of the operation
  */
-CommStatus frdm_kl25z_initialize_spi(void);
+SPIStatus frdm_kl25z_spi_initialize(spi_peripheral_t *this,
+                                    const uint32_t speed);
+
+/**
+   frdm-kl25z specific initialization for the spi transmit_byte. Conforms to the
+   call signature of the transmit_byte routine in the spi_peripheral_t
+   defined in communication-peripheral.h
+
+   \param[in] byte - the byte to be sent
+
+   \return status of the operation
+ */
+SPIStatus frdm_kl25z_spi_transmit_byte(spi_peripheral_t *this,
+                                       const uint8_t byte);
+
+/**
+   frdm-kl25z specific initialization for the spi transmit_n_bytes. Conforms to the
+   call signature of the transmit_byte routine in the spi_peripheral_t
+   defined in communication-peripheral.h
+
+   \param[in] byte - the byte to be sent
+
+   \return status of the operation
+ */
+SPIStatus frdm_kl25z_spi_transmit_n_bytes(spi_peripheral_t *this,
+        uint8_t const *const byte, const size_t num_bytes);
+
+/**
+   frdm-kl25z specific initialization for the spi receive_byte. Conforms to the
+   call signature of the receive_byte routine in the spi_peripheral_t
+   defined in communication-peripheral.h
+
+   \param[out] byte - location to store the received byte.
+
+   \return status of the operation
+ */
+
+SPIStatus frdm_kl25z_spi_receive_byte(spi_peripheral_t *this,
+                                      uint8_t *byte);
+
+/**
+   frdm-kl25z specific initialization for the spi receive_n_byte. Conforms to the
+   call signature of the receive_byte routine in the spi_peripheral_t
+   defined in communication-peripheral.h
+
+   \param[out] byte - location to store the received byte.
+
+   \return status of the operation
+ */
+SPIStatus frdm_kl25z_spi_receive_n_bytes(spi_peripheral_t *this,
+        uint8_t *bytes,
+        const size_t num_bytes);
+
+/**
+   Flush the communication peripheral transmit buffer.
+
+   \param[in] *this - pointer to the communication peripheral
+
+   \return status of the operation
+*/
+SPIStatus frdm_kl25z_spi_flush_transmit_buffer(spi_peripheral_t *this);
+
+/**
+   Pointer to the function to begin an asynchronous tranmit on the
+   communication peripheral
+
+*/
+void frdm_kl25z_spi_begin_async_transmit(void);
 
 /**
    get the state of the spi interface that may need to be preserved across
@@ -50,42 +114,5 @@ void frdm_kl25z_get_spi_state(spi_state_t *state, const GPIO_PINS pin);
    \param[in] *state new state of the spi pins.
  */
 void frdm_kl25z_set_spi_state(spi_state_t *state, const GPIO_PINS pin);
-
-/**
-   frdm-kl25z specific initialization for the spi transmit_byte. Conforms to the
-   call signature of the transmit_byte routine in the communication_peripheral_t
-   defined in communication-peripheral.h
-
-   \param[in] byte - the byte to be sent
-
-   \return status of the operation
- */
-CommStatus frdm_kl25z_spi_transmit_byte(const uint8_t byte,
-                                        const GPIO_PINS pin);
-
-/**
-   frdm-kl25z specific initialization for the spi transmit_n_bytes. Conforms to the
-   call signature of the transmit_byte routine in the communication_peripheral_t
-   defined in communication-peripheral.h
-
-   \param[in] byte - the byte to be sent
-
-   \return status of the operation
- */
-CommStatus frdm_kl25z_spi_transmit_n_bytes(uint8_t const *const byte,
-        const size_t num_bytes,
-        const GPIO_PINS pin);
-
-/**
-   frdm-kl25z specific initialization for the spi receive_byte. Conforms to the
-   call signature of the receive_byte routine in the communication_peripheral_t
-   defined in communication-peripheral.h
-
-   \param[out] byte - location to store the received byte.
-
-   \return status of the operation
- */
-CommStatus frdm_kl25z_spi_receive_byte(uint8_t *byte,
-                                       const GPIO_PINS pin);
 
 #endif /* ESE_HAL_SPI_FRDM_KL25Z_H_ */

@@ -34,7 +34,7 @@ void initialize_gpio(void)
 void initialize_spi(void)
 {
 #if (PLATFORM == PLATFORM_FRDM)
-    frdm_kl25z_initialize_spi();
+
 #endif
 }
 

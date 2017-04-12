@@ -23,6 +23,7 @@
 #include "platform-defs.h"
 
 #include "hal.h"
+#include "spi-peripheral-factory.h"
 
 #include "logger.h"
 #include "log-item.h"
@@ -42,8 +43,6 @@ volatile async_data_t global_async_data;
 #if (PLATFORM == PLATFORM_FRDM)
 #include "gpio-frdm-kl25z.h"
 #include "spi-frdm-kl25z.h"
-#else
-typedef enum GPIO_PINS {LED_PIN} GPIO_PINS;
 #endif
 
 /**
@@ -103,6 +102,14 @@ int main(int argc, char **argv)
     set_global_async_heartbeat_timestamp(testing_timestamp);
 #endif
 
+#define DEBUG_SPI 1
+#if DEBUG_SPI && (PLATFORM == PLATFORM_FRDM)
+    // FIXME(bja, 2017-03) need to abstract out for host!
+    spi_peripheral_t spi;
+    size_t num_bytes_buffer = 128;
+    SPICreate(&spi, SPI_nRF24, num_bytes_buffer);
+#endif
+
     while (1) { /* main event loop */
         __asm("NOP"); /* breakpoint to stop while looping */
         heartbeat(item);
@@ -112,18 +119,16 @@ int main(int argc, char **argv)
         debug_uart(tx_or_rx, buffer, buffer_size);
 #endif
 
-#define DEBUG_SPI 1
 #if DEBUG_SPI && (PLATFORM == PLATFORM_FRDM)
         // FIXME(bja, 2017-03) need to abstract out for host!
         frdm_kl25z_toggle_green_led();
         uint16_t data = 0xFFFF;
-        frdm_kl25z_spi_transmit_byte((uint8_t)data, PTD_SPI1_CS_NRF24);
-        frdm_kl25z_spi_receive_byte((uint8_t *)&data, PTD_SPI1_CS_NRF24);
+        spi.transmit_byte(&spi, (uint8_t)data);
+        spi.receive_byte(&spi, (uint8_t *)&data);
         assert((uint8_t)data == 0x0E);
         data = 0xFF00; // request read of config register
-        frdm_kl25z_spi_transmit_n_bytes((uint8_t *)&data, sizeof(data),
-                                        PTD_SPI1_CS_NRF24);
-        frdm_kl25z_spi_receive_byte((uint8_t *)&data, PTD_SPI1_CS_NRF24);
+        spi.transmit_n_bytes(&spi, (uint8_t *)&data, sizeof(data));
+        spi.receive_byte(&spi, (uint8_t *)&data);
 #endif
 
         analyze_logger_data_event(&data_summary, item);
