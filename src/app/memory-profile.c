@@ -60,7 +60,8 @@ void profile_memmove(log_item_t *item, uint32_t num_bytes)
     average_clocks = 0;
 
     const char name_memmove_stdlib[] = "memmove_stdlib";
-    UpdateLogItem(item, PROFILING_START, sizeof(name_memmove_stdlib), &name_memmove_stdlib);
+    UpdateLogItem(item, PROFILING_START, sizeof(name_memmove_stdlib),
+                  &name_memmove_stdlib);
     log_item(item);
     for (uint8_t i = 0; i < num_trials; i++) {
         get_timer(&start_time);
@@ -71,11 +72,13 @@ void profile_memmove(log_item_t *item, uint32_t num_bytes)
     average_clocks = total_clocks / num_trials;
     UpdateLogItem(item, PROFILING_VALUE, sizeof(uint32_t), &average_clocks);
     log_item(item);
-    UpdateLogItem(item, PROFILING_END, sizeof(name_memmove_stdlib), &name_memmove_stdlib);
+    UpdateLogItem(item, PROFILING_END, sizeof(name_memmove_stdlib),
+                  &name_memmove_stdlib);
     log_item(item);
 
     const char name_memmove_cpu[] = "memmove_cpu";
-    UpdateLogItem(item, PROFILING_START, sizeof(name_memmove_cpu), &name_memmove_cpu);
+    UpdateLogItem(item, PROFILING_START, sizeof(name_memmove_cpu),
+                  &name_memmove_cpu);
     log_item(item);
     for (uint8_t i = 0; i < num_trials; i++) {
         get_timer(&start_time);
@@ -90,7 +93,8 @@ void profile_memmove(log_item_t *item, uint32_t num_bytes)
     log_item(item);
 
     const char name_memmove_dma[] = "memmove_dma";
-    UpdateLogItem(item, PROFILING_START, sizeof(name_memmove_dma), &name_memmove_dma);
+    UpdateLogItem(item, PROFILING_START, sizeof(name_memmove_dma),
+                  &name_memmove_dma);
     log_item(item);
     for (uint8_t i = 0; i < num_trials; i++) {
         bool dma_complete = false;
@@ -125,7 +129,8 @@ void profile_memset(log_item_t *item, uint32_t num_bytes)
     average_clocks = 0;
 
     const char name_memset_stdlib[] = "memset_stdlib";
-    UpdateLogItem(item, PROFILING_START, sizeof(name_memset_stdlib), &name_memset_stdlib);
+    UpdateLogItem(item, PROFILING_START, sizeof(name_memset_stdlib),
+                  &name_memset_stdlib);
     log_item(item);
     for (uint8_t i = 0; i < num_trials; i++) {
         get_timer(&start_time);
@@ -136,7 +141,8 @@ void profile_memset(log_item_t *item, uint32_t num_bytes)
     average_clocks = total_clocks / num_trials;
     UpdateLogItem(item, PROFILING_VALUE, sizeof(uint32_t), &average_clocks);
     log_item(item);
-    UpdateLogItem(item, PROFILING_END, sizeof(name_memset_stdlib), &name_memset_stdlib);
+    UpdateLogItem(item, PROFILING_END, sizeof(name_memset_stdlib),
+                  &name_memset_stdlib);
     log_item(item);
 
     const char name_memset_cpu[] = "memset_cpu";

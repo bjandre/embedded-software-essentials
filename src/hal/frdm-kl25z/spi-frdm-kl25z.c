@@ -121,7 +121,7 @@ CommStatus frdm_kl25z_spi_transmit_byte(const uint8_t byte, const GPIO_PINS pin)
     spi_state_t state;
     // preserve the current state so we can restore it at the end.
     frdm_kl25z_get_spi_state(&state, pin);
-    
+
     // set chip select active so we can write, inactive high, active low
     GPIOD->PCOR |= (1 << pin);
     // poll the status register until empty. SPTEF == 1 --> empty
@@ -142,8 +142,9 @@ CommStatus frdm_kl25z_spi_transmit_byte(const uint8_t byte, const GPIO_PINS pin)
     return status;
 }
 
-CommStatus frdm_kl25z_spi_transmit_n_bytes(uint8_t const *const byte, const size_t num_bytes,
-                                           const GPIO_PINS pin)
+CommStatus frdm_kl25z_spi_transmit_n_bytes(uint8_t const *const byte,
+        const size_t num_bytes,
+        const GPIO_PINS pin)
 {
     CommStatus status = Comm_Status_Success;
     // set CS active low.
@@ -152,7 +153,7 @@ CommStatus frdm_kl25z_spi_transmit_n_bytes(uint8_t const *const byte, const size
     for (size_t i = 0; i < num_bytes; i++) {
         frdm_kl25z_spi_transmit_byte(*(byte + i), pin);
     }
-        
+
     // set CS inactive high.
     GPIOD->PSOR |= (1 << pin);
     return status;

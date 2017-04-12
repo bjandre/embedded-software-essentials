@@ -118,11 +118,12 @@ int main(int argc, char **argv)
         frdm_kl25z_toggle_green_led();
         uint16_t data = 0xFFFF;
         frdm_kl25z_spi_transmit_byte((uint8_t)data, PTD_SPI1_CS_NRF24);
-        frdm_kl25z_spi_receive_byte((uint8_t*)&data, PTD_SPI1_CS_NRF24);
+        frdm_kl25z_spi_receive_byte((uint8_t *)&data, PTD_SPI1_CS_NRF24);
         assert((uint8_t)data == 0x0E);
         data = 0xFF00; // request read of config register
-        frdm_kl25z_spi_transmit_n_bytes((uint8_t *)&data, sizeof(data), PTD_SPI1_CS_NRF24);
-        frdm_kl25z_spi_receive_byte((uint8_t*)&data, PTD_SPI1_CS_NRF24);
+        frdm_kl25z_spi_transmit_n_bytes((uint8_t *)&data, sizeof(data),
+                                        PTD_SPI1_CS_NRF24);
+        frdm_kl25z_spi_receive_byte((uint8_t *)&data, PTD_SPI1_CS_NRF24);
 #endif
 
         analyze_logger_data_event(&data_summary, item);

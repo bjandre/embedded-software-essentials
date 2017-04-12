@@ -81,9 +81,10 @@ typedef struct AsynchronousData {
     time_t heartbeat_timestamp; /*!< heartbeat timestamp */
 
     bool profiling_active; /*!< global flag indicating that profiling is active for interrupts */
-    uint32_t profiling_counter_overflow; /*<! global counter for profiling timer 
+    uint32_t profiling_counter_overflow; /*<! global counter for profiling timer
                                            overflows */
-    profiling_timer_data_t profiling_end_time; /*<! profiling end time that can be accessed in 
+    profiling_timer_data_t
+    profiling_end_time; /*<! profiling end time that can be accessed in
                                                 interrupts */
 
 } async_data_t;
@@ -272,7 +273,8 @@ static inline time_t get_global_async_profiling_overflow(void)
 /**
    Thread / interrupt safe set profiling_end_time in the global_async_data struct
  */
-static inline void set_global_async_profiling_end_time(profiling_timer_data_t end_time)
+static inline void set_global_async_profiling_end_time(profiling_timer_data_t
+        end_time)
 {
     /* NOTE(bja, 2017-04) copying struct, assumes no dynamically allocated memory! */
     extern volatile async_data_t global_async_data;
@@ -290,7 +292,8 @@ static inline profiling_timer_data_t get_global_async_profiling_end_time(void)
     /* NOTE(bja, 2017-04) copying struct, assumes no dynamically allocated memory! */
     extern volatile async_data_t global_async_data;
     uint32_t interrupt_status = start_critical_region();
-    profiling_timer_data_t profiling_end_time = global_async_data.profiling_end_time;
+    profiling_timer_data_t profiling_end_time =
+        global_async_data.profiling_end_time;
     end_critical_region(interrupt_status);
     return profiling_end_time;
 }
