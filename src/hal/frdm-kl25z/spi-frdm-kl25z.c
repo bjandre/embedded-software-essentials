@@ -26,7 +26,8 @@
 
 #include "circular_buffer.h"
 
-SPIStatus frdm_kl25z_spi_initialize(spi_peripheral_t *this, const uint32_t baud)
+SPIStatus frdm_kl25z_spi_initialize(spi_peripheral_t volatile *this,
+                                    const uint32_t baud)
 {
     /*
 
@@ -62,11 +63,6 @@ SPIStatus frdm_kl25z_spi_initialize(spi_peripheral_t *this, const uint32_t baud)
     SIM->SCGC4 |= SIM_SCGC4_SPI1(1);
 
     // set the port d pins to alternate function 1, GPIO, for manually controlled pins:
-    // FIXME(bja, 2017-04) radio enable line, active high. Not SPI, needs to be moved!
-    PORTD->PCR[PTD_NRF24_ENABLE] |= PORT_PCR_MUX(1);
-    frdm_kl25z_initialize_port_d_output_pin(PTD_NRF24_ENABLE);
-    GPIOD->PSOR |= (1 << PTD_NRF24_ENABLE);
-
     this->CS_pin = PTD_SPI1_CS_NRF24;
     PORTD->PCR[this->CS_pin] |= PORT_PCR_MUX(1); // chip select
     frdm_kl25z_initialize_port_d_output_pin(this->CS_pin);
@@ -109,8 +105,8 @@ SPIStatus frdm_kl25z_spi_initialize(spi_peripheral_t *this, const uint32_t baud)
     //SPI1->BR |= SPI1_BR_SPR();
 
 
-    // enable interrupts for the transmitter and receiver
-
+    // enable interrupt for the receive buffer full
+    SPI1->C1 |= SPI_C1_SPIE(1);
     // enable the transmitter and receiver
 
     return status;
@@ -141,6 +137,10 @@ SPIStatus frdm_kl25z_spi_transmit_byte(spi_peripheral_t *this,
     }
     // restore original state
     frdm_kl25z_set_spi_state(&state, this->CS_pin);
+
+    // enable interrupt for the transmit buffer empty
+    SPI1->C1 |= SPI_C1_SPTIE(1);
+
     return status;
 }
 
@@ -157,6 +157,67 @@ SPIStatus frdm_kl25z_spi_transmit_n_bytes(spi_peripheral_t *this,
 
     // set CS inactive high.
     GPIOD->PSOR |= (1 << this->CS_pin);
+    return status;
+}
+
+SPIStatus frdm_kl25z_spi_polling_transmit_receive_byte(
+    spi_peripheral_t volatile *this, uint8_t *byte)
+{
+    SPIStatus status = SPI_Status_Success;
+    // preserve the current state so we can restore it at the end.
+    spi_state_t state;
+    frdm_kl25z_get_spi_state(&state, this->CS_pin);
+
+    // set chip select active so we can write, inactive high, active low
+    GPIOD->PCOR |= (1 << this->CS_pin);
+    // poll the status register until empty. SPTEF == 1 --> empty
+
+    bool transmit_buffer_empty = false;
+    while (!transmit_buffer_empty) {
+        transmit_buffer_empty = SPI1->S & SPI_S_SPTEF(1);
+    }
+
+    // send a character
+    SPI1->D = *byte;
+
+    bool receive_buffer_full = false;
+    while (!receive_buffer_full) {
+        receive_buffer_full = SPI1->S & SPI_S_SPRF(1);
+    }
+    *byte = SPI1->D;
+
+    // since this is synchronous transmission, if we receive a byte, the
+    // transmit buffer should be empty, but check to be safe
+    transmit_buffer_empty = false;
+    // white until transmit buffer is empty
+    while (!transmit_buffer_empty) {
+        transmit_buffer_empty = SPI1->S & SPI_S_SPTEF(1);
+    }
+
+    // restore original state of the chip select pin
+    frdm_kl25z_set_spi_state(&state, this->CS_pin);
+
+    return status;
+}
+
+SPIStatus frdm_kl25z_spi_polling_transmit_receive_n_bytes(
+    spi_peripheral_t volatile *this, uint8_t *byte, const size_t num_bytes)
+{
+    SPIStatus status = SPI_Status_Success;
+    // preserve the current state so we can restore it at the end.
+    spi_state_t state;
+    frdm_kl25z_get_spi_state(&state, this->CS_pin);
+
+    // set CS active low.
+    GPIOD->PCOR |= (1 << this->CS_pin);
+
+    for (size_t i = 0; i < num_bytes; i++) {
+        this->polling_transmit_receive_byte(this, (byte + i));
+    }
+
+    // restore original state of the chip select pin
+    frdm_kl25z_set_spi_state(&state, this->CS_pin);
+
     return status;
 }
 
@@ -204,5 +265,20 @@ void frdm_kl25z_set_spi_state(spi_state_t *state, const GPIO_PINS pin)
     } else {
         // inactive high
         GPIOD->PSOR |= (1 << pin);
+    }
+}
+
+extern void SPI1_IRQHandler(void)
+{
+    if (SPI1->S | SPI_S_SPRF_MASK) {
+        // read buffer full
+        uint8_t byte = SPI1->D;
+        // TODO: store by in receive_buffer
+        (void)byte;
+    } else if (SPI1->S | SPI_S_SPTEF_MASK) {
+        // transmit buffer empty
+        // TODO: read byte from transmit_buffer;
+        uint8_t byte;
+        SPI1->D = byte;
     }
 }

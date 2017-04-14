@@ -53,7 +53,7 @@ struct spi_peripheral_t {
 
        \return status of the operation
     */
-    SPIStatus (*initialize)(spi_peripheral_t *this, const uint32_t baud);
+    SPIStatus (*initialize)(spi_peripheral_t volatile *this, const uint32_t baud);
 
     /**
        Pointer to the function for transmitting a byte with the current
@@ -111,6 +111,32 @@ struct spi_peripheral_t {
     SPIStatus (*receive_n_bytes)(spi_peripheral_t *this,
                                  uint8_t *bytes,
                                  const size_t num_bytes);
+
+    /**
+       Pointer to the function for polling to transmit and receiving a single
+       byte from the specified communication peripheral.
+
+       \param[in] *this - pointer to the communication peripheral
+       \param[in, out] *byte - pointer to location to store the received byte
+
+       \return status of the operation
+    */
+    SPIStatus (*polling_transmit_receive_byte)(spi_peripheral_t volatile *this,
+            uint8_t *byte);
+
+    /**
+       Pointer to the function for polling to transmit and receive N bytes from
+       the specified communication peripheral.
+
+       \param[in] *this - pointer to the communication peripheral
+       \param[in, out] *byte - pointer to location of data to send and receive
+       \param[in] num_bytes - number of bytes to transmit and receive
+
+       \return status of the operation
+    */
+    SPIStatus (*polling_transmit_receive_n_bytes)(spi_peripheral_t volatile *this,
+            uint8_t *bytes,
+            const size_t num_bytes);
 
     /**
        Flush the communication peripheral transmit buffer.

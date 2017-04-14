@@ -16,6 +16,7 @@ LIB = \
 	libapp.a
 
 SRCS = \
+	nrf24l01.c \
 	memory-profile.c \
 	analyze-data.c \
 	heartbeat.c \

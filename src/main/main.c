@@ -43,6 +43,7 @@ volatile async_data_t global_async_data;
 #if (PLATFORM == PLATFORM_FRDM)
 #include "gpio-frdm-kl25z.h"
 #include "spi-frdm-kl25z.h"
+#include "nrf24l01.h"
 #endif
 
 /**
@@ -105,9 +106,10 @@ int main(int argc, char **argv)
 #define DEBUG_SPI 1
 #if DEBUG_SPI && (PLATFORM == PLATFORM_FRDM)
     // FIXME(bja, 2017-03) need to abstract out for host!
-    spi_peripheral_t spi;
     size_t num_bytes_buffer = 128;
-    SPICreate(&spi, SPI_nRF24, num_bytes_buffer);
+    nrf24_initialize(num_bytes_buffer);
+    uint8_t data = nrf24_read_status();
+    assert(data == 0x0E);
 #endif
 
     while (1) { /* main event loop */
@@ -122,13 +124,11 @@ int main(int argc, char **argv)
 #if DEBUG_SPI && (PLATFORM == PLATFORM_FRDM)
         // FIXME(bja, 2017-03) need to abstract out for host!
         frdm_kl25z_toggle_green_led();
-        uint16_t data = 0xFFFF;
-        spi.transmit_byte(&spi, (uint8_t)data);
-        spi.receive_byte(&spi, (uint8_t *)&data);
-        assert((uint8_t)data == 0x0E);
-        data = 0xFF00; // request read of config register
-        spi.transmit_n_bytes(&spi, (uint8_t *)&data, sizeof(data));
-        spi.receive_byte(&spi, (uint8_t *)&data);
+        uint8_t data = nrf24_read_status();
+        assert(data == 0x0E);
+        data = nrf24_read_config();
+        // request read of config register
+        assert(data == 0x08);
 #endif
 
         analyze_logger_data_event(&data_summary, item);

@@ -41,7 +41,7 @@ SPIStatus SetupSPInRF24(spi_peripheral_t volatile *spi);
  */
 void SPIClear(spi_peripheral_t volatile *spi);
 
-SPIStatus SPICreate(spi_peripheral_t *spi,
+SPIStatus SPICreate(spi_peripheral_t volatile *spi,
                     SPIFunction spi_function,
                     size_t num_bytes_buffer)
 {
@@ -96,6 +96,10 @@ SPIStatus SetupSPInRF24(spi_peripheral_t volatile *spi)
     spi->flush_transmit_buffer = &frdm_kl25z_spi_flush_transmit_buffer;
     spi->transmit_n_bytes = &frdm_kl25z_spi_transmit_n_bytes;
     spi->receive_n_bytes = &frdm_kl25z_spi_receive_n_bytes;
+    spi->polling_transmit_receive_byte =
+        &frdm_kl25z_spi_polling_transmit_receive_byte;
+    spi->polling_transmit_receive_n_bytes =
+        &frdm_kl25z_spi_polling_transmit_receive_n_bytes;
     spi->begin_async_transmit = &frdm_kl25z_spi_begin_async_transmit;
     spi->flush_transmit_buffer = &frdm_kl25z_spi_flush_transmit_buffer;
 #else

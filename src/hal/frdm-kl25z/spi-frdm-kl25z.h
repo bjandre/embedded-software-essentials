@@ -30,7 +30,7 @@
 
    \return status of the operation
  */
-SPIStatus frdm_kl25z_spi_initialize(spi_peripheral_t *this,
+SPIStatus frdm_kl25z_spi_initialize(spi_peripheral_t volatile *this,
                                     const uint32_t speed);
 
 /**
@@ -80,8 +80,35 @@ SPIStatus frdm_kl25z_spi_receive_byte(spi_peripheral_t *this,
    \return status of the operation
  */
 SPIStatus frdm_kl25z_spi_receive_n_bytes(spi_peripheral_t *this,
-        uint8_t *bytes,
-        const size_t num_bytes);
+        uint8_t *bytes, const size_t num_bytes);
+
+/**
+   frdm-kl25z specific initialization for the spi
+   polling_transmit_receive_byte. Conforms to the call signature of the
+   spi_peripheral_t defined in
+   spi-peripheral.h
+
+   \param[in, out] *this - location spi specific state
+   \param[in, out] *byte - pointer to the storage for the byte to send and receive
+
+   \return status of the operation
+ */
+
+SPIStatus frdm_kl25z_spi_polling_transmit_receive_byte(
+    spi_peripheral_t volatile *this, uint8_t *byte);
+
+/**
+   frdm-kl25z specific initialization for the spi
+   polling_transmit_receive_n_bytes. Conforms to the call signature of the
+   routine in spi_peripheral_t defined in spi-peripheral.h
+
+   \param[in, out] *this - location spi specific state
+   \param[in, out] *byte - pointer to the storage for the bytes to send and receive
+
+   \return status of the operation
+ */
+SPIStatus frdm_kl25z_spi_polling_transmit_receive_n_bytes(
+    spi_peripheral_t volatile *this, uint8_t *bytes, const size_t num_bytes);
 
 /**
    Flush the communication peripheral transmit buffer.

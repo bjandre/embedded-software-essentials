@@ -61,6 +61,7 @@ __attribute__( ( always_inline ) ) __STATIC_INLINE void end_critical_region(
 
 #include "logger.h"
 #include "profiling-timer-data.h"
+#include "nrf24l01.h"
 /**
    \file async-global.h
 
@@ -83,10 +84,10 @@ typedef struct AsynchronousData {
     bool profiling_active; /*!< global flag indicating that profiling is active for interrupts */
     uint32_t profiling_counter_overflow; /*<! global counter for profiling timer
                                            overflows */
-    profiling_timer_data_t
-    profiling_end_time; /*<! profiling end time that can be accessed in
-                                                interrupts */
-
+    profiling_timer_data_t profiling_end_time; /*<! profiling end time that can
+                                                 be accessed in interrupts */
+    nrf24l01p_t nrf24; /*<! global instance of nrf24l01p internal
+                         state (SPI and rx, tx buffers) */
 } async_data_t;
 
 

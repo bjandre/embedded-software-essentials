@@ -33,7 +33,7 @@ static const GPIO_PINS PTC_MCG_CLOCKOUT =
     3; //!< alternate function 5, MCG clock output line
 
 static const GPIO_PINS PTD_GPIO_LED_BLUE = 1; //!< built in blue led, port d
-static const GPIO_PINS PTD_NRF24_ENABLE =
+static const GPIO_PINS PTD_NRF24_CHIP_ACTIVATE =
     3; //!< Alternate function 1 - nRF24L01+, radio power up/enable when high
 static const GPIO_PINS PTD_SPI1_CS_NRF24 =
     4; //!< Alternate function 1 - SPI1_PCS0 - slave select for NRF24, manually controlled!

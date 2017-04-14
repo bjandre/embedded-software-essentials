@@ -11,7 +11,25 @@
 #ifndef ESE_APP_NRF24L01_H_
 #define ESE_APP_NRF24L01_H_
 
-#include "nrf25l01-const.h"
+#include <stdint.h>
+
+#include "gpio-common.h"
+
+#include "spi-peripheral.h"
+
+#include "nrf24l01-const.h"
+
+
+typedef struct _nrf24l01p {
+    spi_peripheral_t spi;
+    GPIO_PINS chip_active_pin;
+} nrf24l01p_t;
+
+/**
+   Initialize the nRF24L01+
+   \param[in] number of bytes in the FIFO tx rx buffers.
+*/
+void nrf24_initialize(const size_t num_bytes_buffer);
 
 /**
    Read the register and return the value

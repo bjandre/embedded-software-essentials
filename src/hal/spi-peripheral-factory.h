@@ -35,7 +35,7 @@ typedef enum _SPIFunction {
 
    \return status of the create operation
  */
-SPIStatus SPICreate(spi_peripheral_t *spi,
+SPIStatus SPICreate(spi_peripheral_t volatile *spi,
                     SPIFunction spi_function,
                     size_t num_bytes_buffer);
 

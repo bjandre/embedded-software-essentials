@@ -8,8 +8,8 @@
 ** with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
 */
 
-#ifndef ESE_APP_NRF24L01_H_
-#define ESE_APP_NRF24L01_H_
+#ifndef ESE_APP_NRF24L01_CONST_H_
+#define ESE_APP_NRF24L01_CONST_H_
 
 typedef uint8_t NRF24_command;
 
@@ -17,7 +17,7 @@ static const NRF24_command NRF24_CMD_R_REGISTER = 0b00000000;
 static const NRF24_command NRF24_CMD_W_REGISTER = 0b00100000;
 static const NRF24_command NRF24_CMD_R_RX_PAYLOAD = 0b01100001;
 static const NRF24_command NRF24_CMD_W_TX_PAYLOAD = 0b10100000;
-static const NRF24_command NRF24_CMD_FLUSH_TX 0b11100001;
+static const NRF24_command NRF24_CMD_FLUSH_TX = 0b11100001;
 static const NRF24_command NRF24_CMD_FLUSH_RX = 0b11100010;
 static const NRF24_command NRF24_CMD_REUSE_TX_PL = 0b11100011;
 static const NRF24_command NRF24_CMD_ACTIVATE = 0b01010000;
@@ -200,4 +200,4 @@ static const NRF24_register NRF24_REG_DYNPD = 0x1C;
  */
 static const NRF24_register NRF24_REG_FEATURE = 0x1D;
 
-#endif // ESE_APP_NRF24L01_H_
+#endif // ESE_APP_NRF24L01_CONST_H_
