@@ -102,13 +102,16 @@ SPIStatus frdm_kl25z_spi_polling_transmit_receive_byte(
    polling_transmit_receive_n_bytes. Conforms to the call signature of the
    routine in spi_peripheral_t defined in spi-peripheral.h
 
+   Note: send/receive data is handled through the spi peripheral transmit_buffer
+   and receive_buffer.
+
    \param[in, out] *this - location spi specific state
    \param[in, out] *byte - pointer to the storage for the bytes to send and receive
 
    \return status of the operation
  */
 SPIStatus frdm_kl25z_spi_polling_transmit_receive_n_bytes(
-    spi_peripheral_t volatile *this, uint8_t *bytes, const size_t num_bytes);
+    spi_peripheral_t volatile *this, const size_t num_bytes);
 
 /**
    Flush the communication peripheral transmit buffer.

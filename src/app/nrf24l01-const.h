@@ -11,8 +11,13 @@
 #ifndef ESE_APP_NRF24L01_CONST_H_
 #define ESE_APP_NRF24L01_CONST_H_
 
-typedef uint8_t NRF24_command;
+typedef uint8_t NRF24_size_t;
+static const NRF24_size_t NRF24_max_data = 32;
+static const NRF24_size_t NRF24_0_byte = 0;
+static const NRF24_size_t NRF24_1_byte = 1;
 
+//!< Commands
+typedef uint8_t NRF24_command;
 static const NRF24_command NRF24_CMD_R_REGISTER = 0b00000000;
 static const NRF24_command NRF24_CMD_W_REGISTER = 0b00100000;
 static const NRF24_command NRF24_CMD_R_RX_PAYLOAD = 0b01100001;
@@ -163,6 +168,7 @@ static const NRF24_register NRF24_REG_RX_ADDR_P5 = 0x0F;
    TX_ADDR: Transmit address. Used for a PTX device only. (LSByte is written first)
  */
 static const NRF24_register NRF24_REG_TX_ADDR = 0x10;
+static const NRF24_size_t NRF24_TX_ADDR_SIZE = 5;
 /**
    RX_PW_P0: Number of bytes in RX payload in data pipe 0 (1 to 32 bytes).
  */

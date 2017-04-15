@@ -108,7 +108,8 @@ int main(int argc, char **argv)
     // FIXME(bja, 2017-03) need to abstract out for host!
     size_t num_bytes_buffer = 128;
     nrf24_initialize(num_bytes_buffer);
-    uint8_t data = nrf24_read_status();
+    uint8_t data = 0x00;
+    nrf24_read_status(&data);
     assert(data == 0x0E);
 #endif
 
@@ -124,11 +125,30 @@ int main(int argc, char **argv)
 #if DEBUG_SPI && (PLATFORM == PLATFORM_FRDM)
         // FIXME(bja, 2017-03) need to abstract out for host!
         frdm_kl25z_toggle_green_led();
-        uint8_t data = nrf24_read_status();
+        data = 0x00;
+        nrf24_read_status(&data);
         assert(data == 0x0E);
-        data = nrf24_read_config();
-        // request read of config register
+        nrf24_read_config(&data);
         assert(data == 0x08);
+        data |= NRF24_CFG_PWR_UP_MASK;
+        nrf24_write_config(data);
+        data = 0x00;
+        nrf24_read_config(&data);
+        assert(data == (0x08 | NRF24_CFG_PWR_UP_MASK));
+        data &= ~NRF24_CFG_PWR_UP_MASK;
+        nrf24_write_config(data);
+
+        uint64_t tx_addr = 0x0;
+        nrf24_read_TX_ADDR((NRF24_size_t)sizeof(tx_addr), (uint8_t *)&tx_addr);
+        assert(tx_addr == 0xE7E7E7E7E7);
+        tx_addr = 0x7E7E7E7E7E;
+        nrf24_write_TX_ADDR((NRF24_size_t)sizeof(tx_addr), (uint8_t *)&tx_addr);
+        tx_addr = 0x0;
+        nrf24_read_TX_ADDR((NRF24_size_t)sizeof(tx_addr), (uint8_t *)&tx_addr);
+        uint64_t diff = tx_addr - 0x7E7E7E7E7E;
+        assert(diff == 0);
+        tx_addr = 0xE7E7E7E7E7;
+        nrf24_write_TX_ADDR((NRF24_size_t)sizeof(tx_addr), (uint8_t *)&tx_addr);
 #endif
 
         analyze_logger_data_event(&data_summary, item);

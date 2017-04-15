@@ -128,14 +128,15 @@ struct spi_peripheral_t {
        Pointer to the function for polling to transmit and receive N bytes from
        the specified communication peripheral.
 
+       Note: send and receive data are handled through the spi peripheral
+       transmit_buffer and receive_buffer.
+
        \param[in] *this - pointer to the communication peripheral
-       \param[in, out] *byte - pointer to location of data to send and receive
        \param[in] num_bytes - number of bytes to transmit and receive
 
        \return status of the operation
     */
     SPIStatus (*polling_transmit_receive_n_bytes)(spi_peripheral_t volatile *this,
-            uint8_t *bytes,
             const size_t num_bytes);
 
     /**

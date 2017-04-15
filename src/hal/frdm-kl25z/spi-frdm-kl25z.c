@@ -201,7 +201,7 @@ SPIStatus frdm_kl25z_spi_polling_transmit_receive_byte(
 }
 
 SPIStatus frdm_kl25z_spi_polling_transmit_receive_n_bytes(
-    spi_peripheral_t volatile *this, uint8_t *byte, const size_t num_bytes)
+    spi_peripheral_t volatile *this, const size_t num_bytes)
 {
     SPIStatus status = SPI_Status_Success;
     // preserve the current state so we can restore it at the end.
@@ -211,8 +211,11 @@ SPIStatus frdm_kl25z_spi_polling_transmit_receive_n_bytes(
     // set CS active low.
     GPIOD->PCOR |= (1 << this->CS_pin);
 
+    uint8_t byte;
     for (size_t i = 0; i < num_bytes; i++) {
-        this->polling_transmit_receive_byte(this, (byte + i));
+        CircularBufferRemoveItem(this->transmit_buffer, &byte);
+        this->polling_transmit_receive_byte(this, &byte);
+        CircularBufferAddItem(this->receive_buffer, &byte);
     }
 
     // restore original state of the chip select pin
