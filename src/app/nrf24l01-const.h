@@ -89,6 +89,20 @@ static const NRF24_register NRF24_REG_RF_CH = 0x05;
    RF_SETUP: RF Setup Register
  */
 static const NRF24_register NRF24_REG_RF_SETUP = 0x06;
+static const NRF24_mask NRF24_REG_RF_SETUP_RF_PWR_SHIFT = 1u;
+static const NRF24_mask NRF24_REG_RF_SETUP_RF_PWR_MASK = 0x06u;
+#define NRF24_REG_RF_SETUP_RF_PWR(x) ((x << NRF24_REG_RF_SETUP_RF_PWR_SHIFT) & NRF24_REG_RF_SETUP_RF_PWR_MASK)
+
+static const NRF24_mask NRF24_REG_RF_SETUP_RF_PWR_18db = 0x00;
+static const NRF24_mask NRF24_REG_RF_SETUP_RF_PWR_12db = 0x02;
+static const NRF24_mask NRF24_REG_RF_SETUP_RF_PWR_06db = 0x04;
+static const NRF24_mask NRF24_REG_RF_SETUP_RF_PWR_00db = 0x06;
+
+static const NRF24_mask NRF24_REG_RF_SETUP_RF_DR_SHIFT = 3u;
+static const NRF24_mask NRF24_REG_RF_SETUP_RF_DR_MASK = 0x08u;
+#define NRF24_REG_RF_SETUP_RF_DR(x) ((x << NRF24_REG_RF_SETUP_RF_DR_SHIFT) & NRF24_REG_RF_SETUP_RF_DR_MASK)
+static const NRF24_mask NRF24_REG_RF_SETUP_RF_DR_1Mbps = 0x00;
+static const NRF24_mask NRF24_REG_RF_SETUP_RF_DR_2Mbps = 0x08;
 
 /**
    STATUS: Status Register (In parallel to the SPI command word applied on the

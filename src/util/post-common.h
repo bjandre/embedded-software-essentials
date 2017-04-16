@@ -23,6 +23,7 @@
 typedef enum _POSTStatus {
     POST_PASS, //!< test passed
     POST_FAIL, //!< test failed
+    POST_SKIPPED, //!< test skipped
     POST_ALL_SKIPPED, //!< all tests skipped
 } POSTstatus;
 

@@ -10,17 +10,28 @@
 
 #include <stdint.h>
 
+#include "platform-defs.h"
+#if (PLATFORM == PLATFORM_FRDM)
+#include "gpio-frdm-kl25z.h"
+#endif
+
+#include "log-item.h"
+
 #include "post-common.h"
 #include "post.h"
 
 #include "post-profiler.h"
 #include "post-dma.h"
+#include "post-nrf24l01.h"
 
 
 typedef struct _suite_status {
     size_t num_tests_run;
     size_t num_tests_pass;
+    size_t num_tests_skipped;
 } suite_status_t;
+
+#define POST_TEST(item,test,status) run_test(item, &test, #test, sizeof(#test), &status)
 
 typedef POSTstatus (*post_test)(void);
 
@@ -32,47 +43,60 @@ void run_test(log_item_t *item, post_test test, const char *name,
 {
     suite_status->num_tests_run++;
     POSTstatus status = (*test)();
-    if (POST_PASS != status) {
+    if (POST_SKIPPED == status) {
+        suite_status->num_tests_skipped++;
+    } else if (POST_PASS == status) {
+        suite_status->num_tests_pass++;
+    } else { // (POST_PASS != status)
         UpdateLogItem(item, POST_ERROR, name_size, (uint8_t *)name);
         log_item(item);
-    } else {
-        suite_status->num_tests_pass++;
     }
 }
 
 void power_on_self_tests(log_item_t *item)
 {
+#if (PLATFORM == PLATFORM_FRDM)
+	frdm_kl25z_toggle_green_led();
+#endif
     UpdateLogItemNoPayload(item, POST_START);
     log_item(item);
 
     suite_status_t suite_status;
     suite_status.num_tests_run = 0;
     suite_status.num_tests_pass = 0;
+    suite_status.num_tests_skipped = 0;
 
-    {
-        const char name[] = "post_profiler_nop";
-        run_test(item, &post_profiler_nop, name, sizeof(name), &suite_status);
-    }
+    POST_TEST(item, post_profiler_nop, suite_status);
 
-    {
-        const char name[] = "post_dma_memmove_1byte";
-        run_test(item, &post_dma_memmove_1byte, name, sizeof(name), &suite_status);
-    }
-    {
-        const char name[] = "post_dma_memmove_4byte";
-        run_test(item, &post_dma_memmove_4byte, name, sizeof(name), &suite_status);
-    }
-    {
-        const char name[] = "post_dma_memset_1byte";
-        run_test(item, &post_dma_memset_1byte, name, sizeof(name), &suite_status);
-    }
-    {
-        const char name[] = "post_dma_memset_4byte";
-        run_test(item, &post_dma_memset_4byte, name, sizeof(name), &suite_status);
-    }
+    POST_TEST(item, post_dma_memmove_1byte, suite_status);
+    POST_TEST(item, post_dma_memmove_4byte, suite_status);
+    POST_TEST(item, post_dma_memset_1byte, suite_status);
+    POST_TEST(item, post_dma_memset_4byte, suite_status);
 
-    UpdateLogItem(item, POST_COMPLETE, sizeof(size_t),
+    POST_TEST(item, post_nrf24_read_status, suite_status);
+    POST_TEST(item, post_nrf24_read_write_config, suite_status);
+    POST_TEST(item, post_nrf24_read_write_rf_setup, suite_status);
+    POST_TEST(item, post_nrf24_read_write_rf_channel, suite_status);
+    POST_TEST(item, post_nrf24_read_write_tx_addr, suite_status);
+    POST_TEST(item, post_nrf24_read_fifo_status, suite_status);
+    POST_TEST(item, post_nrf24_flush_tx_fifo, suite_status);
+    POST_TEST(item, post_nrf24_flush_rx_fifo, suite_status);
+
+    UpdateLogItem(item, POST_NUM_TESTS_RUN, sizeof(size_t),
+                  &suite_status.num_tests_run);
+    log_item(item);
+
+    UpdateLogItem(item, POST_NUM_TESTS_SKIPPED, sizeof(size_t),
+                  &suite_status.num_tests_skipped);
+    log_item(item);
+
+    UpdateLogItem(item, POST_NUM_TESTS_PASSED, sizeof(size_t),
                   &suite_status.num_tests_pass);
     log_item(item);
-    // FIXME(bja, 2017-04) log num tests passed and num tests run!
+
+    UpdateLogItemNoPayload(item, POST_COMPLETE);
+    log_item(item);
+#if (PLATFORM == PLATFORM_FRDM)
+	frdm_kl25z_toggle_green_led();
+#endif
 }

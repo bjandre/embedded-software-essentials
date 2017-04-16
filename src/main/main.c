@@ -81,6 +81,12 @@ int main(int argc, char **argv)
 
     initialize_profiler();
 
+#if (PLATFORM == PLATFORM_FRDM)
+    // FIXME(bja, 2017-03) need to abstract out for host!
+    size_t num_bytes_buffer = 128;
+    nrf24_initialize(num_bytes_buffer);
+#endif
+
     power_on_self_tests(item);
 
     /*
@@ -103,16 +109,6 @@ int main(int argc, char **argv)
     set_global_async_heartbeat_timestamp(testing_timestamp);
 #endif
 
-#define DEBUG_SPI 1
-#if DEBUG_SPI && (PLATFORM == PLATFORM_FRDM)
-    // FIXME(bja, 2017-03) need to abstract out for host!
-    size_t num_bytes_buffer = 128;
-    nrf24_initialize(num_bytes_buffer);
-    uint8_t data = 0x00;
-    nrf24_read_status(&data);
-    assert(data == 0x0E);
-#endif
-
     while (1) { /* main event loop */
         __asm("NOP"); /* breakpoint to stop while looping */
         heartbeat(item);
@@ -120,35 +116,6 @@ int main(int argc, char **argv)
 #ifdef DEBUG_UART
         uint8_t tx_or_rx = 1;
         debug_uart(tx_or_rx, buffer, buffer_size);
-#endif
-
-#if DEBUG_SPI && (PLATFORM == PLATFORM_FRDM)
-        // FIXME(bja, 2017-03) need to abstract out for host!
-        frdm_kl25z_toggle_green_led();
-        data = 0x00;
-        nrf24_read_status(&data);
-        assert(data == 0x0E);
-        nrf24_read_config(&data);
-        assert(data == 0x08);
-        data |= NRF24_CFG_PWR_UP_MASK;
-        nrf24_write_config(data);
-        data = 0x00;
-        nrf24_read_config(&data);
-        assert(data == (0x08 | NRF24_CFG_PWR_UP_MASK));
-        data &= ~NRF24_CFG_PWR_UP_MASK;
-        nrf24_write_config(data);
-
-        uint64_t tx_addr = 0x0;
-        nrf24_read_TX_ADDR((NRF24_size_t)sizeof(tx_addr), (uint8_t *)&tx_addr);
-        assert(tx_addr == 0xE7E7E7E7E7);
-        tx_addr = 0x7E7E7E7E7E;
-        nrf24_write_TX_ADDR((NRF24_size_t)sizeof(tx_addr), (uint8_t *)&tx_addr);
-        tx_addr = 0x0;
-        nrf24_read_TX_ADDR((NRF24_size_t)sizeof(tx_addr), (uint8_t *)&tx_addr);
-        uint64_t diff = tx_addr - 0x7E7E7E7E7E;
-        assert(diff == 0);
-        tx_addr = 0xE7E7E7E7E7;
-        nrf24_write_TX_ADDR((NRF24_size_t)sizeof(tx_addr), (uint8_t *)&tx_addr);
 #endif
 
         analyze_logger_data_event(&data_summary, item);

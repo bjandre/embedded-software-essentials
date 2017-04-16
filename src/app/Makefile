@@ -17,6 +17,7 @@ LIB = \
 
 SRCS = \
 	nrf24l01.c \
+	post-nrf24l01.c \
 	memory-profile.c \
 	analyze-data.c \
 	heartbeat.c \

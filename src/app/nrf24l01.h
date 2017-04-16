@@ -81,13 +81,13 @@ void nrf24_read_rf_setup(uint8_t *setup);
 void nrf24_write_rf_setup(uint8_t setup);
 
 /**
-   Reads RF_SETUP register
+   Reads RF_CH register
    \return contents of the RF_SETUP register
 */
 void nrf24_read_rf_ch(uint8_t *channel);
 
 /**
-   Writes to the RF_SETUP register
+   Writes to the RF_CH register
    \param[in] channel to use
 */
 void nrf24_write_rf_ch(uint8_t channel);
