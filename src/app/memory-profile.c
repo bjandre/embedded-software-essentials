@@ -76,6 +76,7 @@ void profile_memmove(log_item_t *item, uint32_t num_bytes)
                   &name_memmove_stdlib);
     log_item(item);
 
+    total_clocks = 0;
     const char name_memmove_cpu[] = "memmove_cpu";
     UpdateLogItem(item, PROFILING_START, sizeof(name_memmove_cpu),
                   &name_memmove_cpu);
@@ -92,6 +93,7 @@ void profile_memmove(log_item_t *item, uint32_t num_bytes)
     UpdateLogItem(item, PROFILING_END, sizeof(name_memmove_cpu), &name_memmove_cpu);
     log_item(item);
 
+    total_clocks = 0;
     const char name_memmove_dma[] = "memmove_dma";
     UpdateLogItem(item, PROFILING_START, sizeof(name_memmove_dma),
                   &name_memmove_dma);
@@ -145,6 +147,7 @@ void profile_memset(log_item_t *item, uint32_t num_bytes)
                   &name_memset_stdlib);
     log_item(item);
 
+    total_clocks = 0;
     const char name_memset_cpu[] = "memset_cpu";
     UpdateLogItem(item, PROFILING_START, sizeof(name_memset_cpu), &name_memset_cpu);
     log_item(item);
@@ -160,6 +163,7 @@ void profile_memset(log_item_t *item, uint32_t num_bytes)
     UpdateLogItem(item, PROFILING_END, sizeof(name_memset_cpu), &name_memset_cpu);
     log_item(item);
 
+    total_clocks = 0;
     const char name_memset_dma[] = "memset_dma";
     UpdateLogItem(item, PROFILING_START, sizeof(name_memset_dma), &name_memset_dma);
     log_item(item);
