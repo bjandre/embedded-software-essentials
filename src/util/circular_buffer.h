@@ -14,6 +14,8 @@
 #include <stdbool.h>
 #include <stddef.h>
 
+#include "compiler-compat.h"
+
 /**
    \file circular_buffer.h
 
@@ -34,7 +36,16 @@
 
 */
 
-typedef struct CircularBuffer_t CircularBuffer_t;
+typedef struct CircularBuffer_t {
+    void *buffer; // Pointer to original memory location for the buffer
+    void *head; // Pointer to Head
+    void *tail; // Pointer to Tail
+    size_t bytes_used; // Current count of items stored in the buffer
+    size_t num_items; // total number of items that can be stored
+    size_t bytes_per_item; // size of each item in bytes
+    size_t num_bytes_allocated; // Allocated size of the buffer
+    void *buffer_end; // End of the allocated buffer.
+} CircularBuffer_t;
 
 
 /**
@@ -84,8 +95,21 @@ CircularBufferStatus CircularBufferRemoveItem(CircularBuffer_t volatile *cb,
             this returns CircularBuffer_Success or CircularBuffer_Null. CircularBuffer_Is_Full only returned when
             trying to add an item to a full buffer.
  */
-CircularBufferStatus CircularBufferIsFull(CircularBuffer_t volatile *cb,
-        bool *is_full);
+__attribute__( ( always_inline ) ) __STATIC_INLINE CircularBufferStatus
+CircularBufferIsFull(CircularBuffer_t volatile *cb,
+                     bool *is_full)
+{
+    CircularBufferStatus status = CircularBuffer_Success;
+    if (NULL == cb || NULL == is_full) {
+        status = CircularBuffer_Null_Pointer;
+    } else {
+        *is_full = false;
+        if (cb->bytes_used > cb->num_bytes_allocated - cb->bytes_per_item) {
+            *is_full = true;
+        }
+    }
+    return status;
+}
 
 
 /**
@@ -99,8 +123,22 @@ CircularBufferStatus CircularBufferIsFull(CircularBuffer_t volatile *cb,
             this returns CircularBuffer_Success or CircularBuffer_Null. CircularBuffer_Empyt only returned when
             trying to remove an item from an empty buffer.
  */
-CircularBufferStatus CircularBufferIsEmpty(CircularBuffer_t volatile *cb,
-        bool *is_empty);
+__attribute__( ( always_inline ) ) __STATIC_INLINE CircularBufferStatus
+CircularBufferIsEmpty(CircularBuffer_t volatile *cb,
+                      bool *is_empty)
+{
+    CircularBufferStatus status = CircularBuffer_Success;
+    if (NULL == cb || NULL == is_empty) {
+        status = CircularBuffer_Null_Pointer;
+    } else {
+        *is_empty = false;
+        if (cb->bytes_used < cb->bytes_per_item) {
+            *is_empty = true;
+        }
+    }
+    return status;
+}
+
 
 
 /**
