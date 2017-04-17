@@ -247,6 +247,10 @@ SPIStatus frdm_kl25z_spi_receive_n_bytes(spi_peripheral_t *this, uint8_t *byte,
 SPIStatus frdm_kl25z_spi_flush_transmit_buffer(spi_peripheral_t *this)
 {
     SPIStatus status = SPI_Status_Success;
+    bool transmit_buffer_empty = false;
+    while (!transmit_buffer_empty) {
+        transmit_buffer_empty = SPI1->S & SPI_S_SPTEF(1);
+    }
     return status;
 }
 

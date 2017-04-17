@@ -84,6 +84,8 @@ static const NRF24_register NRF24_REG_SETUP_RETR = 0x04;
    RF_CH: RF Channel
 */
 static const NRF24_register NRF24_REG_RF_CH = 0x05;
+static const NRF24_mask NRF24_REG_RF_CH_RF_CH_SHIFT = 0u;
+static const NRF24_mask NRF24_REG_RF_CH_RF_CH_MASK = 0x7Fu;
 
 /**
    RF_SETUP: RF Setup Register
@@ -109,6 +111,16 @@ static const NRF24_mask NRF24_REG_RF_SETUP_RF_DR_2Mbps = 0x08;
    MOSI pin, the STATUS reg- ister is shifted serially out on the MISO pin)
  */
 static const NRF24_register NRF24_REG_STATUS = 0x07;
+static const NRF24_mask NRF24_REG_STATUS_TX_FULL_SHIFT = 0u;
+static const NRF24_mask NRF24_REG_STATUS_TX_FULL_MASK = 0x01u;
+static const NRF24_mask NRF24_REG_STATUS_RX_P_NO_SHIFT = 1u;
+static const NRF24_mask NRF24_REG_STATUS_RX_P_NO_MASK = 0x0Eu;
+static const NRF24_mask NRF24_REG_STATUS_MAX_RT_SHIFT = 4u;
+static const NRF24_mask NRF24_REG_STATUS_MAX_RT_MASK = 0x10u;
+static const NRF24_mask NRF24_REG_STATUS_TX_DS_SHIFT = 5u;
+static const NRF24_mask NRF24_REG_STATUS_TX_DS_MASK = 0x20u;
+static const NRF24_mask NRF24_REG_STATUS_RX_DR_SHIFT = 6u;
+static const NRF24_mask NRF24_REG_STATUS_RX_DR_MASK = 0x40u;
 
 /**
    TX FIFO full flag.
@@ -211,6 +223,18 @@ static const NRF24_register NRF24_REG_RX_PW_P5 = 0x16;
    FIFO_STATUS: FIFO Status Register
  */
 static const NRF24_register NRF24_REG_FIFO_STATUS = 0x17;
+static const NRF24_mask NRF24_REG_FIFO_STATUS_RX_EMPTY_SHIFT = 0u;
+static const NRF24_mask NRF24_REG_FIFO_STATUS_RX_EMPTY_MASK = 0x01u;
+static const NRF24_mask NRF24_REG_FIFO_STATUS_RX_FULL_SHIFT = 1u;
+static const NRF24_mask NRF24_REG_FIFO_STATUS_RX_FULL_MASK = 0x02u;
+static const NRF24_mask NRF24_REG_FIFO_STATUS_TX_EMPTY_SHIFT = 4u;
+static const NRF24_mask NRF24_REG_FIFO_STATUS_TX_EMPTY_MASK = 0x10u;
+static const NRF24_mask NRF24_REG_FIFO_STATUS_TX_FULL_SHIFT = 5u;
+static const NRF24_mask NRF24_REG_FIFO_STATUS_TX_FULL_MASK = 0x20u;
+static const NRF24_mask NRF24_REG_FIFO_STATUS_TX_REUSE_SHIFT = 6u;
+static const NRF24_mask NRF24_REG_FIFO_STATUS_TX_REUSE_MASK = 0x40u;
+
+
 /**
    DYNPD: Enable dynamic payload length
  */

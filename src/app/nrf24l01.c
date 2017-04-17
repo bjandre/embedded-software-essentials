@@ -56,6 +56,39 @@ __STATIC_INLINE void nrf24_chip_deactivate(void)
     }
 }
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-function"
+/**
+   Update GPIO pin to activate spi chip select for the nrf24l01
+ */
+__STATIC_INLINE void nrf24_spi_chip_select(void)
+{
+    /* active low */
+    {
+        uint32_t interrupt_state = start_critical_region();
+#if (PLATFORM == PLATFORM_FRDM)
+        GPIOD->PCOR |= (1 << global_async_data.nrf24.spi.CS_pin);
+#endif
+        end_critical_region(interrupt_state);
+    }
+}
+
+/**
+   Update GPIO pin to unset the spi chip select pin for nrf24l01
+ */
+__STATIC_INLINE void nrf24_chip_spi_unselect(void)
+{
+    /* inactive high */
+    {
+        uint32_t interrupt_state = start_critical_region();
+#if (PLATFORM == PLATFORM_FRDM)
+        GPIOD->PSOR |= (1 << global_async_data.nrf24.spi.CS_pin);
+#endif
+        end_critical_region(interrupt_state);
+    }
+}
+#pragma GCC diagnostic pop
+
 /**
    \param[in] register to read
    \return read command for the specified register
