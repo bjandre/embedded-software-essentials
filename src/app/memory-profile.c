@@ -39,7 +39,7 @@ void memory_profile(log_item_t *item)
     uint32_t lengths[NUM_LENGTHS] = {10, 100, 1000, 5000};
 #undef NUM_LENGTHS
 
-    for (int i = 0; i < num_lengths; i++) {
+    for (uint8_t i = 0; i < num_lengths; i++) {
         profile_memmove(item, lengths[i]);
         profile_memset(item, lengths[i]);
     }
@@ -55,7 +55,7 @@ void profile_memmove(log_item_t *item, uint32_t num_bytes)
     profiling_timer_data_t start_time, end_time;
     uint32_t total_clocks;
     uint32_t average_clocks;
-
+    size_t i;
     total_clocks = 0;
     average_clocks = 0;
 
@@ -63,7 +63,7 @@ void profile_memmove(log_item_t *item, uint32_t num_bytes)
     UpdateLogItem(item, PROFILING_START, sizeof(name_memmove_stdlib),
                   &name_memmove_stdlib);
     log_item(item);
-    for (uint8_t i = 0; i < num_trials; i++) {
+    for (i = 0; i < num_trials; i++) {
         get_timer(&start_time);
         memmove(destination, source, num_bytes);
         get_timer(&end_time);
@@ -80,7 +80,7 @@ void profile_memmove(log_item_t *item, uint32_t num_bytes)
     UpdateLogItem(item, PROFILING_START, sizeof(name_memmove_cpu),
                   &name_memmove_cpu);
     log_item(item);
-    for (uint8_t i = 0; i < num_trials; i++) {
+    for (i = 0; i < num_trials; i++) {
         get_timer(&start_time);
         memmove_cpu(destination, source, num_bytes);
         get_timer(&end_time);
@@ -96,11 +96,11 @@ void profile_memmove(log_item_t *item, uint32_t num_bytes)
     UpdateLogItem(item, PROFILING_START, sizeof(name_memmove_dma),
                   &name_memmove_dma);
     log_item(item);
-    for (uint8_t i = 0; i < num_trials; i++) {
+    for (i = 0; i < num_trials; i++) {
         bool dma_complete = false;
         get_timer(&start_time);
         memmove_dma(destination, source, num_bytes, sizeof(uint8_t));
-        // wait for dma to finish and set end time in interrupt!
+        /* wait for dma to finish and set end time in interrupt! */
         while (!dma_complete) {
             dma_complete = get_global_async_dma_complete();
         }
@@ -124,7 +124,7 @@ void profile_memset(log_item_t *item, uint32_t num_bytes)
     profiling_timer_data_t start_time, end_time;
     uint32_t total_clocks;
     uint32_t average_clocks;
-
+    size_t i;
     total_clocks = 0;
     average_clocks = 0;
 
@@ -132,7 +132,7 @@ void profile_memset(log_item_t *item, uint32_t num_bytes)
     UpdateLogItem(item, PROFILING_START, sizeof(name_memset_stdlib),
                   &name_memset_stdlib);
     log_item(item);
-    for (uint8_t i = 0; i < num_trials; i++) {
+    for (i = 0; i < num_trials; i++) {
         get_timer(&start_time);
         memset(destination, source, num_bytes);
         get_timer(&end_time);
@@ -148,7 +148,7 @@ void profile_memset(log_item_t *item, uint32_t num_bytes)
     const char name_memset_cpu[] = "memset_cpu";
     UpdateLogItem(item, PROFILING_START, sizeof(name_memset_cpu), &name_memset_cpu);
     log_item(item);
-    for (uint8_t i = 0; i < num_trials; i++) {
+    for (i = 0; i < num_trials; i++) {
         get_timer(&start_time);
         memset_cpu(destination, &source, num_bytes);
         get_timer(&end_time);
@@ -163,11 +163,11 @@ void profile_memset(log_item_t *item, uint32_t num_bytes)
     const char name_memset_dma[] = "memset_dma";
     UpdateLogItem(item, PROFILING_START, sizeof(name_memset_dma), &name_memset_dma);
     log_item(item);
-    for (uint8_t i = 0; i < num_trials; i++) {
+    for (i = 0; i < num_trials; i++) {
         bool dma_complete = false;
         get_timer(&start_time);
         memset_dma(destination, &source, num_bytes, sizeof(uint8_t));
-        // wait for dma to finish and set end time in interrupt!
+        /* wait for dma to finish and set end time in interrupt! */
         while (!dma_complete) {
             dma_complete = get_global_async_dma_complete();
         }

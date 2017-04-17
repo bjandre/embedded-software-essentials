@@ -171,4 +171,4 @@ struct spi_peripheral_t {
 };
 
 
-#endif // ESE_HAL_SPI_PERIPHERAL_H_
+#endif/* ESE_HAL_SPI_PERIPHERAL_H_ */

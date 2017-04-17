@@ -56,8 +56,8 @@ SPIStatus SPICreate(spi_peripheral_t volatile *spi,
             SetupSPInRF24(spi);
             break;
         default:
-            // FIXME(bja, 2017-04) Additional spi peripheral functionality not
-            // supported at this time.
+            /* FIXME(bja, 2017-04) Additional spi peripheral functionality not */
+            /* supported at this time. */
             abort();
         }
 
@@ -86,7 +86,7 @@ SPIStatus SetupSPInRF24(spi_peripheral_t volatile *spi)
 {
     SPIStatus status = SPI_Status_Success;
 #if (PLATFORM == PLATFORM_HOST) || (PLATFORM == PLATFORM_BBB)
-    // FIXME(bja, 2017-04) generalize the uart interface to a generic host spi.
+    /* FIXME(bja, 2017-04) generalize the uart interface to a generic host spi. */
     abort();
 #elif PLATFORM == PLATFORM_FRDM
     spi->initialize = &frdm_kl25z_spi_initialize;

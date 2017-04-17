@@ -28,4 +28,4 @@
  */
 void heartbeat(log_item_t *item);
 
-#endif // ESE_APP_HEARTBEAT_H_
+#endif/* ESE_APP_HEARTBEAT_H_ */

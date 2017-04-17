@@ -23,27 +23,27 @@ bool is_whitespace(int8_t byte);
 int8_t *my_itoa(int8_t *string, int32_t data, int32_t base)
 {
     if (base > 16) {
-        // don't support anything greater than hex
+        /* don't support anything greater than hex */
         return string;
     }
     if (NULL == string) {
         return string;
     }
 
-    // offset for ascii characters
+    /* offset for ascii characters */
     int8_t ascii_offset = '0';
-    // offset for ascii  hex characters > 9
+    /* offset for ascii  hex characters > 9 */
     int8_t ascii_offset_hex = 'a' - 0x0a;
 
     uint32_t length = 0;
     int8_t *position = string;
 
-    // insert the null terminator so it will be at the end when reversed
+    /* insert the null terminator so it will be at the end when reversed */
     *position = '\0';
     position++;
     length++;
 
-    // record that the number was negative, then negate it to be positive.
+    /* record that the number was negative, then negate it to be positive. */
     bool negative = false;
     if (data < 0) {
         negative = true;
@@ -90,7 +90,7 @@ int8_t *my_itoa(int8_t *string, int32_t data, int32_t base)
 
 bool is_whitespace(int8_t byte)
 {
-    // check to see if a byte is an ascii whitespace character.
+    /* check to see if a byte is an ascii whitespace character. */
     bool is_space = false;
     switch (byte) {
     case ' ':
@@ -107,22 +107,22 @@ bool is_whitespace(int8_t byte)
 
 int32_t my_atoi(int8_t *string)
 {
-    // assumes that digits are stored in the string such that the most
-    // siginificant digit is at the lowest index in the string, e.g.
-    // 1002 = str = {' ', ' ', '1', '0', '0', '2', '\0'}
-    // only handles decimal strings.
+    /* assumes that digits are stored in the string such that the most */
+    /* siginificant digit is at the lowest index in the string, e.g. */
+    /* 1002 = str = {' ', ' ', '1', '0', '0', '2', '\0'} */
+    /* only handles decimal strings. */
     if (NULL == string) {
         return DataStatus_Success;
     }
 
     int8_t *position = string;
 
-    // strip leading whitespace
+    /* strip leading whitespace */
     while (is_whitespace(*position)) {
         position++;
     }
 
-    // check the sign
+    /* check the sign */
     uint32_t sign = 1;
     if (*position == '-') {
         sign = -1;
@@ -131,8 +131,8 @@ int32_t my_atoi(int8_t *string)
         position++;
     }
 
-    // add the digits. every time we add a digit, we need to shift the previous
-    // value by a single decimal digit.
+    /* add the digits. every time we add a digit, we need to shift the previous */
+    /* value by a single decimal digit. */
     int32_t value = 0;
     while (*position >= '0' && *position <= '9') {
         value = 10 * value + (*position - '0');
@@ -159,17 +159,17 @@ int32_t my_atoi(int8_t *string)
  */
 DataStatus convert_endian32(uint32_t *data, uint32_t length)
 {
-    // big endian - most significant byte is at the lowest memory location.
-    // little endian - most significant byte is at the lowest memory location.
+    /* big endian - most significant byte is at the lowest memory location. */
+    /* little endian - most significant byte is at the lowest memory location. */
 
-    // conversion from big to little and little to big is the same, just swap
-    // the order of bytes within each integer....
+    /* conversion from big to little and little to big is the same, just swap */
+    /* the order of bytes within each integer.... */
     if (NULL == data) {
         return DataStatus_Null_Pointer;
     }
     size_t num_bytes = sizeof(*data);
     for (uint32_t i = 0; i < length; i++) {
-        // each uint32 object is a chunk of num_bytes that get reversed.
+        /* each uint32 object is a chunk of num_bytes that get reversed. */
         uint8_t *object = (uint8_t *)(data + i);
         MemStatus error = my_reverse(object, num_bytes);
         if (MemStatus_Success != error) {
@@ -191,7 +191,7 @@ DataStatus little_to_big32(uint32_t *data, uint32_t length)
 
 void print_memory(uint8_t *start, uint32_t length)
 {
-    // print a block of memory in hex.
+    /* print a block of memory in hex. */
     if (NULL == start) {
         return;
     }

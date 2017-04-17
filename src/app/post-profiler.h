@@ -18,4 +18,4 @@
  */
 POSTstatus post_profiler_nop();
 
-#endif // ESE_APP_POST_PROFILER_H_
+#endif/* ESE_APP_POST_PROFILER_H_ */

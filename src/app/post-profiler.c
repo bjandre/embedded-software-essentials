@@ -16,13 +16,14 @@
 #include "post-common.h"
 #include "post-profiler.h"
 
-// Assign some reasonable platform specific limits to ensure things are working sanely.
+/* Assign some reasonable platform specific limits to ensure things are working
+ * sanely. */
 #include "platform-defs.h"
 #if (PLATFORM == PLATFORM_FRDM)
 static const uint32_t profile_time_min =
-    20;  // lower bound for optimized builds, typical about 38 debug, 22 optimized?
+    20; /* lower bound for optimized builds, typical about 38 debug, 22 optimized? */
 static const uint32_t profile_time_max =
-    510;  // upper bound for debug builds, typical about 500?
+    510; /* upper bound for debug builds, typical about 500? */
 #else
 static const uint32_t profile_time_min = 1;
 static const uint32_t profile_time_max = 5;

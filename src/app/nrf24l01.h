@@ -120,4 +120,4 @@ void nrf24_flush_tx_fifo(void);
 */
 void nrf24_flush_rx_fifo(void);
 
-#endif // ESE_APP_NRF24L01_H_
+#endif/* ESE_APP_NRF24L01_H_ */

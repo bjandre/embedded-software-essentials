@@ -24,9 +24,9 @@
    All data utilities return the status of the operation.
  */
 typedef enum DataUtilsStatus {
-    DataStatus_Success, //!< operation successful
-    DataStatus_Null_Pointer, //!< received null pointer error
-    DataStatus_Unknown_Error, //!< unknown error
+    DataStatus_Success,/*!< operation successful */
+    DataStatus_Null_Pointer,/*!< received null pointer error */
+    DataStatus_Unknown_Error,/*!< unknown error */
 } DataStatus;
 
 /**

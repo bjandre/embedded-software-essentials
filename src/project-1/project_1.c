@@ -23,14 +23,14 @@ void test_data1(uint8_t *data, uint32_t size);
 void test_data2(uint8_t *data, uint32_t size);
 void test_memory(uint8_t *data, uint32_t size);
 
-// FIXME(bja, 2017-02-11) Moving the definition of set_size as a constant into
-// project_1_report results in a runtime failure when cross compiling for the
-// BBB with a debug build. Cross compiling a release build is fine. Both release
-// and native builds on the BBB are fine. The runtime failure is that the
-// constant changes value from 32 to 17 between the last C instruction of
-// initialize_set_1 and the creation of set_2 in main....? Some sort of stack
-// corruption? Can't see anything useful in the cross compiled executable when
-// running it in gdb.
+/* FIXME(bja, 2017-02-11) Moving the definition of set_size as a constant into
+   project_1_report results in a runtime failure when cross compiling for the
+   BBB with a debug build. Cross compiling a release build is fine. Both release
+   and native builds on the BBB are fine. The runtime failure is that the
+   constant changes value from 32 to 17 between the last C instruction of
+   initialize_set_1 and the creation of set_2 in main....? Some sort of stack
+   corruption? Can't see anything useful in the cross compiled executable when
+   running it in gdb. */
 uint32_t const set_size = 32;
 
 /*
@@ -79,7 +79,7 @@ void test_data1(uint8_t *data, uint32_t size)
 {
     printf("\ntest_data_1 :\n  ");
 
-    // interpret the data as a bunch of 32bit, 4byte unsigned integers
+    /* interpret the data as a bunch of 32bit, 4byte unsigned integers */
     assert(size % sizeof(uint32_t) == 0);
     uint32_t *uint32_ptr = (uint32_t *)data;
 
@@ -117,8 +117,8 @@ void test_data2(uint8_t *data, uint32_t size)
     int8_t string[size];
     const int32_t base = 10;
 
-    // interpret the data as 32bit, 4 byte signed integers. Loop over the 4 byte
-    // ints for round trip conversion to and from a string.
+    /* interpret the data as 32bit, 4 byte signed integers. Loop over the 4 byte
+       ints for round trip conversion to and from a string. */
     assert(size % sizeof(uint32_t) == 0);
     uint32_t num_ints = size / sizeof(int32_t);
     int32_t *data_ptr = (int32_t *)data;

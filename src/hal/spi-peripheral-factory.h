@@ -49,4 +49,4 @@ SPIStatus SPICreate(spi_peripheral_t volatile *spi,
  */
 void SPIDestroy(spi_peripheral_t volatile *spi);
 
-#endif // ESE_HAL_SPI_PERIPHERAL_FACTORY_H_
+#endif/* ESE_HAL_SPI_PERIPHERAL_FACTORY_H_ */

@@ -39,9 +39,9 @@ BinaryLoggerStatus logger_polling_receive(logger_size_t num_bytes);
 
 extern volatile async_data_t global_async_data;
 
-static const uint32_t debugger_baud = 115200u; //!< UART debugger baud
+static const uint32_t debugger_baud = 115200u;/*!< UART debugger baud */
 static const logger_size_t bytes_per_item = sizeof(
-            uint8_t); //!< number of bytes per sent via logger
+            uint8_t);/*!< number of bytes per sent via logger */
 
 BinaryLoggerStatus BinaryLoggerCreate(logger_size_t num_bytes)
 {
@@ -99,7 +99,7 @@ BinaryLoggerStatus log_data(logger_size_t num_bytes, uint8_t *buffer)
     for (logger_size_t n = 0; n < num_bytes; n++) {
         bool is_full;
         do {
-            // poll the transmit buffer to see if in can accept data.
+            /* poll the transmit buffer to see if in can accept data. */
             {
                 interrupt_state = start_critical_region();
                 cb_status = CircularBufferIsFull(global_async_data.logger->transmit_buffer,
@@ -117,15 +117,15 @@ BinaryLoggerStatus log_data(logger_size_t num_bytes, uint8_t *buffer)
             abort();
         }
 
-        // Only use interrupts on platforms that support it and it was requested in
-        // the build. Otherwise use polling.
+        /* Only use interrupts on platforms that support it and it was requested in */
+        /* the build. Otherwise use polling. */
 #if (PLATFORM == PLATFORM_FRDM) && (LOGGER_ALGORITHM == LOGGER_INTERRUPTS)
         {
             interrupt_state = start_critical_region();
             global_async_data.logger->comm.begin_async_transmit();
             end_critical_region(interrupt_state);
         }
-#else // LOGGER_ALGORITHM == LOGGER_POLLING
+#else/* LOGGER_ALGORITHM == LOGGER_POLLING */
         logger_polling_transmit_byte();
 #endif
     }
@@ -135,7 +135,7 @@ BinaryLoggerStatus log_data(logger_size_t num_bytes, uint8_t *buffer)
 
 void logger_polling_transmit_byte(void)
 {
-    // no interrupts, just write all available data
+    /* no interrupts, just write all available data */
     CircularBufferStatus cb_status;
     bool is_empty;
     uint32_t interrupt_state;
@@ -211,12 +211,12 @@ BinaryLoggerStatus log_receive_data(logger_size_t num_bytes, uint8_t *buffer)
     CircularBufferStatus cb_status = CircularBuffer_Success;
 
 #if (PLATFORM == PLATFORM_FRDM) && (LOGGER_ALGORITHM == LOGGER_INTERRUPTS)
-    // extraction from comm receive data register and pack into the circular
-    // buffer is done by the communication peripheral interrupt handler
-#else // LOGGER_ALGORITHM == LOGGER_POLLING
+    /* extraction from comm receive data register and pack into the circular */
+    /* buffer is done by the communication peripheral interrupt handler */
+#else/* LOGGER_ALGORITHM == LOGGER_POLLING */
     status = logger_polling_receive(num_bytes);
 #endif
-    // extract from circular buffer and pack into user buffer.
+    /* extract from circular buffer and pack into user buffer. */
     logger_size_t num_received = 0;
     while (num_received < num_bytes) {
         uint8_t byte;
@@ -230,7 +230,7 @@ BinaryLoggerStatus log_receive_data(logger_size_t num_bytes, uint8_t *buffer)
             *(buffer + num_received) = byte;
             num_received++;
         }
-        // FIXME(bja, 2017-03) error handling if we didn't get our desired number of bytes? just return what we got...
+        /* FIXME(bja, 2017-03) error handling if we didn't get our desired number of bytes? just return what we got... */
     }
     return status;
 }
@@ -258,7 +258,7 @@ BinaryLoggerStatus logger_polling_receive(logger_size_t num_bytes)
     return status;
 }
 
-#else // LOGGING_DISABLED - disable logging by providing empty functions that
+#else/* LOGGING_DISABLED - disable logging by providing empty functions that */
 // simply return status OK. These may be removed by the linker when link
 // time optimization in enabled. If profiling shows that they are not, we
 // can replace them with a macro that substitutes status ok.

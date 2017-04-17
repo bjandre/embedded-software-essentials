@@ -25,4 +25,4 @@ uint32_t next_power_of_2(uint32_t num);
 
 
 
-#endif // ESE_UTIL_MATH_UTIL_H_
+#endif /* ESE_UTIL_MATH_UTIL_H_ */

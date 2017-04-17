@@ -22,7 +22,7 @@ void host_initialize_rtc(void)
 
 void RTC_Seconds_IRQHandler(void)
 {
-    // NOTE: no status flag to clear
+    /* NOTE: no status flag to clear */
     time_t current_time = time(NULL);
     set_global_async_heartbeat_timestamp(current_time);
     set_global_async_heartbeat_occurred(true);

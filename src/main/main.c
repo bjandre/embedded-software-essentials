@@ -37,7 +37,7 @@
 
 #include "async-global.h"
 
-// Global, asynchronously accessed data instances
+/* Global, asynchronously accessed data instances */
 volatile async_data_t global_async_data;
 
 #if (PLATFORM == PLATFORM_FRDM)
@@ -82,7 +82,7 @@ int main(int argc, char **argv)
     initialize_profiler();
 
 #if (PLATFORM == PLATFORM_FRDM)
-    // FIXME(bja, 2017-03) need to abstract out for host!
+    /* FIXME(bja, 2017-03) need to abstract out for host! */
     size_t num_bytes_buffer = 128;
     nrf24_initialize(num_bytes_buffer);
 #endif

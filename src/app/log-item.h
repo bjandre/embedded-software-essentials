@@ -138,4 +138,4 @@ BinaryLoggerStatus DestroyLogItem(log_item_t **item);
  */
 BinaryLoggerStatus log_item(const log_item_t *item);
 
-#endif // ESE_APP_LOG_ITEM_H_
+#endif/* ESE_APP_LOG_ITEM_H_ */

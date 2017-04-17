@@ -50,4 +50,4 @@ CommStatus host_uart_receive_byte(uint8_t *byte);
 
 
 
-#endif // ESE_HAL_HOST_UART_H_
+#endif/* ESE_HAL_HOST_UART_H_ */

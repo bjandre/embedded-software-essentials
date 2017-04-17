@@ -13,4 +13,4 @@
 
 int suite_memory(void);
 
-#endif // ESE_UTIL_TEST_MEMORY_H_
+#endif/* ESE_UTIL_TEST_MEMORY_H_ */

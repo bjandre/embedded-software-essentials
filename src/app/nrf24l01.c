@@ -10,6 +10,8 @@
 #include <assert.h>
 #include <stdint.h>
 
+#include "compiler-compat.h"
+
 #include "spi-peripheral-factory.h"
 
 #include "nrf24l01.h"
@@ -27,9 +29,9 @@ extern volatile async_data_t global_async_data;
 /**
    Update GPIO pin to activate the receiving chip
  */
-static inline void nrf24_chip_activate(void)
+__STATIC_INLINE void nrf24_chip_activate(void)
 {
-    // active high
+    /* active high */
     {
         uint32_t interrupt_state = start_critical_region();
 #if (PLATFORM == PLATFORM_FRDM)
@@ -42,9 +44,9 @@ static inline void nrf24_chip_activate(void)
 /**
    Update GPIO pin to deactivate the receiving chip
  */
-static inline void nrf24_chip_deactivate(void)
+__STATIC_INLINE void nrf24_chip_deactivate(void)
 {
-    // inactive low
+    /* inactive low */
     {
         uint32_t interrupt_state = start_critical_region();
 #if (PLATFORM == PLATFORM_FRDM)
@@ -58,7 +60,7 @@ static inline void nrf24_chip_deactivate(void)
    \param[in] register to read
    \return read command for the specified register
  */
-static inline NRF24_command nrf24_create_cmd_read_register(NRF24_register reg)
+__STATIC_INLINE NRF24_command nrf24_create_cmd_read_register(NRF24_register reg)
 {
     return NRF24_CMD_R_REGISTER | reg;
 }
@@ -67,7 +69,8 @@ static inline NRF24_command nrf24_create_cmd_read_register(NRF24_register reg)
    \param[in] register to write
    \return write command for the specified register
  */
-static inline NRF24_command nrf24_create_cmd_write_register(NRF24_register reg)
+__STATIC_INLINE NRF24_command nrf24_create_cmd_write_register(
+    NRF24_register reg)
 {
     return NRF24_CMD_W_REGISTER | reg;
 }
@@ -89,11 +92,11 @@ void nrf24_initialize(const size_t num_bytes_buffer)
         end_critical_region(interrupt_state);
     }
 
-    // GPIO radio enable line, active high, inactive low
+    /* GPIO radio enable line, active high, inactive low */
     GPIO_PINS pin = PTD_NRF24_CHIP_ACTIVATE;
     {
         uint32_t interrupt_state = start_critical_region();
-        // FIXME(bja, 2017-04) frdm-kl25z specific GPIO pin! Needs to be abstracted!
+        /* FIXME(bja, 2017-04) frdm-kl25z specific GPIO pin! Needs to be abstracted! */
         global_async_data.nrf24.chip_active_pin = pin;
         end_critical_region(interrupt_state);
     }
@@ -107,19 +110,19 @@ void nrf24_initialize(const size_t num_bytes_buffer)
 void nrf24_read_register(NRF24_register reg, NRF24_size_t num_bytes,
                          NRF24_data *data)
 {
-    //
-    // load the SPI transmit buffer with the data we want to send
-    //
-
-    // first byte of send packet is the read command
+    /* */
+    /* load the SPI transmit buffer with the data we want to send */
+    /* */
+    uint8_t i;
+    /* first byte of send packet is the read command */
     uint8_t cmd = nrf24_create_cmd_read_register(reg);
     {
         uint32_t interrupt_state = start_critical_region();
         CircularBufferAddItem(global_async_data.nrf24.spi.transmit_buffer, &cmd);
         end_critical_region(interrupt_state);
     }
-    // need to send num_bytes of no-op to received num_bytes
-    for (uint8_t i = 0; i < num_bytes; i++) {
+    /* need to send num_bytes of no-op to received num_bytes */
+    for (i = 0; i < num_bytes; i++) {
         cmd = NRF24_CMD_NOP;
         {
             uint32_t interrupt_state = start_critical_region();
@@ -128,11 +131,11 @@ void nrf24_read_register(NRF24_register reg, NRF24_size_t num_bytes,
         }
     }
 
-    //
-    // send the buffered data
-    //
+    /* */
+    /* send the buffered data */
+    /* */
     NRF24_size_t total_bytes = NRF24_1_byte +
-                               num_bytes; // one byte command + payload
+                               num_bytes;/* one byte command + payload */
     nrf24_chip_activate();
     {
         uint32_t interrupt_state = start_critical_region();
@@ -142,11 +145,11 @@ void nrf24_read_register(NRF24_register reg, NRF24_size_t num_bytes,
     }
     nrf24_chip_deactivate();
 
-    //
-    // extract the buffered data to send back to the caller
-    //
+    /* */
+    /* extract the buffered data to send back to the caller */
+    /* */
 
-    // first byte is the automatic status byte
+    /* first byte is the automatic status byte */
     uint8_t byte;
     bool is_empty = true;
     while (is_empty) {
@@ -163,11 +166,11 @@ void nrf24_read_register(NRF24_register reg, NRF24_size_t num_bytes,
             global_async_data.nrf24.spi.receive_buffer, &byte);
         end_critical_region(interrupt_state);
     }
-    // FIXME(bja, 2017-04) some sort of error checking on status? Should
-    // probably be done lower in the stack.
+    /* FIXME(bja, 2017-04) some sort of error checking on status? Should */
+    /* probably be done lower in the stack. */
 
-    // read the actual data bytes that are returned to the caller
-    for (uint8_t i = 0; i < num_bytes; i++) {
+    /* read the actual data bytes that are returned to the caller */
+    for (i = 0; i < num_bytes; i++) {
         bool is_empty = true;
         while (is_empty) {
             {
@@ -191,19 +194,19 @@ void nrf24_read_register(NRF24_register reg, NRF24_size_t num_bytes,
 void nrf24_write_register(NRF24_register reg, uint8_t num_bytes,
                           NRF24_data *data)
 {
-    //
-    // load the SPI transmit buffer with the data we want to send
-    //
-
-    // first byte of send packet is the read command
+    /* */
+    /* load the SPI transmit buffer with the data we want to send */
+    /* */
+    uint8_t i;
+    /* first byte of send packet is the read command */
     uint8_t cmd = nrf24_create_cmd_write_register(reg);
     {
         uint32_t interrupt_state = start_critical_region();
         CircularBufferAddItem(global_async_data.nrf24.spi.transmit_buffer, &cmd);
         end_critical_region(interrupt_state);
     }
-    // need to send num_bytes of data
-    for (uint8_t i = 0; i < num_bytes; i++) {
+    /* need to send num_bytes of data */
+    for (i = 0; i < num_bytes; i++) {
         {
             uint32_t interrupt_state = start_critical_region();
             CircularBufferAddItem(global_async_data.nrf24.spi.transmit_buffer,
@@ -212,11 +215,11 @@ void nrf24_write_register(NRF24_register reg, uint8_t num_bytes,
         }
     }
 
-    //
-    // send the buffered data
-    //
+    /* */
+    /* send the buffered data */
+    /* */
     NRF24_size_t total_bytes = NRF24_1_byte +
-                               num_bytes; // one byte command + payload
+                               num_bytes;/* one byte command + payload */
     nrf24_chip_activate();
     {
         uint32_t interrupt_state = start_critical_region();
@@ -226,14 +229,14 @@ void nrf24_write_register(NRF24_register reg, uint8_t num_bytes,
     }
     nrf24_chip_deactivate();
 
-    // FIXME(bja, 2017-04) Check return codes to ensure packet send successfully!
+    /* FIXME(bja, 2017-04) Check return codes to ensure packet send successfully! */
 
-    //
-    // we received total_bytes into the receive buffer. We need to excract them
-    // from the buffer even though there is nothing to send back to the caller.
-    //
+    /* */
+    /* we received total_bytes into the receive buffer. We need to excract them */
+    /* from the buffer even though there is nothing to send back to the caller. */
+    /* */
 
-    // first byte is the automatic status byte
+    /* first byte is the automatic status byte */
     uint8_t byte;
     bool is_empty = true;
     while (is_empty) {
@@ -250,11 +253,11 @@ void nrf24_write_register(NRF24_register reg, uint8_t num_bytes,
             global_async_data.nrf24.spi.receive_buffer, &byte);
         end_critical_region(interrupt_state);
     }
-    // FIXME(bja, 2017-04) some sort of error checking on status? Should
-    // probably be done lower in the stack.
+    /* FIXME(bja, 2017-04) some sort of error checking on status? Should */
+    /* probably be done lower in the stack. */
 
-    // read the actual data bytes that are returned to the caller
-    for (uint8_t i = 0; i < num_bytes; i++) {
+    /* read the actual data bytes that are returned to the caller */
+    for (i = 0; i < num_bytes; i++) {
         bool is_empty = true;
         while (is_empty) {
             {

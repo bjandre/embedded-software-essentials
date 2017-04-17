@@ -26,17 +26,17 @@ uint32_t next_power_of_2(uint32_t num)
     */
 
     if (num > 0) {
-        // subtract 1 to avoid incorrect result if num is already a power of 2.
+        /* subtract 1 to avoid incorrect result if num is already a power of 2. */
         num--;
     }
-    // shift to the right and or with the number to ensure all bits below the
-    // highest are are set
-    num |= num >> 1;  // handle  2 bit numbers
-    num |= num >> 2;  // handle  4 bit numbers
-    num |= num >> 4;  // handle  8 bit numbers
-    num |= num >> 8;  // handle 16 bit numbers
-    num |= num >> 16; // handle 32 bit numbers
-    // num has been set to to 2^(n+1) - 1, increment
+    /* shift to the right and or with the number to ensure all bits below the */
+    /* highest are are set */
+    num |= num >> 1;  /* handle  2 bit numbers */
+    num |= num >> 2;  /* handle  4 bit numbers */
+    num |= num >> 4;  /* handle  8 bit numbers */
+    num |= num >> 8;  /* handle 16 bit numbers */
+    num |= num >> 16; /* handle 32 bit numbers */
+    /* num has been set to to 2^(n+1) - 1, increment */
     num++;
 
     return num;

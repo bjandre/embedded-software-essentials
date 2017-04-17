@@ -14,17 +14,22 @@
 #include <stdint.h>
 #include <time.h>
 
+#include "compiler-compat.h"
+
 #include "profiling-timer-data.h"
 
 static uint32_t clock_t_max;
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-function"
+
 /*
   Platform specific routine to initialize the profiling timer
  */
-__attribute__( ( always_inline ) ) static inline void
+__attribute__( ( always_inline ) ) __STATIC_INLINE void
 host_initialize_profiling_timer(void)
 {
-    // FIXME(bja, 2017-04) assumes that clock_t is unsigned!
+    /* FIXME(bja, 2017-04) assumes that clock_t is unsigned! */
     clock_t_max = 0;
     for (uint8_t n = 0; n < sizeof(clock_t); n += 2) {
         clock_t_max |= (0xFF << n);
@@ -36,7 +41,7 @@ host_initialize_profiling_timer(void)
 
   \return timer value
  */
-__attribute__( ( always_inline ) ) static inline void host_get_profile_timer(
+__attribute__( ( always_inline ) ) __STATIC_INLINE void host_get_profile_timer(
     profiling_timer_data_t *timer_data)
 {
     timer_data->timer_count = (uint32_t)clock();
@@ -44,5 +49,7 @@ __attribute__( ( always_inline ) ) static inline void host_get_profile_timer(
     timer_data->max_timer_value = clock_t_max;
 }
 
+#pragma GCC diagnostic pop
 
-#endif // ESE_HAL_HOST_PROFILING_TIMER_H_
+
+#endif/* ESE_HAL_HOST_PROFILING_TIMER_H_ */

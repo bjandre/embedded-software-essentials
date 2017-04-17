@@ -126,4 +126,4 @@ BinaryLoggerStatus log_flush(void);
  */
 BinaryLoggerStatus log_receive_data(logger_size_t num_bytes, uint8_t *buffer);
 
-#endif // ESE_APP_LOGGER_H_
+#endif/* ESE_APP_LOGGER_H_ */

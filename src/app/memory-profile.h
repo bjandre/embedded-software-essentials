@@ -24,4 +24,4 @@
  */
 void memory_profile(log_item_t *item);
 
-#endif // ESE_APP_MEMORY_PROFILE_H_
+#endif/* ESE_APP_MEMORY_PROFILE_H_ */

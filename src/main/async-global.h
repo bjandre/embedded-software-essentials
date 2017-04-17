@@ -15,6 +15,8 @@
 #include <stdint.h>
 #include <time.h>
 
+#include "compiler-compat.h"
+
 #include "platform-defs.h"
 
 #if (PLATFORM == PLATFORM_FRDM)
@@ -29,8 +31,7 @@
 
    \return original state of the primask.
  */
-__attribute__( ( always_inline ) ) __STATIC_INLINE uint32_t
-start_critical_region(void)
+__STATIC_INLINE uint32_t start_critical_region(void)
 {
     uint32_t original_state = __get_PRIMASK();
     __disable_irq();
@@ -44,8 +45,7 @@ start_critical_region(void)
 
    \param original_state original state of the primask.
 */
-__attribute__( ( always_inline ) ) __STATIC_INLINE void end_critical_region(
-    uint32_t original_state)
+__STATIC_INLINE void end_critical_region(uint32_t original_state)
 {
     if (PRIMASK_IE == original_state) {
         __enable_irq();
@@ -62,6 +62,10 @@ __attribute__( ( always_inline ) ) __STATIC_INLINE void end_critical_region(
 #include "logger.h"
 #include "profiling-timer-data.h"
 #include "nrf24l01.h"
+
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-function"
+
 /**
    \file async-global.h
 
@@ -102,7 +106,7 @@ void initialize_global_async_data(void);
 
    \return dma_complete
  */
-static inline bool get_global_async_dma_complete(void)
+__STATIC_INLINE bool get_global_async_dma_complete(void)
 {
     extern volatile async_data_t global_async_data;
     uint32_t interrupt_status = start_critical_region();
@@ -115,7 +119,7 @@ static inline bool get_global_async_dma_complete(void)
    Thread / interrupt safe write dma_complete from the global_async_data struct
 
  */
-static inline void set_global_async_dma_complete(const bool dma_complete)
+__STATIC_INLINE void set_global_async_dma_complete(const bool dma_complete)
 {
     extern volatile async_data_t global_async_data;
     uint32_t interrupt_status = start_critical_region();
@@ -128,7 +132,7 @@ static inline void set_global_async_dma_complete(const bool dma_complete)
 
    \return data_available
  */
-static inline bool get_global_async_logger_data_available(void)
+__STATIC_INLINE bool get_global_async_logger_data_available(void)
 {
     extern volatile async_data_t global_async_data;
     uint32_t interrupt_status = start_critical_region();
@@ -141,7 +145,7 @@ static inline bool get_global_async_logger_data_available(void)
    Thread / interrupt safe write data_available from the global_async_data struct
 
  */
-static inline void set_global_async_logger_data_available(
+__STATIC_INLINE void set_global_async_logger_data_available(
     const bool data_available)
 {
     extern volatile async_data_t global_async_data;
@@ -154,7 +158,7 @@ static inline void set_global_async_logger_data_available(
    Thread / interrupt safe write of logger from the global_async_data struct
 
  */
-static inline void set_global_async_logger(BinaryLogger_t *logger)
+__STATIC_INLINE void set_global_async_logger(BinaryLogger_t *logger)
 {
     extern volatile async_data_t global_async_data;
     uint32_t interrupt_status = start_critical_region();
@@ -165,7 +169,7 @@ static inline void set_global_async_logger(BinaryLogger_t *logger)
 /**
    Thread / interrupt safe set heartbeat_occurred in the global_async_data struct
  */
-static inline void set_global_async_heartbeat_occurred(
+__STATIC_INLINE void set_global_async_heartbeat_occurred(
     bool heartbeat_occurred)
 {
     extern volatile async_data_t global_async_data;
@@ -178,7 +182,7 @@ static inline void set_global_async_heartbeat_occurred(
    Thread / interrupt safe get the heartbeat_occurred flag from the global_async_data struct
    \return bool indicationg if a heartbeat has occurred.
  */
-static inline bool get_global_async_heartbeat_occurred(void)
+__STATIC_INLINE bool get_global_async_heartbeat_occurred(void)
 {
     extern volatile async_data_t global_async_data;
     uint32_t interrupt_status = start_critical_region();
@@ -190,7 +194,7 @@ static inline bool get_global_async_heartbeat_occurred(void)
 /**
    Thread / interrupt safe set heartbeat_timestamp in the global_async_data struct
  */
-static inline void set_global_async_heartbeat_timestamp(
+__STATIC_INLINE void set_global_async_heartbeat_timestamp(
     time_t heartbeat_timestamp)
 {
     extern volatile async_data_t global_async_data;
@@ -203,7 +207,7 @@ static inline void set_global_async_heartbeat_timestamp(
    Thread / interrupt safe get the heartbeat_occurred from the global_async_data struct
    \return timestamp of last heartbeat
  */
-static inline time_t get_global_async_heartbeat_timestamp(void)
+__STATIC_INLINE time_t get_global_async_heartbeat_timestamp(void)
 {
     extern volatile async_data_t global_async_data;
     uint32_t interrupt_status = start_critical_region();
@@ -215,7 +219,7 @@ static inline time_t get_global_async_heartbeat_timestamp(void)
 /**
    Thread / interrupt safe enable profiling_active in the global_async_data struct
  */
-static inline void enable_global_async_profiling_active(void)
+__STATIC_INLINE void enable_global_async_profiling_active(void)
 {
     extern volatile async_data_t global_async_data;
     uint32_t interrupt_status = start_critical_region();
@@ -226,7 +230,7 @@ static inline void enable_global_async_profiling_active(void)
 /**
    Thread / interrupt safe disable profiling_active in the global_async_data struct
  */
-static inline void disable_global_async_profiling_active(void)
+__STATIC_INLINE void disable_global_async_profiling_active(void)
 {
     extern volatile async_data_t global_async_data;
     uint32_t interrupt_status = start_critical_region();
@@ -238,7 +242,7 @@ static inline void disable_global_async_profiling_active(void)
    Thread / interrupt safe get the profiling_active from the global_async_data struct
    \return profiling timer overflow counter
  */
-static inline time_t get_global_async_profiling_active(void)
+__STATIC_INLINE time_t get_global_async_profiling_active(void)
 {
     extern volatile async_data_t global_async_data;
     uint32_t interrupt_status = start_critical_region();
@@ -250,7 +254,7 @@ static inline time_t get_global_async_profiling_active(void)
 /**
    Thread / interrupt safe increment profiling_overflow in the global_async_data struct
  */
-static inline void increment_global_async_profiling_overflow(void)
+__STATIC_INLINE void increment_global_async_profiling_overflow(void)
 {
     extern volatile async_data_t global_async_data;
     uint32_t interrupt_status = start_critical_region();
@@ -262,7 +266,7 @@ static inline void increment_global_async_profiling_overflow(void)
    Thread / interrupt safe get the profiling_overflow from the global_async_data struct
    \return profiling timer overflow counter
  */
-static inline time_t get_global_async_profiling_overflow(void)
+__STATIC_INLINE time_t get_global_async_profiling_overflow(void)
 {
     extern volatile async_data_t global_async_data;
     uint32_t interrupt_status = start_critical_region();
@@ -274,7 +278,7 @@ static inline time_t get_global_async_profiling_overflow(void)
 /**
    Thread / interrupt safe set profiling_end_time in the global_async_data struct
  */
-static inline void set_global_async_profiling_end_time(profiling_timer_data_t
+__STATIC_INLINE void set_global_async_profiling_end_time(profiling_timer_data_t
         end_time)
 {
     /* NOTE(bja, 2017-04) copying struct, assumes no dynamically allocated memory! */
@@ -288,7 +292,7 @@ static inline void set_global_async_profiling_end_time(profiling_timer_data_t
    Thread / interrupt safe get the profiling_overflow from the global_async_data struct
    \return profiling timer overflow counter
  */
-static inline profiling_timer_data_t get_global_async_profiling_end_time(void)
+__STATIC_INLINE profiling_timer_data_t get_global_async_profiling_end_time(void)
 {
     /* NOTE(bja, 2017-04) copying struct, assumes no dynamically allocated memory! */
     extern volatile async_data_t global_async_data;
@@ -299,4 +303,6 @@ static inline profiling_timer_data_t get_global_async_profiling_end_time(void)
     return profiling_end_time;
 }
 
-#endif // ESE_MAIN_ASYNC_GLOBAL_H_
+#pragma GCC diagnostic pop
+
+#endif/* ESE_MAIN_ASYNC_GLOBAL_H_ */

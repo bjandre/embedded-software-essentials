@@ -45,4 +45,4 @@ POSTstatus post_nrf24_flush_tx_fifo();
 /**
  */
 POSTstatus post_nrf24_flush_rx_fifo();
-#endif // ESE_APP_POST_NRF24L01_H_
+#endif/* ESE_APP_POST_NRF24L01_H_ */

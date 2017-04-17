@@ -17,9 +17,9 @@
    state information for profiling timer
  */
 typedef struct {
-    uint32_t timer_count; //!< current timer count
-    uint32_t overflow_count; //!< current overflow count
-    uint32_t max_timer_value; //!< max timer value where overflow occurs
+    uint32_t timer_count;/*!< current timer count */
+    uint32_t overflow_count;/*!< current overflow count */
+    uint32_t max_timer_value;/*!< max timer value where overflow occurs */
 } profiling_timer_data_t;
 
-#endif // ESE_HAL_PROFILING_TIMER_DATA_H_
+#endif/* ESE_HAL_PROFILING_TIMER_DATA_H_ */

@@ -13,4 +13,4 @@
 
 int suite_profiler(void);
 
-#endif // ESE_APP_TEST_PROFILER_H_
+#endif/* ESE_APP_TEST_PROFILER_H_ */

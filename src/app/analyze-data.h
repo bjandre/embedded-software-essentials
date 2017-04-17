@@ -77,4 +77,4 @@ void process_data(data_summary_t *data_summary, uint8_t byte);
  */
 void log_data_analysis(log_item_t *item, data_summary_t *data_summary);
 
-#endif // ESE_APP_ANALYZE_DATA_H_
+#endif/* ESE_APP_ANALYZE_DATA_H_ */

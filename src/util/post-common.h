@@ -21,10 +21,10 @@
    Common return codes from all POSTs
  */
 typedef enum _POSTStatus {
-    POST_PASS, //!< test passed
-    POST_FAIL, //!< test failed
-    POST_SKIPPED, //!< test skipped
-    POST_ALL_SKIPPED, //!< all tests skipped
+    POST_PASS,/*!< test passed */
+    POST_FAIL,/*!< test failed */
+    POST_SKIPPED,/*!< test skipped */
+    POST_ALL_SKIPPED,/*!< all tests skipped */
 } POSTstatus;
 
-#endif // ESE_UTIL_POST_COMMON_H_
+#endif/* ESE_UTIL_POST_COMMON_H_ */

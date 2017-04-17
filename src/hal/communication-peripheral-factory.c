@@ -48,8 +48,8 @@ CommStatus CommCreate(communication_peripheral_t volatile *comm,
         if (UART_Logger == comm_function) {
             SetupUARTLogger(comm);
         } else {
-            // FIXME(bja, 2017-03) Additional comm peripheral functionality not supported at
-            // this time.
+            /* FIXME(bja, 2017-03) Additional comm peripheral functionality not supported at */
+            /* this time. */
             abort();
         }
     }

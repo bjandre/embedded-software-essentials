@@ -16,7 +16,7 @@ static const NRF24_size_t NRF24_max_data = 32;
 static const NRF24_size_t NRF24_0_byte = 0;
 static const NRF24_size_t NRF24_1_byte = 1;
 
-//!< Commands
+/*!< Commands */
 typedef uint8_t NRF24_command;
 static const NRF24_command NRF24_CMD_R_REGISTER = 0b00000000;
 static const NRF24_command NRF24_CMD_W_REGISTER = 0b00100000;
@@ -31,7 +31,7 @@ static const NRF24_command NRF24_CMD_W_ACK_PAYLOAD = 0b10101000;
 static const NRF24_command NRF24_CMD_W_TX_PAYLOAD_NOACK = 0b10110000;
 static const NRF24_command NRF24_CMD_NOP = 0b11111111;
 
-//!< Register map
+/*!< Register map */
 typedef uint8_t NRF24_register;
 typedef uint8_t NRF24_mask;
 
@@ -220,4 +220,4 @@ static const NRF24_register NRF24_REG_DYNPD = 0x1C;
  */
 static const NRF24_register NRF24_REG_FEATURE = 0x1D;
 
-#endif // ESE_APP_NRF24L01_CONST_H_
+#endif/* ESE_APP_NRF24L01_CONST_H_ */

@@ -166,10 +166,10 @@ void test_cb_add_remove_one_item(void **state)
     CircularBufferStatus status = CircularBufferNew(&cb, num_items, bytes_per_item);
     assert_int_equal(status, CircularBuffer_Success);
 
-    // add an item
+    /* add an item */
     status = CircularBufferAddItem(cb, &data);
     assert_int_equal(status, CircularBuffer_Success);
-    // extract the item and verify it matches what we added
+    /* extract the item and verify it matches what we added */
     uint32_t received = 0;
     status = CircularBufferRemoveItem(cb, &received);
     assert_int_equal(status, CircularBuffer_Success);
@@ -194,7 +194,7 @@ void test_cb_add_remove_n_items_sizeof1(void **state)
     CircularBufferStatus status = CircularBufferNew(&cb, num_items, bytes_per_item);
     assert_int_equal(status, CircularBuffer_Success);
 
-    // initialize data
+    /* initialize data */
     uint8_t data[SIZE];
     uint8_t received[SIZE];
     for (size_t i = 0; i < num_items; i++) {
@@ -202,13 +202,13 @@ void test_cb_add_remove_n_items_sizeof1(void **state)
         received[i] = 0;
     }
 
-    // add data to the buffer
+    /* add data to the buffer */
     for (size_t i = 0; i < num_items; i++) {
         status = CircularBufferAddItem(cb, data + i);
         assert_int_equal(status, CircularBuffer_Success);
     }
 
-    // remove data and verify it matches what we put in
+    /* remove data and verify it matches what we put in */
     for (size_t i = 0; i < num_items; i++) {
         status = CircularBufferRemoveItem(cb, received + i);
         assert_int_equal(status, CircularBuffer_Success);
@@ -238,7 +238,7 @@ void test_cb_add_remove_n_items_sizeof2(void **state)
     CircularBufferStatus status = CircularBufferNew(&cb, num_items, bytes_per_item);
     assert_int_equal(status, CircularBuffer_Success);
 
-    // initialize data
+    /* initialize data */
     uint16_t data[SIZE];
     uint16_t received[SIZE];
     for (size_t i = 0; i < num_items; i++) {
@@ -246,13 +246,13 @@ void test_cb_add_remove_n_items_sizeof2(void **state)
         received[i] = 0;
     }
 
-    // fill the buffer
+    /* fill the buffer */
     for (size_t i = 0; i < num_items; i++) {
         status = CircularBufferAddItem(cb, data + i);
         assert_int_equal(status, CircularBuffer_Success);
     }
 
-    // extract data and verify it matches what we put in
+    /* extract data and verify it matches what we put in */
     for (size_t i = 0; i < num_items; i++) {
         status = CircularBufferRemoveItem(cb, received + i);
         assert_int_equal(status, CircularBuffer_Success);
@@ -282,7 +282,7 @@ void test_cb_add_remove_n_items_sizeof4(void **state)
     CircularBufferStatus status = CircularBufferNew(&cb, num_items, bytes_per_item);
     assert_int_equal(status, CircularBuffer_Success);
 
-    // initialize data
+    /* initialize data */
     uint32_t data[SIZE];
     uint32_t received[SIZE];
     for (size_t i = 0; i < num_items; i++) {
@@ -290,13 +290,13 @@ void test_cb_add_remove_n_items_sizeof4(void **state)
         received[i] = 0;
     }
 
-    // add data to the buffer
+    /* add data to the buffer */
     for (size_t i = 0; i < num_items; i++) {
         status = CircularBufferAddItem(cb, data + i);
         assert_int_equal(status, CircularBuffer_Success);
     }
 
-    // remove data from the buffer and verify it is what we put in
+    /* remove data from the buffer and verify it is what we put in */
     for (size_t i = 0; i < num_items; i++) {
         status = CircularBufferRemoveItem(cb, received + i);
         assert_int_equal(status, CircularBuffer_Success);
@@ -326,24 +326,24 @@ void test_cb_buffer_full(void **state)
     assert_int_equal(status, CircularBuffer_Success);
 
     bool is_full = true;
-    // don't report full when not full, status ok
+    /* don't report full when not full, status ok */
     status = CircularBufferIsFull(cb, &is_full);
     assert_int_equal(status, CircularBuffer_Success);
     assert_int_equal(is_full, false);
 
-    // initialize some data
+    /* initialize some data */
     uint32_t data[SIZE];
     for (size_t i = 0; i < num_items; i++) {
         data[i] = offset + i;
     }
 
-    // add data to fill the buffer
+    /* add data to fill the buffer */
     for (size_t i = 0; i < num_items; i++) {
         status = CircularBufferAddItem(cb, data + i);
         assert_int_equal(status, CircularBuffer_Success);
     }
 
-    // report full when full, but status ok
+    /* report full when full, but status ok */
     status = CircularBufferIsFull(cb, &is_full);
     assert_int_equal(status, CircularBuffer_Success);
     assert_int_equal(is_full, true);
@@ -367,7 +367,7 @@ void test_cb_buffer_empty(void **state)
     assert_int_equal(status, CircularBuffer_Success);
 
     bool is_empty = false;
-    // report empty when empty, status ok
+    /* report empty when empty, status ok */
     status = CircularBufferIsEmpty(cb, &is_empty);
     assert_int_equal(status, CircularBuffer_Success);
     assert_int_equal(is_empty, true);
@@ -375,7 +375,7 @@ void test_cb_buffer_empty(void **state)
     status = CircularBufferAddItem(cb, &data);
     assert_int_equal(status, CircularBuffer_Success);
 
-    // don't report empty when not empty, status ok
+    /* don't report empty when not empty, status ok */
     status = CircularBufferIsEmpty(cb, &is_empty);
     assert_int_equal(status, CircularBuffer_Success);
     assert_int_equal(is_empty, false);
@@ -401,7 +401,7 @@ void test_cb_wrap_add(void **state)
     CircularBufferStatus status = CircularBufferNew(&cb, num_items, bytes_per_item);
     assert_int_equal(status, CircularBuffer_Success);
 
-    // initialize the data
+    /* initialize the data */
     uint32_t data[SIZE];
     uint32_t received[SIZE];
     size_t size = SIZE;
@@ -410,7 +410,7 @@ void test_cb_wrap_add(void **state)
         received[i] = 0;
     }
 
-    // incrementally add and remove items to wrap around the buffer
+    /* incrementally add and remove items to wrap around the buffer */
     for (size_t i = 0; i < size; i++) {
         status = CircularBufferAddItem(cb, data + i);
         assert_int_equal(status, CircularBuffer_Success);
@@ -452,7 +452,7 @@ void test_cb_wrap_remove(void **state)
         received[i] = 0;
     }
 
-    // fill the buffer
+    /* fill the buffer */
     size_t add_begin = 0;
     size_t add_end = num_items;
     for (size_t i = add_begin; i < add_end; i++) {
@@ -460,7 +460,7 @@ void test_cb_wrap_remove(void **state)
         assert_int_equal(status, CircularBuffer_Success);
     }
 
-    // remove some items
+    /* remove some items */
     size_t remove_begin = 0;
     size_t remove_end = add_end / 2;
     for (size_t i = remove_begin; i < remove_end; i++) {
@@ -472,7 +472,7 @@ void test_cb_wrap_remove(void **state)
         assert_int_equal(data[i], received[i]);
     }
 
-    // add some more items
+    /* add some more items */
     add_begin = add_end;
     add_end += num_items / 2;
     for (size_t i = add_begin; i < add_end; i++) {
@@ -480,7 +480,7 @@ void test_cb_wrap_remove(void **state)
         assert_int_equal(status, CircularBuffer_Success);
     }
 
-    // remove some items
+    /* remove some items */
     remove_begin = remove_end;
     remove_end += num_items;
     for (size_t i = remove_begin; i < remove_end; i++) {
@@ -512,19 +512,19 @@ void test_cb_over_fill(void **state)
     CircularBufferStatus status = CircularBufferNew(&cb, num_items, bytes_per_item);
     assert_int_equal(status, CircularBuffer_Success);
 
-    // initialize data
+    /* initialize data */
     uint16_t data[SIZE + 1];
     for (size_t i = 0; i < num_items; i++) {
         data[i] = offset + i;
     }
 
-    // completely fill the buffer.
+    /* completely fill the buffer. */
     for (size_t i = 0; i < num_items; i++) {
         status = CircularBufferAddItem(cb, data + i);
         assert_int_equal(status, CircularBuffer_Success);
     }
 
-    // attempt to overfill the buffer.
+    /* attempt to overfill the buffer. */
     status = CircularBufferAddItem(cb, data + SIZE - 1);
     assert_int_equal(status, CircularBuffer_Is_Full);
 
@@ -548,7 +548,7 @@ void test_cb_over_empty(void **state)
     CircularBufferStatus status = CircularBufferNew(&cb, num_items, bytes_per_item);
     assert_int_equal(status, CircularBuffer_Success);
 
-    // initialize data
+    /* initialize data */
     uint16_t data[SIZE];
     uint16_t received[SIZE + 1];
     for (size_t i = 0; i < num_items; i++) {
@@ -556,24 +556,24 @@ void test_cb_over_empty(void **state)
         received[i] = 0;
     }
 
-    // try removing from an empty buffer
+    /* try removing from an empty buffer */
     status = CircularBufferRemoveItem(cb, received);
     assert_int_equal(status, CircularBuffer_Is_Empty);
 
-    // add items to the buffer
+    /* add items to the buffer */
     for (size_t i = 0; i < num_items; i++) {
         status = CircularBufferAddItem(cb, data + i);
         assert_int_equal(status, CircularBuffer_Success);
     }
 
-    // remove the items
+    /* remove the items */
     for (size_t i = 0; i < num_items; i++) {
         status = CircularBufferRemoveItem(cb, received + i);
         assert_int_equal(status, CircularBuffer_Success);
         assert_int_equal(data[i], received[i]);
     }
 
-    // again try to remove from an empty buffer
+    /* again try to remove from an empty buffer */
     status = CircularBufferRemoveItem(cb, received);
     assert_int_equal(status, CircularBuffer_Is_Empty);
 
@@ -597,7 +597,7 @@ void test_cb_peak(void **state)
     CircularBufferStatus status = CircularBufferNew(&cb, num_items, bytes_per_item);
     assert_int_equal(status, CircularBuffer_Success);
 
-    // initialize some input data
+    /* initialize some input data */
     uint32_t data[SIZE];
     uint32_t received[SIZE];
     size_t size = SIZE;
@@ -606,7 +606,7 @@ void test_cb_peak(void **state)
         received[i] = 0;
     }
 
-    // fill the buffer
+    /* fill the buffer */
     size_t add_begin = 0;
     size_t add_end = num_items;
     for (size_t i = add_begin; i < add_end; i++) {
@@ -614,7 +614,7 @@ void test_cb_peak(void **state)
         assert_int_equal(status, CircularBuffer_Success);
     }
 
-    // remove some items
+    /* remove some items */
     size_t remove_begin = 0;
     size_t remove_end = add_end / 2;
     for (size_t i = remove_begin; i < remove_end; i++) {
@@ -626,7 +626,7 @@ void test_cb_peak(void **state)
         assert_int_equal(data[i], received[i]);
     }
 
-    // add some more items that will wrapp the buffer
+    /* add some more items that will wrapp the buffer */
     add_begin = add_end;
     add_end += num_items / 2;
     for (size_t i = add_begin; i < add_end; i++) {
@@ -636,7 +636,7 @@ void test_cb_peak(void **state)
 
     remove_begin = remove_end;
     remove_end += num_items;
-    // peak at items without removing
+    /* peak at items without removing */
     uint32_t item;
     for (size_t i = 0; i < num_items; i++) {
         status = CircularBufferPeakItem(cb, i, &item);
@@ -647,7 +647,7 @@ void test_cb_peak(void **state)
         assert_int_equal(data[remove_begin + i], item);
     }
 
-    // remove some items
+    /* remove some items */
     for (size_t i = remove_begin; i < remove_end; i++) {
         status = CircularBufferRemoveItem(cb, received + i);
         assert_int_equal(status, CircularBuffer_Success);

@@ -13,4 +13,4 @@
 
 int suite_circular_buffer(void);
 
-#endif // ESE_UTIL_TEST_CIRCULAR_BUFFER_H_
+#endif/* ESE_UTIL_TEST_CIRCULAR_BUFFER_H_ */

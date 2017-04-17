@@ -23,12 +23,12 @@
 
 #include "async-global.h"
 
-// define some reusable constants
+/* define some reusable constants */
 static const logger_size_t max_payload_bytes =
-    UINT8_MAX; //!< maximum payload size in bytes
+    UINT8_MAX;/*!< maximum payload size in bytes */
 static const logger_size_t zero_payload_bytes =
-    0; //!< consant for zero payload size
-static const void *null_payload = NULL; //!< constant for a null payload
+    0;/*!< consant for zero payload size */
+static const void *null_payload = NULL;/*!< constant for a null payload */
 
 BinaryLoggerStatus InitializeLoggerForLogItems(void)
 {
@@ -80,8 +80,8 @@ BinaryLoggerStatus UpdateLogItem(log_item_t *item, BinaryLoggerID id,
     if (BinaryLogger_Success == status) {
         item->id = id;
         item->timestamp = get_global_async_heartbeat_timestamp();
-        // FIXME(bja, 2017-03) what's the best error handling for a size greater
-        // than our buffer...? Return an error, or just log what we can....
+        /* FIXME(bja, 2017-03) what's the best error handling for a size greater */
+        /* than our buffer...? Return an error, or just log what we can.... */
         num_bytes = num_bytes > max_payload_bytes ? max_payload_bytes : num_bytes;
         item->payload_num_bytes = num_bytes;
         if (item->payload_num_bytes > 0) {
@@ -132,10 +132,10 @@ BinaryLoggerStatus DestroyLogItem(log_item_t **item)
     return status;
 }
 
-#else // LOGGING_DISABLED - disable logging by providing empty functions that
-// simply return status OK. These may be removed by the linker when link
-// time optimization in enabled. If profiling shows that they are not, we
-// can replace them with a macro that substitutes status ok.
+#else/* LOGGING_DISABLED - disable logging by providing empty functions that */
+/* simply return status OK. These may be removed by the linker when link
+   time optimization in enabled. If profiling shows that they are not, we
+   can replace them with a macro that substitutes status ok. */
 BinaryLoggerStatus CreateLogItem(log_item_t **item)
 {
     (void)item;

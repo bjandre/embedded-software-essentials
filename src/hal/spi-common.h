@@ -28,4 +28,4 @@ typedef enum SPIstatus {
 } SPIstatus;
 
 
-#endif // ESE_HAL_SPI_COMMON_H_
+#endif/* ESE_HAL_SPI_COMMON_H_ */

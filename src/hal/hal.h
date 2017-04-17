@@ -46,4 +46,4 @@ void initialize_spi(void);
  */
 void initialize_dma(void);
 
-#endif // ESE_HAL_HAL_H_
+#endif/* ESE_HAL_HAL_H_ */

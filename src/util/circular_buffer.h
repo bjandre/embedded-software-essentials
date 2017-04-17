@@ -37,14 +37,14 @@
 */
 
 typedef struct CircularBuffer_t {
-    void *buffer; // Pointer to original memory location for the buffer
-    void *head; // Pointer to Head
-    void *tail; // Pointer to Tail
-    size_t bytes_used; // Current count of items stored in the buffer
-    size_t num_items; // total number of items that can be stored
-    size_t bytes_per_item; // size of each item in bytes
-    size_t num_bytes_allocated; // Allocated size of the buffer
-    void *buffer_end; // End of the allocated buffer.
+    void *buffer;/* Pointer to original memory location for the buffer */
+    void *head;/* Pointer to Head */
+    void *tail;/* Pointer to Tail */
+    size_t bytes_used;/* Current count of items stored in the buffer */
+    size_t num_items;/* total number of items that can be stored */
+    size_t bytes_per_item;/* size of each item in bytes */
+    size_t num_bytes_allocated;/* Allocated size of the buffer */
+    void *buffer_end;/* End of the allocated buffer. */
 } CircularBuffer_t;
 
 
@@ -84,6 +84,8 @@ CircularBufferStatus CircularBufferAddItem(CircularBuffer_t volatile *cb,
 CircularBufferStatus CircularBufferRemoveItem(CircularBuffer_t volatile *cb,
         void *item);
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-function"
 /**
    Report whether the buffer is full.
 
@@ -139,6 +141,7 @@ CircularBufferIsEmpty(CircularBuffer_t volatile *cb,
     return status;
 }
 
+#pragma GCC diagnostic pop
 
 
 /**
@@ -177,4 +180,4 @@ CircularBufferStatus CircularBufferNew(volatile CircularBuffer_t *volatile *cb,
 CircularBufferStatus CircularBufferDestroy(volatile CircularBuffer_t *volatile
         *cb);
 
-#endif // ESE_UTIL_CIRCULAR_BUFFER_H_
+#endif/* ESE_UTIL_CIRCULAR_BUFFER_H_ */

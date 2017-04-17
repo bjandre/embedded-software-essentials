@@ -23,7 +23,7 @@ void dummy_DMA2_IRQHandler(void);
 
 void host_initialize_dma(void)
 {
-    // Nothing to do.
+    /* Nothing to do. */
 }
 
 

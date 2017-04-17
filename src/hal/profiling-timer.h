@@ -25,7 +25,7 @@
 /*
   Platform independent wrapper routine to initialize the profiling timer
  */
-__attribute__( ( always_inline ) ) static inline void
+__attribute__( ( always_inline ) ) __STATIC_INLINE void
 initialize_profiling_timer(void)
 {
 #if (PLATFORM == PLATFORM_FRDM)
@@ -40,7 +40,7 @@ initialize_profiling_timer(void)
 
   \param[out] current timer value
  */
-__attribute__( ( always_inline ) ) static inline void get_profiling_timer(
+__attribute__( ( always_inline ) ) __STATIC_INLINE void get_profiling_timer(
     profiling_timer_data_t *timer_data)
 {
 #if (PLATFORM == PLATFORM_FRDM)
@@ -50,4 +50,4 @@ __attribute__( ( always_inline ) ) static inline void get_profiling_timer(
 #endif
 }
 
-#endif // ESE_HAL_PROFILING_TIMER_H_
+#endif/* ESE_HAL_PROFILING_TIMER_H_ */

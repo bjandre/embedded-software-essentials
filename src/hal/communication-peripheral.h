@@ -105,4 +105,4 @@ struct communication_peripheral_t {
 };
 
 
-#endif // ESE_HAL_COMMUNICATION_PERIPHERAL_H_
+#endif/* ESE_HAL_COMMUNICATION_PERIPHERAL_H_ */

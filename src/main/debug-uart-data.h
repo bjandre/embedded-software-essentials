@@ -14,7 +14,7 @@
 #include <stddef.h>
 #include <stdint.h>
 
-// some interesting byte patterns to send over uart.
+/* some interesting byte patterns to send over uart. */
 static const uint32_t data_dead_beef = 0xEFBEADDEu;
 static const uint32_t data_dead_code = 0xDEC0ADDEu;
 static const uint32_t data_aaaa_5555 = 0x5555AAAAu;
@@ -55,4 +55,4 @@ void debug_uart_transmit(void);
  */
 void debug_uart_receive_transmit(uint8_t *buffer, size_t buffer_size);
 
-#endif // ESE_MAIN_DEBUG_UART_DATA_H_
+#endif/* ESE_MAIN_DEBUG_UART_DATA_H_ */

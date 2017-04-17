@@ -39,4 +39,4 @@ POSTstatus post_dma_memmove_1byte(void);
  */
 POSTstatus post_dma_memmove_4byte(void);
 
-#endif // ESE_HAL_POST_DMA_FRDM_KL25Z_H_
+#endif/* ESE_HAL_POST_DMA_FRDM_KL25Z_H_ */

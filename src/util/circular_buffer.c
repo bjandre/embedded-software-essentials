@@ -120,7 +120,7 @@ CircularBufferStatus CircularBufferPeakItem(CircularBuffer_t volatile *cb,
         }
         MemStatus memstat = memmove_cpu(item, position, cb->bytes_per_item);
         if (MemStatus_Success == memstat) {
-            // success!
+            /* success! */
         } else {
             status = CircularBuffer_Copy_Error;
         }
@@ -132,8 +132,8 @@ CircularBufferStatus CircularBufferNew(volatile CircularBuffer_t *volatile *cb,
                                        const size_t num_items,
                                        const size_t bytes_per_item)
 {
-    // NOTE: the result of malloc(0) is implementation defined, and is not
-    // guarenteed to be a NULL pointer.
+    /* NOTE: the result of malloc(0) is implementation defined, and is not */
+    /* guarenteed to be a NULL pointer. */
     CircularBufferStatus status = CircularBuffer_Success;
 
     *cb = malloc(sizeof(CircularBuffer_t));
@@ -145,9 +145,9 @@ CircularBufferStatus CircularBufferNew(volatile CircularBuffer_t *volatile *cb,
         status = InitCircularBuffer(*cb, num_items, bytes_per_item);
         if (CircularBuffer_Success == status) {
         } else {
-            // free any memory that might have been allocated. Don't save the
-            // status because it's meaningless and we want to report the error
-            // that was returned by Init.
+            /* free any memory that might have been allocated. Don't save the */
+            /* status because it's meaningless and we want to report the error */
+            /* that was returned by Init. */
             CircularBufferDestroy(cb);
         }
     }
@@ -159,8 +159,8 @@ CircularBufferStatus InitCircularBuffer(CircularBuffer_t volatile *cb,
                                         const size_t num_items,
                                         const size_t bytes_per_item)
 {
-    // NOTE: the result of malloc(0) is implementation defined, and is not
-    // guarenteed to be a NULL pointer.
+    /* NOTE: the result of malloc(0) is implementation defined, and is not */
+    /* guarenteed to be a NULL pointer. */
 
     CircularBufferStatus status = CircularBuffer_Success;
     if (NULL == cb) {

@@ -47,7 +47,7 @@ void run_test(log_item_t *item, post_test test, const char *name,
         suite_status->num_tests_skipped++;
     } else if (POST_PASS == status) {
         suite_status->num_tests_pass++;
-    } else { // (POST_PASS != status)
+    } else {/* (POST_PASS != status) */
         UpdateLogItem(item, POST_ERROR, name_size, (uint8_t *)name);
         log_item(item);
     }

@@ -49,4 +49,4 @@ CommStatus CommCreate(communication_peripheral_t volatile *comm,
  */
 void CommDestroy(communication_peripheral_t volatile *comm);
 
-#endif // ESE_HAL_COMMUNICATION_PERIPHERAL_FACTORY_H_
+#endif/* ESE_HAL_COMMUNICATION_PERIPHERAL_FACTORY_H_ */

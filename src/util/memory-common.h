@@ -25,9 +25,9 @@
     All memory utilities return the status of the operation.
  */
 typedef enum MemoryStatus {
-    MemStatus_Success, //!< operation successful
-    MemStatus_Null_Pointer, //!< operation failed with an unknow error
-    MemStatus_Transfer_Size_Error, //!< invalid transfer size. must be 1, 2, or 4 bytes
+    MemStatus_Success,/*!< operation successful */
+    MemStatus_Null_Pointer,/*!< operation failed with an unknow error */
+    MemStatus_Transfer_Size_Error,/*!< invalid transfer size. must be 1, 2, or 4 bytes */
 } MemStatus;
 
 /**

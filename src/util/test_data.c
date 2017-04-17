@@ -122,7 +122,7 @@ void test_convert_endian32_1(void **state)
     uint32_t expected = 0x67452301;
     size_t num_bytes = sizeof(data);
 
-    // note: just calling the wrapper to avoid exposing convert_endian
+    /* note: just calling the wrapper to avoid exposing convert_endian */
     DataStatus status = big_to_little32(&data, length);
     assert_int_equal(status, DataStatus_Success);
     assert_memory_equal((uint8_t *)&expected, (uint8_t *)&data, length * num_bytes);
@@ -145,7 +145,7 @@ void test_convert_endian32_2(void **state)
     uint32_t expected[length];
     size_t num_bytes = sizeof(*data);
 
-    // create some dummy data and manually reverse it
+    /* create some dummy data and manually reverse it */
     *data = 0x01234567;
     *expected = 0x67452301;
     *(data + 1) = 0x89abcdef;
@@ -160,7 +160,7 @@ void test_convert_endian32_2(void **state)
         *(expected_orig + i) = *(data + i);
     }
 
-    // note: just calling the wrapper to avoid exposing convert_endian
+    /* note: just calling the wrapper to avoid exposing convert_endian */
     DataStatus status = little_to_big32(data, length);
     assert_int_equal(status, DataStatus_Success);
     assert_memory_equal((uint8_t *)expected, (uint8_t *)data, length * num_bytes);

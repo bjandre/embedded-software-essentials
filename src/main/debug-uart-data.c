@@ -40,9 +40,9 @@ void debug_uart_transmit(void)
 
 void debug_uart_receive_transmit(uint8_t *buffer, size_t buffer_size)
 {
-    // NOTE(bja, 2017-03) this recives a byte and makes a decision about what to
-    // transmit back based on that byte. It needs polling instead of interrupt
-    // logging to make sense.
+    /* NOTE(bja, 2017-03) this recives a byte and makes a decision about what to */
+    /* transmit back based on that byte. It needs polling instead of interrupt */
+    /* logging to make sense. */
     uint8_t byte;
     log_receive_data(sizeof(byte), &byte);
     switch (byte) {
@@ -74,7 +74,7 @@ void debug_uart_receive_transmit(uint8_t *buffer, size_t buffer_size)
         log_data(sizeof(uint8_t), &byte);
         break;
     default:
-        //log_data(sizeof(byte), &byte);
+        /*log_data(sizeof(byte), &byte); */
         break;
     }
 }

@@ -16,6 +16,8 @@
 #include <stdbool.h>
 #include <stdint.h>
 
+#include "compiler-compat.h"
+
 /**
    Determine the maximum valid bit shift for a particular variable.
 
@@ -24,6 +26,9 @@
  */
 #define MAX_SHIFT(X) (sizeof((X)) * CHAR_BIT - 1)
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-function"
+
 /**
    Set the bit in the specified position to one.
 
@@ -31,7 +36,7 @@
                shift - position of the bit to modify
 
  */
-inline void set_bit_one(volatile uint32_t *current, uint8_t shift)
+__STATIC_INLINE void set_bit_one(volatile uint32_t *current, uint8_t shift)
 {
     assert(shift <= MAX_SHIFT(*current));
     *current |= (1 << shift);
@@ -44,7 +49,7 @@ inline void set_bit_one(volatile uint32_t *current, uint8_t shift)
                shift - position of the bit to modify
 
  */
-inline void set_bit_zero(volatile uint32_t *current, uint8_t shift)
+__STATIC_INLINE void set_bit_zero(volatile uint32_t *current, uint8_t shift)
 {
     assert(shift <= MAX_SHIFT(*current));
     *current &= ~(1 << shift);
@@ -57,7 +62,7 @@ inline void set_bit_zero(volatile uint32_t *current, uint8_t shift)
                shift - position of the bit to modify
 
  */
-inline void flip_bit(volatile uint32_t *current, uint8_t shift)
+__STATIC_INLINE void flip_bit(volatile uint32_t *current, uint8_t shift)
 {
     assert(shift <= MAX_SHIFT(*current));
     *current ^= (1 << shift);
@@ -71,12 +76,16 @@ inline void flip_bit(volatile uint32_t *current, uint8_t shift)
                value - pointer to the memory for the return value
 
  */
-inline void get_bit(volatile uint32_t *current, uint8_t shift, bool *value)
+__STATIC_INLINE void get_bit(volatile uint32_t *current, uint8_t shift,
+                             bool *value)
 {
     assert(shift <= MAX_SHIFT(*current));
     *value = *current & (1 << shift);
 }
 
+#pragma GCC diagnostic pop
+
+
 #undef MAX_SHIFT
 
-#endif // ESE_UTIL_BIT_OPTS_H_
+#endif/* ESE_UTIL_BIT_OPTS_H_ */

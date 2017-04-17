@@ -56,4 +56,4 @@ void initialize_set_2(uint8_t *data, uint32_t size);
  */
 void initialize_set_3(uint8_t *data, uint32_t size);
 
-#endif // ESE_UTIL_DATA_SET_H_
+#endif/* ESE_UTIL_DATA_SET_H_ */

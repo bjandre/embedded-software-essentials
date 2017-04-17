@@ -65,4 +65,4 @@ CommStatus comm_flush_transmit_buffer(communication_peripheral_t *comm);
  */
 void comm_begin_async_transmit(void);
 
-#endif // ESE_HAL_COMMUNICATION_PERIPHERAL_GENERIC_H_
+#endif/* ESE_HAL_COMMUNICATION_PERIPHERAL_GENERIC_H_ */

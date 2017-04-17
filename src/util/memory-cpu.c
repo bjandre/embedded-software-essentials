@@ -20,29 +20,29 @@ MemStatus memmove_cpu(uint8_t *destination, const uint8_t *const source,
     if (NULL == source || NULL == destination) {
         return MemStatus_Null_Pointer;
     }
-    // Check for overlapped regions. Note that there are five possible overlap patterns:
-    //
-    //   * src < src + len < dest < dest + len - no overlap, start at beginning of src.
-    //
-    //   * dest < dest + len < src < src + len - no overlap, start at beginning of src
-    //
-    //   * src < dest < src + len < dest + len - overlap - start at end of src
-    //
-    //   * dest < src < dest + len < src + len - overlap - start at beginning of src
-    //
-    //   * src == dest - complete overlap, nothing to do.
-    //
-    // Not that of the five possible combinations, there are three operations.
-    //   * Start beginning of src
-    //
-    //   * start at end of src
-    //
-    //   * do nothing
+    /* Check for overlapped regions. Note that there are five possible overlap patterns: */
+    /* */
+    /*   * src < src + len < dest < dest + len - no overlap, start at beginning of src. */
+    /* */
+    /*   * dest < dest + len < src < src + len - no overlap, start at beginning of src */
+    /* */
+    /*   * src < dest < src + len < dest + len - overlap - start at end of src */
+    /* */
+    /*   * dest < src < dest + len < src + len - overlap - start at beginning of src */
+    /* */
+    /*   * src == dest - complete overlap, nothing to do. */
+    /* */
+    /* Not that of the five possible combinations, there are three operations. */
+    /*   * Start beginning of src */
+    /* */
+    /*   * start at end of src */
+    /* */
+    /*   * do nothing */
 
     if (source == destination) {
-        // do nothing
+        /* do nothing */
     } else if (source < destination && destination < source + num_bytes) {
-        // copy from end of source.
+        /* copy from end of source. */
         const uint8_t *source_pt = source + num_bytes - 1;
         uint8_t *destination_pt = destination + num_bytes - 1;
         for (int i = 0; i < num_bytes; i++) {
@@ -51,7 +51,7 @@ MemStatus memmove_cpu(uint8_t *destination, const uint8_t *const source,
             destination_pt--;
         }
     } else {
-        // copy from begining of source.
+        /* copy from begining of source. */
         for (uint32_t i = 0; i < num_bytes; i++) {
             *(destination + i) = *(source + i);
         }

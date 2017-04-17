@@ -26,4 +26,4 @@
  */
 void power_on_self_tests(log_item_t *log_item);
 
-#endif // ESE_MAIN_POST_H_
+#endif/* ESE_MAIN_POST_H_ */

@@ -17,7 +17,7 @@
 
 CommStatus host_uart_initialize(const uint32_t baud)
 {
-    // nothing to do
+    /* nothing to do */
     CommStatus status = Comm_Status_Success;
     return status;
 }
@@ -26,7 +26,7 @@ CommStatus host_uart_transmit_byte(const uint8_t byte)
 {
     CommStatus status = Comm_Status_Success;
     fprintf(stdout, "%.2x", byte);
-    //putc(byte, stdout);
+    /*putc(byte, stdout); */
     return status;
 }
 
@@ -34,10 +34,10 @@ CommStatus host_uart_receive_byte(uint8_t *byte)
 {
     CommStatus status = Comm_Status_Success;
     *byte = fgetc(stdin);
-    // fgetc reads a single character. Terminal input will contain an extra
-    // character for the newline. Need to remove it with another fgetc.
+    /* fgetc reads a single character. Terminal input will contain an extra */
+    /* character for the newline. Need to remove it with another fgetc. */
     if ('\n' == *byte) {
-        // user input just a newline, do nothing
+        /* user input just a newline, do nothing */
     } else {
         fgetc(stdin);
     }

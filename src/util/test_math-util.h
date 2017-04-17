@@ -13,4 +13,4 @@
 
 int suite_math_util(void);
 
-#endif // ESE_UTIL_TEST_MATH_UTIL_H_
+#endif/* ESE_UTIL_TEST_MATH_UTIL_H_ */

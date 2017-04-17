@@ -13,12 +13,30 @@
 
 
 #if defined(__GNUC__)
-#define __INLINE         inline                                     /*!< inline keyword for GNU Compiler */
-#define __STATIC_INLINE  static inline
+#    if defined(__STDC__)
+#        if defined(__STDC_VERSION__)
+#            if (__STDC_VERSION__ >= 199901L)
+#ifdef __STATIC_INLINE
+#undef __STATIC_INLINE
 #endif
-
-#if defined(__STDC__)
+#ifdef __INLINE
+#undef __INLINE
+#endif
+#                define __INLINE         inline        /*!< inline keyword for GNU Compiler */
+#                define __STATIC_INLINE  static inline
+#            endif
+#        else
 /* we have a lovely c89 compiler.... */
+#ifdef __STATIC_INLINE
+#undef __STATIC_INLINE
+#endif
+#ifdef __INLINE
+#undef __INLINE
+#endif
+#        define __INLINE
+#        define __STATIC_INLINE  static
+#       endif
+#    endif
 #endif
 
-#endif // ESE_UTIL_COMPILER_COMPAT_H_
+#endif/* ESE_UTIL_COMPILER_COMPAT_H_ */

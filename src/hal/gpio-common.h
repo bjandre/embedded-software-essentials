@@ -13,4 +13,4 @@
 
 typedef uint8_t GPIO_PINS;
 
-#endif // ESE_HAL_GPIO_COMMON_H_
+#endif/* ESE_HAL_GPIO_COMMON_H_ */

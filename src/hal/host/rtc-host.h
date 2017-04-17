@@ -22,4 +22,4 @@ void host_initialize_rtc(void);
 void host_initialize_rtc(void);
 
 
-#endif // ESE_HAL_HOST_RTC_H_
+#endif/* ESE_HAL_HOST_RTC_H_ */

@@ -36,4 +36,4 @@ void get_timer(profiling_timer_data_t *timer_data);
 uint32_t elapsed_time(profiling_timer_data_t const *const start_time,
                       profiling_timer_data_t const *const end_time);
 
-#endif // ESE_APP_PROFILER_H_
+#endif/* ESE_APP_PROFILER_H_ */
