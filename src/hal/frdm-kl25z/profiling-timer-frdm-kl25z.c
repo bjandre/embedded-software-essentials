@@ -17,6 +17,13 @@
 #include "math-util.h"
 #include "async-global.h"
 
+static uint32_t clocks_per_sec;
+
+/**
+   Set the clocks per second for this platform.
+ */
+void frdm_kl25z_set_clocks_per_second_profiling_timer(uint32_t cps);
+
 /**
    Determine the prescaler selection factor.
 
@@ -26,6 +33,17 @@
  */
 uint8_t determine_prescaler_selection(uint32_t prescaler);
 
+
+uint32_t frdm_kl25z_get_clocks_per_second_profiling_timer(void)
+{
+    return clocks_per_sec;
+}
+
+
+void frdm_kl25z_set_clocks_per_second_profiling_timer(uint32_t cps)
+{
+    clocks_per_sec = cps;
+}
 
 void frdm_kl25z_initialize_profiling_timer(void)
 {
@@ -52,6 +70,11 @@ void frdm_kl25z_initialize_profiling_timer(void)
 
     uint8_t prescaler_selection = determine_prescaler_selection(prescaler);
     TPM0->SC |= TPM_SC_PS(prescaler_selection);
+
+    // FIXME(bja, 2017-04) don't hard code! Since we are incrementing the
+    // counter every clock tic, and using a prescaler of 1, we can just set
+    // clocks_per_sec to the clock value.
+    frdm_kl25z_set_clocks_per_second_profiling_timer(SystemCoreClock);
 
     // continue counting in debug mode?
 

@@ -18,7 +18,17 @@
 
 static uint32_t clock_t_max;
 
-/*
+/**
+
+ */
+__attribute__( ( always_inline ) ) static inline uint32_t
+host_get_clocks_per_second_profiling_timer(void)
+{
+    return CLOCKS_PER_SEC;
+}
+
+
+/**
   Platform specific routine to initialize the profiling timer
  */
 __attribute__( ( always_inline ) ) static inline void
@@ -26,12 +36,13 @@ host_initialize_profiling_timer(void)
 {
     // FIXME(bja, 2017-04) assumes that clock_t is unsigned!
     clock_t_max = 0;
-    for (uint8_t n = 0; n < sizeof(clock_t); n += 2) {
-        clock_t_max |= (0xFF << n);
+    size_t num_bytes = sizeof(clock_t);
+    for (uint8_t n = 0; n < num_bytes; n += 1) {
+        clock_t_max |= (0xFF << 2 * n);
     }
 }
 
-/*
+/**
   Platform specific routine to get the profiling timer value
 
   \return timer value

@@ -56,7 +56,7 @@ void run_test(log_item_t *item, post_test test, const char *name,
 void power_on_self_tests(log_item_t *item)
 {
 #if (PLATFORM == PLATFORM_FRDM)
-	frdm_kl25z_toggle_green_led();
+    frdm_kl25z_toggle_green_led();
 #endif
     UpdateLogItemNoPayload(item, POST_START);
     log_item(item);
@@ -97,6 +97,6 @@ void power_on_self_tests(log_item_t *item)
     UpdateLogItemNoPayload(item, POST_COMPLETE);
     log_item(item);
 #if (PLATFORM == PLATFORM_FRDM)
-	frdm_kl25z_toggle_green_led();
+    frdm_kl25z_toggle_green_led();
 #endif
 }

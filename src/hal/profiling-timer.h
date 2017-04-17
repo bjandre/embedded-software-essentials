@@ -22,7 +22,8 @@
 #endif
 
 #include "profiling-timer-data.h"
-/*
+
+/**
   Platform independent wrapper routine to initialize the profiling timer
  */
 __attribute__( ( always_inline ) ) static inline void
@@ -35,7 +36,23 @@ initialize_profiling_timer(void)
 #endif
 }
 
-/*
+/**
+  Platform independent wrapper routine to retreive clocks per second for the
+  profiling timer.
+ */
+__attribute__( ( always_inline ) ) static inline uint32_t
+get_clocks_per_second_profiling_timer(void)
+{
+    uint32_t cps;
+#if (PLATFORM == PLATFORM_FRDM)
+    cps = frdm_kl25z_get_clocks_per_second_profiling_timer();
+#else
+    cps = host_get_clocks_per_second_profiling_timer();
+#endif
+    return cps;
+}
+
+/**
   Platform indeendent wrapper routine to get the profiling timer value
 
   \param[out] current timer value

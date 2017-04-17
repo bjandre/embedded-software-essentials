@@ -20,12 +20,17 @@
 
 #include "async-global.h"
 
-/*
+/**
+   Return the number of clocks per second for the profiling timer
+ */
+uint32_t frdm_kl25z_get_clocks_per_second_profiling_timer(void);
+
+/**
   Platform specific routine to initialize the profiling timer
  */
 void frdm_kl25z_initialize_profiling_timer(void);
 
-/*
+/**
   Platform specific routine to get the profiling timer value
 
   \return timer value
