@@ -24,6 +24,7 @@ SRCS = \
 OBJS = $(SRCS:%.c=%.o)
 
 INCLUDES = \
+	-I. \
 	-I../../util \
 	-I../../main \
 	-I../../app \
@@ -41,6 +42,7 @@ SRCS = \
 OBJS = $(SRCS:%.c=%.o)
 
 INCLUDES = \
+	-I. \
 	-I../../util \
 	-I../../main \
 	-I../../app \

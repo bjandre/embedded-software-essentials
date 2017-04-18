@@ -38,8 +38,8 @@ void frdm_kl25z_initialize_dma(void);
  *
  * \param[out] destination pointer to a destination location.
  * \param[in] source pointer to a list of bytes to be moved.
- * \param[in] num_items the number of items to be moved
- * \param[in] bytes_per_item number of bytes per item. Valid values: 1, 2, or 4
+ * \param[in] num_bytes the number of items to be moved
+ * \param[in] bytes_per_transfer number of bytes per item. Valid values: 1, 2, or 4
  *
  * \return MemStatus flag indicating success or type of error tha occurred.
  *
@@ -65,7 +65,7 @@ void frdm_kl25z_initialize_dma(void);
  */
 MemStatus frdm_kl25z_memmove_dma(
     uint8_t *destination, uint8_t const *const source,
-    uint32_t const num_items, uint8_t const bytes_per_item);
+    uint32_t const num_bytes, uint8_t const bytes_per_transfer);
 
 /**
  * Take a pointer to a destination memory location, a number of items, a source
@@ -74,15 +74,15 @@ MemStatus frdm_kl25z_memmove_dma(
  *
  * \param[in,out] destination pointer to a list of items
  * \param[in] source pointer to a list of items
- * \param[in] num_items the number of items to be moved
- * \param[in] bytes_per_item number of bytes per item. Valid values: 1, 2, or 4
+ * \param[in] num_bytes the number of items to be moved
+ * \param[in] bytes_per_transfer number of bytes per item. Valid values: 1, 2, or 4
  *
  * \returns MemStatus flag indicating success or type of error tha occurred.
  *
  */
 MemStatus frdm_kl25z_memset_dma(
     uint8_t *destination, uint8_t const *const source,
-    uint32_t const num_items, uint8_t const bytes_per_item);
+    uint32_t const num_bytes, uint8_t const bytes_per_transfer);
 
 
 #endif /* ESE_HAL_DMA_FRDM_KL25Z_H_ */

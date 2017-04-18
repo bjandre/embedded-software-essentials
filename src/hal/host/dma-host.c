@@ -28,31 +28,38 @@ void host_initialize_dma(void)
 
 
 MemStatus host_memmove_dma(uint8_t *destination, uint8_t const *const source,
-                           uint32_t const num_items, uint8_t const bytes_per_item)
+                           uint32_t const num_bytes, uint8_t const bytes_per_transfer)
 {
     if (NULL == destination || NULL == source) {
         return MemStatus_Null_Pointer;
     }
 
-    memmove(destination, source, num_items * bytes_per_item);
+    if (bytes_per_transfer != 1 &&
+            bytes_per_transfer != 2 &&
+            bytes_per_transfer != 4) {
+        return MemStatus_Transfer_Size_Error;
+    }
+
+    memmove(destination, source, num_bytes);
     dummy_DMA2_IRQHandler();
 
     return MemStatus_Success;
 }
 
 MemStatus host_memset_dma(uint8_t *destination, uint8_t const *const source,
-                          uint32_t const num_items, uint8_t const bytes_per_item)
+                          uint32_t const num_bytes, uint8_t const bytes_per_transfer)
 {
     if (NULL == destination || NULL == source) {
         return MemStatus_Null_Pointer;
     }
-    if (bytes_per_item != 1 &&
-            bytes_per_item != 2 &&
-            bytes_per_item != 4) {
+
+    if (bytes_per_transfer != 1 &&
+            bytes_per_transfer != 2 &&
+            bytes_per_transfer != 4) {
         return MemStatus_Transfer_Size_Error;
     }
 
-    memset(destination, *source, num_items * bytes_per_item);
+    memset(destination, *source, num_bytes);
     dummy_DMA2_IRQHandler();
 
     return MemStatus_Success;

@@ -77,7 +77,7 @@ typedef enum {
 /**
    Get the correct bit pattern for the transfer size.
  */
-uint8_t get_transfer_size_indicator(uint8_t bytes_per_item);
+uint8_t get_transfer_size_indicator(uint8_t bytes_per_transfer);
 
 
 void frdm_kl25z_initialize_dma(void)
@@ -99,12 +99,12 @@ void frdm_kl25z_initialize_dma(void)
 }
 
 
-uint8_t get_transfer_size_indicator(uint8_t bytes_per_item)
+uint8_t get_transfer_size_indicator(uint8_t bytes_per_transfer)
 {
     uint8_t size_indicator;
-    if (bytes_per_item == 4) {
+    if (bytes_per_transfer == 4) {
         size_indicator = DMA_SIZE_32BIT;
-    } else if (bytes_per_item == 2) {
+    } else if (bytes_per_transfer == 2) {
         size_indicator = DMA_SIZE_16BIT;
     } else {
         size_indicator = DMA_SIZE_8BIT;
@@ -115,7 +115,7 @@ uint8_t get_transfer_size_indicator(uint8_t bytes_per_item)
 
 MemStatus frdm_kl25z_memmove_dma(
     uint8_t *destination, uint8_t const *const source,
-    uint32_t const num_items, uint8_t const bytes_per_item)
+    uint32_t const num_bytes, uint8_t const bytes_per_transfer)
 {
     if (NULL == destination || NULL == source) {
         return MemStatus_Null_Pointer;
@@ -123,12 +123,12 @@ MemStatus frdm_kl25z_memmove_dma(
 
     if (source == destination) {
         // do nothing
-    } else if (source < destination && destination < source + num_items) {
+    } else if (source < destination && destination < source + num_bytes) {
         // NOTE(bja, 2017-03) requires copying backward from end of source (not
         // possible with DMA) or copying the overlapped region, wasteful, may
         // not be possible on memory constrained system.... For now just call
         // memmove_cpu...
-        memmove_cpu(destination, source, num_items * bytes_per_item);
+        memmove_cpu(destination, source, num_bytes);
     } else {
         // setup dma to copy forward from start of source.
 
@@ -143,11 +143,10 @@ MemStatus frdm_kl25z_memmove_dma(
         // stop the DMA channel and clear status?
         DMA0->DMA[channel_m2m].DSR_BCR = DMA_DSR_BCR_DONE(1);
 
-        // FIXME(bja, 2017-03) assert num_items > 0, return?
+        // FIXME(bja, 2017-03) assert num_bytes > 0, return?
         DMA0->DMA[channel_m2m].SAR = DMA_SAR_SAR(source);
         DMA0->DMA[channel_m2m].DAR = DMA_DAR_DAR(destination);
 
-        uint32_t num_bytes = num_items * bytes_per_item;
         // number of bytes to copy
         DMA0->DMA[channel_m2m].DSR_BCR |= DMA_DSR_BCR_BCR(num_bytes);
 
@@ -157,7 +156,7 @@ MemStatus frdm_kl25z_memmove_dma(
         DMA0->DMA[channel_m2m].DCR |= DMA_DCR_EINT(1);
         // source increment
         DMA0->DMA[channel_m2m].DCR |= DMA_DCR_SINC(1);
-        uint8_t size_indicator = get_transfer_size_indicator(bytes_per_item);
+        uint8_t size_indicator = get_transfer_size_indicator(bytes_per_transfer);
         // one byte source size
         DMA0->DMA[channel_m2m].DCR |= DMA_DCR_SSIZE(size_indicator);
         // one byte destination increment
@@ -176,14 +175,14 @@ MemStatus frdm_kl25z_memmove_dma(
 
 MemStatus frdm_kl25z_memset_dma(
     uint8_t *destination, uint8_t const *const source,
-    uint32_t const num_items, uint8_t const bytes_per_item)
+    uint32_t const num_bytes, uint8_t const bytes_per_transfer)
 {
     if (NULL == destination || NULL == source) {
         return MemStatus_Null_Pointer;
     }
-    if (bytes_per_item != 1 &&
-            bytes_per_item != 2 &&
-            bytes_per_item != 4) {
+    if (bytes_per_transfer != 1 &&
+            bytes_per_transfer != 2 &&
+            bytes_per_transfer != 4) {
         return MemStatus_Transfer_Size_Error;
     }
     // is the channel busy?
@@ -197,11 +196,10 @@ MemStatus frdm_kl25z_memset_dma(
     // stop the DMA channel and clear status?
     DMA0->DMA[channel_m2m].DSR_BCR = DMA_DSR_BCR_DONE(1);
 
-    // FIXME(bja, 2017-03) assert num_items > 0, return?
+    // FIXME(bja, 2017-03) assert num_bytes > 0, return?
     DMA0->DMA[channel_m2m].SAR = DMA_SAR_SAR(source);
     DMA0->DMA[channel_m2m].DAR = DMA_DAR_DAR(destination);
 
-    uint32_t num_bytes = num_items * bytes_per_item;
     // number of bytes to copy
     DMA0->DMA[channel_m2m].DSR_BCR |= DMA_DSR_BCR_BCR(num_bytes);
 
@@ -209,14 +207,14 @@ MemStatus frdm_kl25z_memset_dma(
     DMA0->DMA[channel_m2m].DCR = 0x0U;
     // enable interrupt
     DMA0->DMA[channel_m2m].DCR |= DMA_DCR_EINT(1);
-    // no source increment
+    // source does not increment
     DMA0->DMA[channel_m2m].DCR &= ~DMA_DCR_SINC(1);
-    uint8_t size_indicator = get_transfer_size_indicator(1);
-    // one byte source size
+    uint8_t size_indicator = get_transfer_size_indicator(bytes_per_transfer);
+    // source size, bytes
     DMA0->DMA[channel_m2m].DCR |= DMA_DCR_SSIZE(size_indicator);
-    // one byte destination increment
+    // destination does increment
     DMA0->DMA[channel_m2m].DCR |= DMA_DCR_DINC(1);
-    // one byte destination size
+    // destination size, bytes
     DMA0->DMA[channel_m2m].DCR |= DMA_DCR_DSIZE(size_indicator);
 
     set_global_async_dma_complete(false);

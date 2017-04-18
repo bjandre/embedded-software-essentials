@@ -22,6 +22,10 @@
 
 #include "test_profiler.h"
 
+#include "async-global.h"
+
+volatile async_data_t global_async_data;
+
 void test_profiler_elapsed_time_zero_overflow(void **state);
 void test_profiler_elapsed_time_one_overflow(void **state);
 void test_profiler_elapsed_time_two_overflow(void **state);

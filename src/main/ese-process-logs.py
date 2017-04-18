@@ -129,6 +129,7 @@ def translate_id_to_string(item_id):
                 "DATA_PUNCTUATION_COUNT",
                 "DATA_MISC_COUNT",
                 "DATA_ANALYSIS_COMPLETED",
+                "PROFILING_CLOCKS_PER_SEC",
                 "PROFILING_START",
                 "PROFILING_VALUE",
                 "PROFILING_END",
@@ -218,7 +219,8 @@ def convert_logger_bytes_to_string():
                                        time.gmtime(timestamp))
             payload = "{0}".format(epoch_time)
 
-        elif item_name == "PROFILING_VALUE":
+        elif (item_name == "PROFILING_VALUE" or
+              item_name == "PROFILING_CLOCKS_PER_SEC"):
             fmt = format_string_from_num_bytes(payload_size, 'data')
             profile_time = struct.unpack(fmt, byte_stream)[0]
             translated_payload = "{0}".format(profile_time)

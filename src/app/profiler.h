@@ -12,18 +12,27 @@
 #define ESE_APP_PROFILER_H_
 
 #include "profiling-timer-data.h"
+#include "profiling-timer.h"
 
 /**
   Initialize the profiler
  */
 void initialize_profiler(void);
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-function"
+
 /**
   Get the current timer value
 
   \param[out] timer_data timer struct to store data
  */
-void get_timer(profiling_timer_data_t *timer_data);
+__attribute__( ( always_inline ) ) __STATIC_INLINE
+void get_timer(profiling_timer_data_t *timer_data)
+{
+    get_profiling_timer(timer_data);
+}
+#pragma GCC diagnostic pop
 
 /**
   Get the elapsed time since a start value
