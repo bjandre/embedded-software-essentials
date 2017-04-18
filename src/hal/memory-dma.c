@@ -22,7 +22,7 @@
 #endif
 
 MemStatus memmove_dma(uint8_t *destination, const uint8_t *const source,
-                      uint32_t const num_items, uint32_t const bytes_per_item)
+                      uint32_t const num_bytes, uint32_t const bytes_per_transfer)
 {
     if (NULL == source || NULL == destination) {
         return MemStatus_Null_Pointer;
@@ -30,16 +30,16 @@ MemStatus memmove_dma(uint8_t *destination, const uint8_t *const source,
 
 #include "platform-defs.h"
 #if (PLATFORM == PLATFORM_FRDM)
-    frdm_kl25z_memmove_dma(destination, source, num_items, bytes_per_item);
+    frdm_kl25z_memmove_dma(destination, source, num_bytes, bytes_per_transfer);
 #else
-    host_memmove_dma(destination, source, num_items, bytes_per_item);
+    host_memmove_dma(destination, source, num_bytes, bytes_per_transfer);
 #endif
 
     return MemStatus_Success;
 }
 
 MemStatus memset_dma(uint8_t *destination, const uint8_t *const source,
-                     uint32_t const num_items, uint32_t const bytes_per_item)
+                     uint32_t const num_bytes, uint32_t const bytes_per_transfer)
 {
     if (NULL == destination || NULL == source) {
         return MemStatus_Null_Pointer;
@@ -47,9 +47,9 @@ MemStatus memset_dma(uint8_t *destination, const uint8_t *const source,
 
 #include "platform-defs.h"
 #if (PLATFORM == PLATFORM_FRDM)
-    frdm_kl25z_memset_dma(destination, source, num_items, bytes_per_item);
+    frdm_kl25z_memset_dma(destination, source, num_bytes, bytes_per_transfer);
 #else
-    host_memset_dma(destination, source, num_items, bytes_per_item);
+    host_memset_dma(destination, source, num_bytes, bytes_per_transfer);
 #endif
 
     return MemStatus_Success;
