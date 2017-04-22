@@ -105,6 +105,10 @@ BinaryLoggerStatus log_data(logger_size_t num_bytes, uint8_t *buffer)
                 cb_status = CircularBufferIsFull(global_async_data.logger->transmit_buffer,
                                                  &is_full);
                 end_critical_region(interrupt_state);
+                if (CircularBuffer_Success != cb_status) {
+                    abort();
+                }
+
             }
         } while (is_full);
         {
@@ -144,6 +148,9 @@ void logger_polling_transmit_byte(void)
         cb_status = CircularBufferIsEmpty(global_async_data.logger->transmit_buffer,
                                           &is_empty);
         end_critical_region(interrupt_state);
+    }
+    if (CircularBuffer_Success != cb_status) {
+        abort();
     }
     while (!is_empty) {
         uint8_t byte;
@@ -229,6 +236,8 @@ BinaryLoggerStatus log_receive_data(logger_size_t num_bytes, uint8_t *buffer)
         if (CircularBuffer_Success == cb_status) {
             *(buffer + num_received) = byte;
             num_received++;
+        } else { /* (CircularBuffer_Success != cb_status) */
+            abort();
         }
         /* FIXME(bja, 2017-03) error handling if we didn't get our desired number of bytes? just return what we got... */
     }
@@ -237,7 +246,7 @@ BinaryLoggerStatus log_receive_data(logger_size_t num_bytes, uint8_t *buffer)
 
 BinaryLoggerStatus logger_polling_receive(logger_size_t num_bytes)
 {
-    BinaryLoggerStatus status;
+    BinaryLoggerStatus status = BinaryLogger_Success;
     CircularBufferStatus cb_status;
     for (logger_size_t n = 0; n < num_bytes; n++) {
         uint8_t byte;

@@ -71,24 +71,24 @@ BinaryLoggerStatus UpdateLogItem(log_item_t *item, BinaryLoggerID id,
     BinaryLoggerStatus status = BinaryLogger_Success;
     if (NULL == item) {
         status = BinaryLogger_Null_Pointer;
-    }
-
-    if (NULL == item->payload) {
-        status = BinaryLogger_Null_Pointer;
-    }
-
-    if (BinaryLogger_Success == status) {
-        item->id = id;
-        item->timestamp = get_global_async_heartbeat_timestamp();
-        /* FIXME(bja, 2017-03) what's the best error handling for a size greater */
-        /* than our buffer...? Return an error, or just log what we can.... */
-        num_bytes = num_bytes > max_payload_bytes ? max_payload_bytes : num_bytes;
-        item->payload_num_bytes = num_bytes;
-        if (item->payload_num_bytes > 0) {
-            MemStatus mem_stat = memmove_cpu(item->payload, (uint8_t *)payload,
-                                             item->payload_num_bytes);
-            if (MemStatus_Success != mem_stat) {
-                status = BinaryLogger_Item_Alloc_Error;
+    } else {
+        if (NULL == item->payload) {
+            status = BinaryLogger_Null_Pointer;
+        } else {
+            if (BinaryLogger_Success == status) {
+                item->id = id;
+                item->timestamp = get_global_async_heartbeat_timestamp();
+                /* FIXME(bja, 2017-03) what's the best error handling for a size greater */
+                /* than our buffer...? Return an error, or just log what we can.... */
+                num_bytes = num_bytes > max_payload_bytes ? max_payload_bytes : num_bytes;
+                item->payload_num_bytes = num_bytes;
+                if (item->payload_num_bytes > 0) {
+                    MemStatus mem_stat = memmove_cpu(item->payload, (uint8_t *)payload,
+                                                     item->payload_num_bytes);
+                    if (MemStatus_Success != mem_stat) {
+                        status = BinaryLogger_Item_Alloc_Error;
+                    }
+                }
             }
         }
     }
