@@ -92,17 +92,6 @@ int main(int argc, char **argv)
     /*
       application initialization
      */
-#undef DEBUG_UART
-#ifdef DEBUG_UART
-    size_t const buffer_size = 32 * sizeof(uint8_t);
-    uint8_t *buffer = malloc(buffer_size);
-#endif
-
-    memory_profile(item);
-
-    data_summary_t data_summary;
-    initialize_logger_data_analysis(&data_summary, item);
-
 #ifdef TESTING_MOCK_INTERRUPT
     set_global_async_heartbeat_occurred(true);
     testing_timestamp++;
@@ -113,17 +102,11 @@ int main(int argc, char **argv)
         __asm("NOP"); /* breakpoint to stop while looping */
         heartbeat(item);
 
-#ifdef DEBUG_UART
-        uint8_t tx_or_rx = 1;
-        debug_uart(tx_or_rx, buffer, buffer_size);
+#ifdef TESTING_MOCK_INTERRUPT
+        break;
 #endif
-
-        analyze_logger_data_event(&data_summary, item);
-
     }
-#ifdef DEBUG_UART
-    free(buffer);
-#endif
+
     DestroyLogItem(&item);
     return 0;
 }
