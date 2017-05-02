@@ -23,6 +23,8 @@ SRCS = \
 	heartbeat.c \
 	profiler.c \
 	post-profiler.c \
+	message.c \
+	command.c \
 	logger.c \
 	log-item.c
 

@@ -25,6 +25,7 @@ void initialize_global_async_data(void)
     set_global_async_logger_data_available(false);
     set_global_async_dma_complete(false);
     set_global_async_logger(NULL);
+    set_global_async_software_reset(false);
     end_critical_region(original_state);
 }
 

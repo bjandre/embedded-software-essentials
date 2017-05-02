@@ -29,9 +29,9 @@ typedef enum template_enum_t_ {
 
 /**
    Do something interesting
- 
+
    \param[in,out] pointer to context
-   
+
    \return status
  */
 uint32_t template_func(void *context);

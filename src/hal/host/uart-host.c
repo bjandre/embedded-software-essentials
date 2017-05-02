@@ -33,13 +33,18 @@ CommStatus host_uart_transmit_byte(const uint8_t byte)
 CommStatus host_uart_receive_byte(uint8_t *byte)
 {
     CommStatus status = Comm_Status_Success;
-    *byte = fgetc(stdin);
+    int8_t value = fgetc(stdin);
+    if (EOF == value) {
+        status = Comm_Status_Error;
+    } else {
+        *byte = (uint8_t)value;
+    }
     /* fgetc reads a single character. Terminal input will contain an extra */
     /* character for the newline. Need to remove it with another fgetc. */
-    if ('\n' == *byte) {
-        /* user input just a newline, do nothing */
-    } else {
-        fgetc(stdin);
-    }
+//    if ('\n' == *byte) {
+//        /* user input just a newline, do nothing */
+//    } else {
+//        fgetc(stdin);
+//    }
     return status;
 }

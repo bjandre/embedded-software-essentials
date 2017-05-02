@@ -25,7 +25,7 @@ include $(MAKERULES)/generic.makefile
 
 .PHONY : astyle
 astyle : FORCE
-	astyle --options=.astylerc --recursive src/*.c src/*.h
+	astyle --options=.astylerc --recursive 'src/*.c' 'src/*.h'
 
 .PHONY : archive
 archive : FORCE

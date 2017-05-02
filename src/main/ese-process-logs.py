@@ -133,6 +133,13 @@ def translate_id_to_string(item_id):
                 "PROFILING_START",
                 "PROFILING_VALUE",
                 "PROFILING_END",
+                "HELP_COMMAND",
+                "MESSAGE_COMMAND",
+                "MESSAGE_LENGTH",
+                "MESSAGE_LENGTH_ERROR",
+                "MESSAGE_PAYLOAD",
+                "MESSAGE_CHECKSUM_ERROR",
+                "MESSAGE_DROPPED_ERROR",
                 ]
     try:
         name = id_names[item_id]
@@ -209,7 +216,8 @@ def convert_logger_bytes_to_string():
         payload = byte_stream.hex()
         translated_payload = ''
         if (item_name == "POST_STATUS" or item_name == "POST_ERROR" or
-            item_name == "PROFILING_START" or item_name == "PROFILING_END"):
+            item_name == "PROFILING_START" or item_name == "PROFILING_END" or
+            item_name == "HELP_COMMAND"):
             fmt = ">{0}s".format(payload_size)
             msg = struct.unpack(fmt, byte_stream)[0]
             translated_payload = "{0}".format(msg.decode('utf-8'))
@@ -224,7 +232,8 @@ def convert_logger_bytes_to_string():
             fmt = format_string_from_num_bytes(payload_size, 'data')
             profile_time = struct.unpack(fmt, byte_stream)[0]
             translated_payload = "{0}".format(profile_time)
-
+        elif item_name == "MESSAGE_COMMAND":
+            pass
         print("{0}({1}) : {2} : size = {3} : {4} : {5}".format(
             item_name, item_id, timestamp, payload_size, payload, translated_payload))
 

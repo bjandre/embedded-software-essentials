@@ -27,6 +27,8 @@
 
 #include "logger.h"
 #include "log-item.h"
+#include "message.h"
+#include "command.h"
 
 #include "analyze-data.h"
 #include "debug-uart-data.h"
@@ -101,21 +103,30 @@ int main(int argc, char **argv)
     /*
       application initialization
      */
+    initialize_command_interpreter();
+
 #ifdef TESTING_MOCK_INTERRUPT
     set_global_async_heartbeat_occurred(true);
     testing_timestamp++;
     set_global_async_heartbeat_timestamp(testing_timestamp);
 #endif
 
+    message_t message;
+    reset_message(&message);
+
     while (1) { /* main event loop */
         __asm("NOP"); /* breakpoint to stop while looping */
         heartbeat(item);
+        process_message(item, &message);
+        process_commands(item);
 
 #ifdef TESTING_MOCK_INTERRUPT
-        break;
+        bool software_reset = get_global_async_software_reset();
+        if (software_reset) {
+            break;
+        }
 #endif
     }
-
     shutdown(&item);
     return 0;
 }

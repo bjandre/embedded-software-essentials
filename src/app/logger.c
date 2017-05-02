@@ -30,13 +30,6 @@
  */
 void logger_polling_transmit_byte(void);
 
-/**
-   logger receive using polling
-
-   \param num_bytes number of bytes to receive
- */
-BinaryLoggerStatus logger_polling_receive(logger_size_t num_bytes);
-
 extern volatile async_data_t global_async_data;
 
 static const uint32_t debugger_baud = 115200u;/*!< UART debugger baud */
@@ -247,7 +240,7 @@ BinaryLoggerStatus log_receive_data(logger_size_t num_bytes, uint8_t *buffer)
 BinaryLoggerStatus logger_polling_receive(logger_size_t num_bytes)
 {
     BinaryLoggerStatus status = BinaryLogger_Success;
-    CircularBufferStatus cb_status;
+    CircularBufferStatus cb_status = CircularBuffer_Success;
     for (logger_size_t n = 0; n < num_bytes; n++) {
         uint8_t byte;
         {
@@ -255,9 +248,10 @@ BinaryLoggerStatus logger_polling_receive(logger_size_t num_bytes)
             CommStatus comm_status = global_async_data.logger->comm.receive_byte(&byte);
             if (Comm_Status_Success != comm_status) {
                 status = BinaryLogger_Error;
+            } else {
+                cb_status = CircularBufferAddItem(global_async_data.logger->receive_buffer,
+                                                  &byte);
             }
-            cb_status = CircularBufferAddItem(global_async_data.logger->receive_buffer,
-                                              &byte);
             end_critical_region(interrupt_state);
         }
         if (CircularBuffer_Success != cb_status) {

@@ -126,4 +126,11 @@ BinaryLoggerStatus log_flush(void);
  */
 BinaryLoggerStatus log_receive_data(logger_size_t num_bytes, uint8_t *buffer);
 
+/**
+   logger receive using polling
+
+   \param num_bytes number of bytes to receive
+ */
+BinaryLoggerStatus logger_polling_receive(logger_size_t num_bytes);
+
 #endif/* ESE_APP_LOGGER_H_ */

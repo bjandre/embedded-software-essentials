@@ -92,6 +92,7 @@ typedef struct AsynchronousData {
                                                  be accessed in interrupts */
     nrf24l01p_t nrf24; /*<! global instance of nrf24l01p internal
                          state (SPI and rx, tx buffers) */
+    bool software_reset_requested;
 } async_data_t;
 
 
@@ -301,6 +302,32 @@ __STATIC_INLINE profiling_timer_data_t get_global_async_profiling_end_time(void)
         global_async_data.profiling_end_time;
     end_critical_region(interrupt_status);
     return profiling_end_time;
+}
+
+/**
+   Thread / interrupt safe write softwane software_reset_requested from the global_async_data struct
+
+ */
+__STATIC_INLINE void set_global_async_software_reset(const bool software_reset)
+{
+    extern volatile async_data_t global_async_data;
+    uint32_t interrupt_status = start_critical_region();
+    global_async_data.software_reset_requested = software_reset;
+    end_critical_region(interrupt_status);
+}
+
+/**
+   Thread / interrupt safe read software_reset_requested from the global_async_data struct
+
+   \return software_reset_requested
+ */
+__STATIC_INLINE bool get_global_async_software_reset(void)
+{
+    extern volatile async_data_t global_async_data;
+    uint32_t interrupt_status = start_critical_region();
+    bool software_reset = global_async_data.software_reset_requested;
+    end_critical_region(interrupt_status);
+    return software_reset;
 }
 
 #pragma GCC diagnostic pop
