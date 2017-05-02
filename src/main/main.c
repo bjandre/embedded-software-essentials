@@ -55,6 +55,15 @@ volatile async_data_t global_async_data;
 void initialize(log_item_t **item);
 
 /**
+  Run the shutdown sequence : send final log message, free global memory,
+  etc. Mostly for host and embedded linux systems where we can run memory leak
+  detectors.
+
+  \param[in] **item pointer to log item that will be freed
+ */
+void shutdown(log_item_t **item);
+
+/**
   Generic routine to update led status.
 
   Wrapper around platform specific code.
@@ -107,7 +116,7 @@ int main(int argc, char **argv)
 #endif
     }
 
-    DestroyLogItem(&item);
+    shutdown(&item);
     return 0;
 }
 
@@ -152,6 +161,17 @@ void initialize(log_item_t **item)
     UpdateLogItemNoPayload(*item, SYSTEM_INITIALIZED);
     log_item(*item);
 
+}
+
+void shutdown(log_item_t **item)
+{
+    UpdateLogItemNoPayload(*item, SYSTEM_HALTED);
+    log_item(*item);
+    DestroyLogItem(item);
+    BinaryLoggerDestroy();
+#if (PLATFORM == PLATFORM_FRDM)
+    NVIC_SystemReset();
+#endif
 }
 
 void update_leds(void)
