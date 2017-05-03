@@ -38,7 +38,9 @@ void frdm_kl25z_initialize_gpio(void)
 void frdm_kl25z_initialize_port_b_output_pin(GPIO_PINS pin)
 {
     // Initialize the gpio pin for desired function
-    PORTB->PCR[pin] |= PORT_PCR_MUX(1);
+    // PORTB->PCR[pin] |= PORT_PCR_MUX(1);
+    // Initialize the link to TPM2 channel
+    PORTB->PCR[pin] |= PORT_PCR_MUX(3);
     // set pin to output
     GPIOB->PDDR |= (1 << pin);
 }

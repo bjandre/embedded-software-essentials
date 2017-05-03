@@ -39,9 +39,8 @@ static const command_id_t COMMAND_HELP = 0; /*!< help */
 static const command_id_t COMMAND_ECHO = 1; /*!< echo */
 static const command_id_t COMMAND_GET_RTC_EPOCH = 2; /*!<  */
 static const command_id_t COMMAND_SOFTWARE_RESET = 3; /*!< */
-static const command_id_t COMMAND_RGB_ON_OFF = 4; /*!< */
+static const command_id_t COMMAND_RGB_TOGGLE = 4; /*!< */
 static const command_id_t COMMAND_RGB_BRIGHTNESS = 5; /*!< */
-static const command_id_t COMMAND_RGB_COLOR = 6; /*!< */
 
 /**
    Command message

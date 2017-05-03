@@ -4,6 +4,7 @@
 #include "initialize-frdm-kl25z.h"
 #include "rtc-frdm-kl25z.h"
 #include "gpio-frdm-kl25z.h"
+#include "pwm-timer-frdm-kl25z.h"
 #include "dma-frdm-kl25z.h"
 #include "spi-frdm-kl25z.h"
 #endif
@@ -28,6 +29,7 @@ void initialize_gpio(void)
 {
 #if (PLATFORM == PLATFORM_FRDM)
     frdm_kl25z_initialize_gpio();
+    frdm_kl25z_initialize_pwm_timer();
 #endif
 }
 
