@@ -133,7 +133,7 @@
 						</toolChain>
 					</folderInfo>
 					<sourceEntries>
-						<entry excluding="src/app/test_app.c|src/app/test_profiler.c|src/util/test_math-util.c|src/hal/host|src/arch/host|src/arch/uart-host.c|3rd-party|src/hw3|src/project-2|src/util/test_utils.c|src/util/test_memory.c|src/util/test_data.c|src/util/test_circular_buffer.c|src/util/test_bit-operations.c" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
+						<entry excluding="src/template.c|src/test_template.c|src/app/test_app.c|src/app/test_profiler.c|src/util/test_math-util.c|src/hal/host|src/arch/host|src/arch/uart-host.c|3rd-party|src/hw3|src/project-2|src/util/test_utils.c|src/util/test_memory.c|src/util/test_data.c|src/util/test_circular_buffer.c|src/util/test_bit-operations.c" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>
@@ -534,7 +534,7 @@
 					</folderInfo>
 					<fileInfo id="ilg.gnuarmeclipse.managedbuild.cross.config.elf.debug.159798083.1524335428" name="main.c" rcbsApplicability="disable" resourcePath="src/main/main.c" toolsToInvoke="ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler.635969319.1788595776">
 						<tool id="ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler.635969319.1788595776" name="Cross ARM C Compiler" superClass="ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler.635969319">
-							<option id="ilg.gnuarmeclipse.managedbuild.cross.option.c.compiler.include.paths.1426929504" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.c.compiler.include.paths" valueType="includePath">
+							<option id="ilg.gnuarmeclipse.managedbuild.cross.option.c.compiler.include.paths.1426929504" name="Include paths (-I)" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.c.compiler.include.paths" valueType="includePath">
 								<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src/util}&quot;"/>
 								<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src/main}&quot;"/>
 								<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src/hal}&quot;"/>
@@ -552,7 +552,7 @@
 						</tool>
 					</fileInfo>
 					<sourceEntries>
-						<entry excluding="src/app/test_app.c|src/app/test_profiler.c|src/util/test_math-util.c|src/hal/host|src/arch/host|src/arch/uart-host.c|3rd-party|src/hw3|src/project-2|src/util/test_utils.c|src/util/test_memory.c|src/util/test_data.c|src/util/test_circular_buffer.c|src/util/test_bit-operations.c" flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name=""/>
+						<entry excluding="src/template.c|src/test_template.c|src/app/test_app.c|src/app/test_profiler.c|src/util/test_math-util.c|src/hal/host|src/arch/host|src/arch/uart-host.c|3rd-party|src/hw3|src/project-2|src/util/test_utils.c|src/util/test_memory.c|src/util/test_data.c|src/util/test_circular_buffer.c|src/util/test_bit-operations.c" flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name=""/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>

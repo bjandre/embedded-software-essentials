@@ -90,7 +90,7 @@ BinaryLoggerStatus log_data(logger_size_t num_bytes, uint8_t *buffer)
     CircularBufferStatus cb_status;
     uint32_t interrupt_state;
     for (logger_size_t n = 0; n < num_bytes; n++) {
-        bool is_full;
+        bool is_full = false;
         do {
             /* poll the transmit buffer to see if in can accept data. */
             {
@@ -134,7 +134,7 @@ void logger_polling_transmit_byte(void)
 {
     /* no interrupts, just write all available data */
     CircularBufferStatus cb_status;
-    bool is_empty;
+    bool is_empty = false;
     uint32_t interrupt_state;
     {
         interrupt_state = start_critical_region();

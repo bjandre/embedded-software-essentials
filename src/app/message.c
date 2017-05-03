@@ -8,6 +8,11 @@
 ** with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
 */
 
+#ifdef BARE_METAL
+#else
+#define TESTING_MOCK_INTERRUPT
+#endif
+
 #include <stdint.h>
 
 #include "util.h"
@@ -50,7 +55,8 @@
    \param[in,out] message - message state struct
    \param[in] byte - byte received with this state
  */
-typedef void (*message_function)(log_item_t *item, message_t *message, uint8_t byte);
+typedef void (*message_function)(log_item_t *item, message_t *message,
+                                 uint8_t byte);
 
 
 /**
@@ -86,7 +92,8 @@ void state_receiving_data(log_item_t *item, message_t *message, uint8_t byte);
 
    matches call signature of message_function.
  */
-void state_receiving_checksum(log_item_t *item, message_t *message, uint8_t byte);
+void state_receiving_checksum(log_item_t *item, message_t *message,
+                              uint8_t byte);
 
 /**
    function pointer indicating that the state machine is processing the message
@@ -129,9 +136,8 @@ uint32_t process_message(log_item_t *item, message_t *message)
     // extract bytes from the global message buffer and process them with the
     // message state machine.
     extern volatile async_data_t global_async_data;
-    bool msg_buffer_empty;
+    bool msg_buffer_empty = false;
     do {
-#define TESTING_MOCK_INTERRUPT
 #ifdef TESTING_MOCK_INTERRUPT
         logger_polling_receive(1);
 #endif
@@ -200,7 +206,8 @@ void state_receiving_data(log_item_t *item, message_t *message, uint8_t byte)
     }
 }
 
-void state_receiving_checksum(log_item_t *item, message_t *message, uint8_t byte)
+void state_receiving_checksum(log_item_t *item, message_t *message,
+                              uint8_t byte)
 {
     // In the receiving checksum state, the byte we are receiving is a checksum.
 
@@ -217,6 +224,8 @@ void state_message_complete(log_item_t *item, message_t *message, uint8_t byte)
     // into the command buffer, then reset the message back to the idle state.
     UNUSED_VARIABLE(byte);
     verify_checksum(item, message);
+    UpdateLogItem(item, MESSAGE_COMMAND, message->data_length, message->data);
+    log_item(item);
     receive_command_message(message->data_length, message->data);
     reset_message(message);
 }
@@ -227,7 +236,8 @@ void verify_checksum(log_item_t *item, message_t *message)
     is_valid = verify_checksum_xor(message->data_length, message->data,
                                    *(message->checksum));
     if (!is_valid) {
-        UpdateLogItem(item, MESSAGE_CHECKSUM_ERROR, message_checksum_num_bytes, message->checksum);
+        UpdateLogItem(item, MESSAGE_CHECKSUM_ERROR, message_checksum_num_bytes,
+                      message->checksum);
         log_item(item);
         UpdateLogItem(item, MESSAGE_CHECKSUM, message->data_length, message->data);
         log_item(item);

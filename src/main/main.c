@@ -120,12 +120,10 @@ int main(int argc, char **argv)
         process_message(item, &message);
         process_commands(item);
 
-#ifdef TESTING_MOCK_INTERRUPT
         bool software_reset = get_global_async_software_reset();
         if (software_reset) {
             break;
         }
-#endif
     }
     shutdown(&item);
     return 0;
@@ -179,6 +177,7 @@ void shutdown(log_item_t **item)
     UpdateLogItemNoPayload(*item, SYSTEM_HALTED);
     log_item(*item);
     DestroyLogItem(item);
+    log_flush();
     BinaryLoggerDestroy();
 #if (PLATFORM == PLATFORM_FRDM)
     NVIC_SystemReset();
