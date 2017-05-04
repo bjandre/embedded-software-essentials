@@ -58,17 +58,18 @@ void frdm_kl25z_initialize_pwm_timer(void)
     // up counting only
     TPM2->SC |= TPM_SC_CPWMS(1);
 
-    // upper limit of counter, all available 16 bits
-    TPM2->MOD = 0xFFFFU;
+    // upper limit of counter, all available 16 bits - 1 so we can exceed the
+    // value and disable the PWM on a channel
+    TPM2->MOD = 0xFFFEu;
 
     // initial value
     TPM2->CNT = 0;
 
     // initialize the channels for center aligned PWM
     TPM2->CONTROLS[0].CnSC = TPM_CnSC_MSB_MASK | TPM_CnSC_ELSA_MASK;
-    TPM2->CONTROLS[0].CnV = TPM2->MOD / 8;  // 1/8 of timer period
+    TPM2->CONTROLS[0].CnV = 0;
     TPM2->CONTROLS[1].CnSC = TPM_CnSC_MSB_MASK | TPM_CnSC_ELSA_MASK;
-    TPM2->CONTROLS[1].CnV = TPM2->MOD / 8;
+    TPM2->CONTROLS[1].CnV = 0;
 }
 
 uint8_t determine_prescaler_selection(uint32_t prescaler)

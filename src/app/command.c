@@ -194,9 +194,17 @@ void command_rgb_toggle(log_item_t *item, command_message_t const *message)
     log_item(item);
 #elif (PLATFORM == PLATFORM_FRDM)
     if (red_led == *(message->payload)) {
-        frdm_kl25z_toggle_red_led();
+        if (TPM2->CONTROLS[0].CnV == 0) {
+            TPM2->CONTROLS[0].CnV = TPM2->MOD / 8;
+        } else {
+            TPM2->CONTROLS[0].CnV = 0;
+        }
     } else if (green_led == *(message->payload)) {
-        frdm_kl25z_toggle_green_led();
+        if (TPM2->CONTROLS[1].CnV == 0) {
+            TPM2->CONTROLS[1].CnV = TPM2->MOD / 8;
+        } else {
+            TPM2->CONTROLS[1].CnV = 0;
+        }
     }
     // NOTE(bja, 2017-04) blue is not included here because it is used for the
     // heartbeat
@@ -220,16 +228,18 @@ void command_rgb_brightness(log_item_t *item, command_message_t const *message)
 #elif (PLATFORM == PLATFORM_FRDM)
     uint8_t led = message->payload[0];
     uint8_t change = message->payload[1];
-    uint16_t period = TPM2->MOD;
     if (increase_brightness == change) {
-        period <<= 1;
+        if (red_led == led) {
+            TPM2->CONTROLS[0].CnV <<= 1;
+        } else if (green_led == led) {
+            TPM2->CONTROLS[1].CnV <<= 1;
+        }
     } else if (decrease_brightness == change) {
-        period >>= 1;
-    }
-    if (red_led == led) {
-        TPM2->CONTROLS[0].CnV = period;
-    } else if (green_led == led) {
-        TPM2->CONTROLS[0].CnV = period;
+        if (red_led == led) {
+            TPM2->CONTROLS[0].CnV >>= 1;
+        } else if (green_led == led) {
+            TPM2->CONTROLS[1].CnV >>= 1;
+        }
     }
 #endif
 }
