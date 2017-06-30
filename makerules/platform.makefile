@@ -13,6 +13,7 @@ SYS_LINUX := Linux
 SYS_DARWIN := Darwin
 SYS_UBUNTU := Ubuntu 16.04.2 LTS
 SYS_WHEEZY := Debian GNU/Linux 7.9 (wheezy)
+SYS_STRETCH := Debian GNU/Linux 9.0 (stretch)
 SYS_FEDORA := "Fedora release 24 (Twenty Four)"
 SYS_ARCH := "Arch Linux"
 PLATFORM_HOST := host
@@ -73,7 +74,7 @@ ifeq ($(HOST_SYSTEM), $(TARGET_SYSTEM))
     include $(MAKERULES)/fedora-fedora.makefile
   else ifeq ("$(HOST_SYSTEM)", "$(SYS_ARCH)")
     include $(MAKERULES)/arch-arch.makefile
-  else ifeq ("$(HOST_SYSTEM)", "$(SYS_WHEEZY)")
+  else ifeq ("$(HOST_SYSTEM)", "$(SYS_STRETCH)")
     include $(MAKERULES)/bbb-bbb.makefile
   else
     $(error Unsupported host system : "$(HOST_SYSTEM)")
