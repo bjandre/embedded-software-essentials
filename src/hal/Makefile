@@ -29,7 +29,7 @@ INCLUDES = -I. -I../util -I../main -I../app
 ifeq ($(PLATFORM), $(PLATFORM_ENUM_HOST))
   INCLUDES += -Ihost
 else ifeq ($(PLATFORM), $(PLATFORM_ENUM_BBB))
-  INCLUDES += -Ihost
+  INCLUDES += -Ibeagle-bone-black
 else ifeq ($(PLATFORM), $(PLATFORM_ENUM_FRDM))
   INCLUDES += -Ifrdm-kl25z
 endif
@@ -41,8 +41,8 @@ OBJS = $(SRCS:%.c=%.o)
 # subdirectories that will be built.
 SUBDIRS = \
 	host \
-	frdm-kl25z
-#	beagle-bone-black \
+	frdm-kl25z \
+	beagle-bone-black 
 
 #
 # macro for executing TARGET in all SUBDIRS

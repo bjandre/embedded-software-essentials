@@ -25,6 +25,7 @@
 typedef enum SPIstatus {
     SPI_Status_Success,
     SPI_Status_Error,
+    SPI_Status_NULL,
 } SPIstatus;
 
 

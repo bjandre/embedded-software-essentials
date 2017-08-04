@@ -17,8 +17,10 @@
 
 #include "platform-defs.h"
 
-#if (PLATFORM == PLATFORM_HOST) || (PLATFORM == PLATFORM_BBB)
+#if (PLATFORM == PLATFORM_HOST)
 #include "uart-host.h"
+#elif (PLATFORM == PLATFORM_BBB)
+#include "uart-bbb.h"
 #elif (PLATFORM == PLATFORM_FRDM)
 #include "uart-frdm-kl25z.h"
 #endif
@@ -59,10 +61,14 @@ CommStatus CommCreate(communication_peripheral_t volatile *comm,
 CommStatus SetupUARTLogger(communication_peripheral_t volatile *comm)
 {
     CommStatus status = Comm_Status_Success;
-#if (PLATFORM == PLATFORM_HOST) || (PLATFORM == PLATFORM_BBB)
+#if (PLATFORM == PLATFORM_HOST)
     comm->initialize = &host_uart_initialize;
     comm->transmit_byte = &host_uart_transmit_byte;
     comm->receive_byte = &host_uart_receive_byte;
+#elif (PLATFORM == PLATFORM_BBB)
+    comm->initialize = &bbb_uart_initialize;
+    comm->transmit_byte = &bbb_uart_transmit_byte;
+    comm->receive_byte = &bbb_uart_receive_byte;
 #elif PLATFORM == PLATFORM_FRDM
     comm->initialize = &frdm_kl25z_uart_initialize;
     comm->transmit_byte = &frdm_kl25z_uart_transmit_byte;

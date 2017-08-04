@@ -14,36 +14,36 @@
  * SPI hardware specific implementation for FRDM-KL25Z dev board.
  */
 
-#ifndef ESE_HAL_SPI_FRDM_KL25Z_H_
-#define ESE_HAL_SPI_FRDM_KL25Z_H_
+#ifndef ESE_HAL_SPI_BBB_H_
+#define ESE_HAL_SPI_BBB_H_
 
 #include <stdbool.h>
 #include <stdint.h>
 
 #include "spi-peripheral.h"
-#include "gpio-frdm-kl25z.h"
+//#include "gpio-bbb.h"
 
 /**
-   frdm-kl25z specific initialization for the spi. Conforms to the call
+   bbb specific initialization for the spi. Conforms to the call
    signature of the initialization routine in the spi_peripheral_t
    defined in communication-peripheral.h
 
    \return status of the operation
  */
-SPIStatus frdm_kl25z_spi_initialize(spi_peripheral_t volatile *this,
+SPIStatus bbb_spi_initialize(spi_peripheral_t volatile *this,
                                     const uint32_t speed);
 
 /**
-   frdm-kl25z specific shutdown for the spi. Conforms to the call
+   bbb specific shutdown for the spi. Conforms to the call
    signature of the shutdown routine in the spi_peripheral_t
    defined in communication-peripheral.h
 
    \return status of the operation
  */
-SPIStatus frdm_kl25z_spi_shutdown(spi_peripheral_t volatile *this)
+SPIStatus bbb_spi_shutdown(spi_peripheral_t volatile *this);
 
 /**
-   frdm-kl25z specific initialization for the spi transmit_byte. Conforms to the
+   bbb specific initialization for the spi transmit_byte. Conforms to the
    call signature of the transmit_byte routine in the spi_peripheral_t
    defined in communication-peripheral.h
 
@@ -51,11 +51,11 @@ SPIStatus frdm_kl25z_spi_shutdown(spi_peripheral_t volatile *this)
 
    \return status of the operation
  */
-SPIStatus frdm_kl25z_spi_transmit_byte(spi_peripheral_t *this,
+SPIStatus bbb_spi_transmit_byte(spi_peripheral_t *this,
                                        const uint8_t byte);
 
 /**
-   frdm-kl25z specific initialization for the spi transmit_n_bytes. Conforms to the
+   bbb specific initialization for the spi transmit_n_bytes. Conforms to the
    call signature of the transmit_byte routine in the spi_peripheral_t
    defined in communication-peripheral.h
 
@@ -63,11 +63,11 @@ SPIStatus frdm_kl25z_spi_transmit_byte(spi_peripheral_t *this,
 
    \return status of the operation
  */
-SPIStatus frdm_kl25z_spi_transmit_n_bytes(spi_peripheral_t *this,
+SPIStatus bbb_spi_transmit_n_bytes(spi_peripheral_t *this,
         uint8_t const *const byte, const size_t num_bytes);
 
 /**
-   frdm-kl25z specific initialization for the spi receive_byte. Conforms to the
+   bbb specific initialization for the spi receive_byte. Conforms to the
    call signature of the receive_byte routine in the spi_peripheral_t
    defined in communication-peripheral.h
 
@@ -76,11 +76,11 @@ SPIStatus frdm_kl25z_spi_transmit_n_bytes(spi_peripheral_t *this,
    \return status of the operation
  */
 
-SPIStatus frdm_kl25z_spi_receive_byte(spi_peripheral_t *this,
+SPIStatus bbb_spi_receive_byte(spi_peripheral_t *this,
                                       uint8_t *byte);
 
 /**
-   frdm-kl25z specific initialization for the spi receive_n_byte. Conforms to the
+   bbb specific initialization for the spi receive_n_byte. Conforms to the
    call signature of the receive_byte routine in the spi_peripheral_t
    defined in communication-peripheral.h
 
@@ -88,11 +88,11 @@ SPIStatus frdm_kl25z_spi_receive_byte(spi_peripheral_t *this,
 
    \return status of the operation
  */
-SPIStatus frdm_kl25z_spi_receive_n_bytes(spi_peripheral_t *this,
+SPIStatus bbb_spi_receive_n_bytes(spi_peripheral_t *this,
         uint8_t *bytes, const size_t num_bytes);
 
 /**
-   frdm-kl25z specific initialization for the spi
+   bbb specific initialization for the spi
    polling_transmit_receive_byte. Conforms to the call signature of the
    spi_peripheral_t defined in
    spi-peripheral.h
@@ -103,11 +103,11 @@ SPIStatus frdm_kl25z_spi_receive_n_bytes(spi_peripheral_t *this,
    \return status of the operation
  */
 
-SPIStatus frdm_kl25z_spi_polling_transmit_receive_byte(
+SPIStatus bbb_spi_polling_transmit_receive_byte(
     spi_peripheral_t volatile *this, uint8_t *byte);
 
 /**
-   frdm-kl25z specific initialization for the spi
+   bbb specific initialization for the spi
    polling_transmit_receive_n_bytes. Conforms to the call signature of the
    routine in spi_peripheral_t defined in spi-peripheral.h
 
@@ -119,7 +119,7 @@ SPIStatus frdm_kl25z_spi_polling_transmit_receive_byte(
 
    \return status of the operation
  */
-SPIStatus frdm_kl25z_spi_polling_transmit_receive_n_bytes(
+SPIStatus bbb_spi_polling_transmit_receive_n_bytes(
     spi_peripheral_t volatile *this, const size_t num_bytes);
 
 /**
@@ -129,13 +129,13 @@ SPIStatus frdm_kl25z_spi_polling_transmit_receive_n_bytes(
 
    \return status of the operation
 */
-SPIStatus frdm_kl25z_spi_flush_transmit_buffer(spi_peripheral_t *this);
+SPIStatus bbb_spi_flush_transmit_buffer(spi_peripheral_t *this);
 
 /**
    Pointer to the function to begin an asynchronous tranmit on the
    communication peripheral
 
 */
-void frdm_kl25z_spi_begin_async_transmit(void);
+void bbb_spi_begin_async_transmit(void);
 
-#endif /* ESE_HAL_SPI_FRDM_KL25Z_H_ */
+#endif /* ESE_HAL_SPI_BBB_H_ */

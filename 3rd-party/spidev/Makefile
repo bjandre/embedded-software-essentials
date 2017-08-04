@@ -6,7 +6,11 @@
 
 all : spidev_test.c
 	cc -o spidev_test spidev_test.c
-	
+
 test : all
 	./spidev_test --verbose --speed 1000000 --device /dev/spidev1.0
 
+%.i : %.c
+	cc -E -c -o $*.i $<
+
+FORCE: 

@@ -59,11 +59,11 @@ else ifeq ($(PLATFORM), $(PLATFORM_ENUM_HOST))
 	-L../hal/host -lesehost
 else ifeq ($(PLATFORM), $(PLATFORM_ENUM_BBB))
   INCLUDES += \
-	-I../hal/host
+	-I../hal/beagle-bone-black
   DEPEND_LIBS += \
-	../hal/host/libesehost.a
+	../hal/beagle-bone-black/libesebbb.a
   LIBS += \
-	-L../hal/host -lesehost
+	-L../hal/beagle-bone-black -lesebbb
 endif
 
 LIBS += \

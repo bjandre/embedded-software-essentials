@@ -28,12 +28,12 @@ SRCS = \
 	logger.c \
 	log-item.c
 
-INCLUDES = -I. -I../util -I../hal -I../hal/host -I../hal/frdm-kl25z -I../main
+INCLUDES = -I. -I../util -I../hal -I../main
 
 ifeq ($(PLATFORM), $(PLATFORM_ENUM_HOST))
-  INCLUDES += -I../host
+  INCLUDES += -I../hal/host
 else ifeq ($(PLATFORM), $(PLATFORM_ENUM_BBB))
-  INCLUDES += -I../host
+  INCLUDES += -I../hal/beagle-bone-black
 else ifeq ($(PLATFORM), $(PLATFORM_ENUM_FRDM))
   INCLUDES += -I../hal/frdm-kl25z
 endif

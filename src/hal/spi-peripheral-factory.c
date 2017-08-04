@@ -18,8 +18,10 @@
 
 #include "platform-defs.h"
 
-#if (PLATFORM == PLATFORM_HOST) || (PLATFORM == PLATFORM_BBB)
+#if (PLATFORM == PLATFORM_HOST)
 #include "uart-host.h"
+#elif (PLATFORM == PLATFORM_BBB)
+#include "spi-bbb.h"
 #elif (PLATFORM == PLATFORM_FRDM)
 #include "spi-frdm-kl25z.h"
 #endif
@@ -85,11 +87,27 @@ SPIStatus SPICreate(spi_peripheral_t volatile *spi,
 SPIStatus SetupSPInRF24(spi_peripheral_t volatile *spi)
 {
     SPIStatus status = SPI_Status_Success;
-#if (PLATFORM == PLATFORM_HOST) || (PLATFORM == PLATFORM_BBB)
+#if (PLATFORM == PLATFORM_HOST)
     /* FIXME(bja, 2017-04) generalize the uart interface to a generic host spi. */
     abort();
+#elif  (PLATFORM == PLATFORM_BBB)
+    spi->initialize = &bbb_spi_initialize;
+    spi->shutdown = &bbb_spi_shutdown;
+    spi->transmit_byte = &bbb_spi_transmit_byte;
+    spi->receive_byte = &bbb_spi_receive_byte;
+    spi->begin_async_transmit = &bbb_spi_begin_async_transmit;
+    spi->flush_transmit_buffer = &bbb_spi_flush_transmit_buffer;
+    spi->transmit_n_bytes = &bbb_spi_transmit_n_bytes;
+    spi->receive_n_bytes = &bbb_spi_receive_n_bytes;
+    spi->polling_transmit_receive_byte =
+        &bbb_spi_polling_transmit_receive_byte;
+    spi->polling_transmit_receive_n_bytes =
+        &bbb_spi_polling_transmit_receive_n_bytes;
+    spi->begin_async_transmit = &bbb_spi_begin_async_transmit;
+    spi->flush_transmit_buffer = &bbb_spi_flush_transmit_buffer;
 #elif PLATFORM == PLATFORM_FRDM
     spi->initialize = &frdm_kl25z_spi_initialize;
+    spi->shutdown = &frdm_kl25z_spi_shutdown;
     spi->transmit_byte = &frdm_kl25z_spi_transmit_byte;
     spi->receive_byte = &frdm_kl25z_spi_receive_byte;
     spi->begin_async_transmit = &frdm_kl25z_spi_begin_async_transmit;
@@ -112,6 +130,7 @@ void SPIClear(spi_peripheral_t volatile *spi)
 {
     if (NULL != spi) {
         spi->initialize = NULL;
+        spi->shutdown = NULL;
         spi->transmit_byte = NULL;
         spi->receive_byte = NULL;
         spi->begin_async_transmit = NULL;

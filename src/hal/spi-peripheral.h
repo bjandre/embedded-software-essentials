@@ -20,13 +20,6 @@
 #include "circular_buffer.h"
 
 /**
-   spi state that must be preserved between transmit/receive calls
- */
-typedef struct _spi_state {
-    bool chip_select; /*<! state of the SPI CS pin */
-} spi_state_t;
-
-/**
    Status of communication peripheral operation
  */
 typedef enum _SPIStatus {
@@ -35,6 +28,7 @@ typedef enum _SPIStatus {
     SPI_Null_Pointer,
     SPI_Initialization_Error,
     SPI_Buffer_Error,
+    SPI_Status_Not_Implemented,
 } SPIStatus;
 
 typedef struct spi_peripheral_t spi_peripheral_t;
@@ -54,6 +48,16 @@ struct spi_peripheral_t {
        \return status of the operation
     */
     SPIStatus (*initialize)(spi_peripheral_t volatile *this, const uint32_t baud);
+
+    /**
+       Pointer to the function containing shutdown for the communication
+       peripheral.
+
+       \param[in] *this - pointer to the communication peripheral
+
+       \return status of the operation
+    */
+    SPIStatus (*shutdown)(spi_peripheral_t volatile *this);
 
     /**
        Pointer to the function for transmitting a byte with the current
@@ -151,7 +155,7 @@ struct spi_peripheral_t {
     /**
        Internal state that needs to be preserved between calls
      */
-    spi_state_t state;
+    void *state;
 
     /**
        manually controled chip select pin

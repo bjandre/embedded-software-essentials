@@ -46,6 +46,8 @@ volatile async_data_t global_async_data;
 #include "gpio-frdm-kl25z.h"
 #include "spi-frdm-kl25z.h"
 #include "nrf24l01.h"
+#elif (PLATFORM == PLATFORM_BBB)
+#include "nrf24l01.h"
 #endif
 
 /**
@@ -92,7 +94,7 @@ int main(int argc, char **argv)
 
     initialize_profiler();
 
-#if (PLATFORM == PLATFORM_FRDM)
+#if (PLATFORM == PLATFORM_FRDM) || (PLATFORM == PLATFORM_BBB)
     /* FIXME(bja, 2017-03) need to abstract out for host! */
     size_t num_bytes_buffer = 128;
     nrf24_initialize(num_bytes_buffer);

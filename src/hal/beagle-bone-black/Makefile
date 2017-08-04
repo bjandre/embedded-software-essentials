@@ -12,26 +12,35 @@ MAKERULES = $(abspath $(WORKSPACE_PATH)/makerules)
 
 include $(MAKERULES)/config.makefile
 
-ifeq ($(PLATFORM), $(PLATFORM_ENUM_HOST))
+ifeq ($(PLATFORM), $(PLATFORM_ENUM_BBB))
 LIB = \
-	libesehost.a
+	libesebbb.a
 
 SRCS = \
-	dma-host.c \
-	uart-host.c \
-	rtc-host.c
+	dma-bbb.c \
+	rtc-bbb.c \
+	spi-bbb.c \
+	uart-bbb.c
 
 OBJS = $(SRCS:%.c=%.o)
 
 INCLUDES = \
-	-I. \
-	-I../../util \
 	-I../../main \
 	-I../../app \
-	-I..
+	-I../../util \
+	-I.. \
+	-I.
+
+EPOCH_TIME := $(shell date +%s)
+CFLAGS += -DEPOCH_TIME=$(EPOCH_TIME)
+
 endif
 
 include $(MAKERULES)/generic.makefile
+
+
+
+
 
 
 

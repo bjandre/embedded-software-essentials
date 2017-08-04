@@ -101,6 +101,10 @@ else
     else
       $(error Unsupported ubuntu cross compile : "$(TARGET_SYSTEM)")
     endif
+  else ifeq ($(HOST_SYSTEM), $(SYS_STRETCH))
+    ifeq ($(TARGET_SYSTEM), $(PLATFORM_BBB))
+      include $(MAKERULES)/bbb-bbb.makefile
+    endif
   else
     $(error Unsupported host "$(HOST_SYSTEM)" cross compile to "$(TARGET_SYSTEM)")
   endif

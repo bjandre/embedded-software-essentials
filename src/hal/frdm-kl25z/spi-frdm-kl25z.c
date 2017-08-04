@@ -26,6 +26,30 @@
 
 #include "circular_buffer.h"
 
+/**
+   spi state that must be preserved between transmit/receive calls
+ */
+typedef struct _frdm_kl25z_spi_state {
+    bool chip_select; /*<! state of the SPI CS pin */
+} frdm_kl25z_spi_state_t;
+
+/**
+   get the state of the spi interface that may need to be preserved across
+   function calls.
+
+   \param[out] *state current state of the spi pins.
+ */
+void frdm_kl25z_get_spi_state(frdm_kl25z_spi_state_t *state, const GPIO_PINS pin);
+
+/**
+   set the state of the spi interface that may need to be preserved across
+   function calls.
+
+   \param[in] *state new state of the spi pins.
+ */
+void frdm_kl25z_set_spi_state(frdm_kl25z_spi_state_t *state, const GPIO_PINS pin);
+
+
 SPIStatus frdm_kl25z_spi_initialize(spi_peripheral_t volatile *this,
                                     const uint32_t baud)
 {
@@ -112,11 +136,16 @@ SPIStatus frdm_kl25z_spi_initialize(spi_peripheral_t volatile *this,
     return status;
 }
 
+SPIStatus frdm_kl25z_spi_shutdown(spi_peripheral_t *this)
+{
+    return SPI_Status_Success;
+}
+
 SPIStatus frdm_kl25z_spi_transmit_byte(spi_peripheral_t *this,
                                        const uint8_t byte)
 {
     SPIStatus status = SPI_Status_Success;
-    spi_state_t state;
+    frdm_kl25z_spi_state_t state;
     // preserve the current state so we can restore it at the end.
     frdm_kl25z_get_spi_state(&state, this->CS_pin);
 
@@ -165,7 +194,7 @@ SPIStatus frdm_kl25z_spi_polling_transmit_receive_byte(
 {
     SPIStatus status = SPI_Status_Success;
     // preserve the current state so we can restore it at the end.
-    spi_state_t state;
+    frdm_kl25z_spi_state_t state;
     frdm_kl25z_get_spi_state(&state, this->CS_pin);
 
     // set chip select active so we can write, inactive high, active low
@@ -205,7 +234,7 @@ SPIStatus frdm_kl25z_spi_polling_transmit_receive_n_bytes(
 {
     SPIStatus status = SPI_Status_Success;
     // preserve the current state so we can restore it at the end.
-    spi_state_t state;
+    frdm_kl25z_spi_state_t state;
     frdm_kl25z_get_spi_state(&state, this->CS_pin);
 
     // set CS active low.
@@ -258,13 +287,13 @@ void frdm_kl25z_spi_begin_async_transmit(void)
 {
 }
 
-void frdm_kl25z_get_spi_state(spi_state_t *state, const GPIO_PINS pin)
+void frdm_kl25z_get_spi_state(frdm_kl25z_spi_state_t *state, const GPIO_PINS pin)
 {
     // set chip select, inactive high, active low
     state->chip_select = GPIOD->PDOR & (1 << pin);
 }
 
-void frdm_kl25z_set_spi_state(spi_state_t *state, const GPIO_PINS pin)
+void frdm_kl25z_set_spi_state(frdm_kl25z_spi_state_t *state, const GPIO_PINS pin)
 {
     if (state->chip_select == 0) {
         // active low

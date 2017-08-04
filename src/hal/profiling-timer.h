@@ -17,6 +17,9 @@
 #include "platform-defs.h"
 #if (PLATFORM == PLATFORM_FRDM)
 #include "profiling-timer-frdm-kl25z.h"
+#elif (PLATFORM == PLATFORM_BBB)
+#include "profiling-timer-bbb.h"
+#include "compiler-compat.h"
 #else
 #include "profiling-timer-host.h"
 #include "compiler-compat.h"
@@ -35,6 +38,8 @@ initialize_profiling_timer(void)
 {
 #if (PLATFORM == PLATFORM_FRDM)
     frdm_kl25z_initialize_profiling_timer();
+#elif (PLATFORM == PLATFORM_BBB)
+    bbb_initialize_profiling_timer();
 #else
     host_initialize_profiling_timer();
 #endif
@@ -50,6 +55,8 @@ get_clocks_per_second_profiling_timer(void)
     uint32_t cps;
 #if (PLATFORM == PLATFORM_FRDM)
     cps = frdm_kl25z_get_clocks_per_second_profiling_timer();
+#elif (PLATFORM == PLATFORM_BBB)
+    cps = bbb_get_clocks_per_second_profiling_timer();
 #else
     cps = host_get_clocks_per_second_profiling_timer();
 #endif
@@ -66,6 +73,8 @@ __attribute__( ( always_inline ) ) __STATIC_INLINE void get_profiling_timer(
 {
 #if (PLATFORM == PLATFORM_FRDM)
     frdm_kl25z_get_profile_timer(timer_data);
+#elif (PLATFORM == PLATFORM_BBB)
+    bbb_get_profile_timer(timer_data);
 #else
     host_get_profile_timer(timer_data);
 #endif
