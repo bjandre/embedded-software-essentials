@@ -119,11 +119,13 @@ NRF24_command nrf24_create_cmd_write_ack_payload(uint8_t pipe)
 
 void nrf24_initialize(const size_t num_bytes_buffer)
 {
+    SPIStatus status = SPI_Status_Success;
     {
         uint32_t interrupt_state = start_critical_region();
-        SPICreate(&(global_async_data.nrf24.spi), SPI_nRF24, num_bytes_buffer);
+        status = SPICreate(&(global_async_data.nrf24.spi), SPI_nRF24, num_bytes_buffer);
         end_critical_region(interrupt_state);
     }
+    assert(SPI_Status_Success == status);
 
     /* GPIO radio enable line, active high, inactive low */
     GPIO_PINS pin = PTD_NRF24_CHIP_ACTIVATE;
@@ -164,6 +166,7 @@ void nrf24_read_register(NRF24_register reg, NRF24_size_t num_bytes,
         }
     }
 
+    SPIStatus status = SPI_Status_Success;
     /* */
     /* send the buffered data */
     /* */
@@ -172,11 +175,12 @@ void nrf24_read_register(NRF24_register reg, NRF24_size_t num_bytes,
     nrf24_chip_activate();
     {
         uint32_t interrupt_state = start_critical_region();
-        global_async_data.nrf24.spi.polling_transmit_receive_n_bytes(
+        status = global_async_data.nrf24.spi.polling_transmit_receive_n_bytes(
             &(global_async_data.nrf24.spi), total_bytes);
         end_critical_region(interrupt_state);
     }
     nrf24_chip_deactivate();
+    assert(SPI_Status_Success == status);
 
     /* */
     /* extract the buffered data to send back to the caller */
@@ -248,6 +252,7 @@ void nrf24_write_register(NRF24_register reg, uint8_t num_bytes,
         }
     }
 
+    SPIStatus status = SPI_Status_Success;
     /* */
     /* send the buffered data */
     /* */
@@ -261,6 +266,7 @@ void nrf24_write_register(NRF24_register reg, uint8_t num_bytes,
         end_critical_region(interrupt_state);
     }
     nrf24_chip_deactivate();
+    assert(SPI_Status_Success == status);
 
     /* FIXME(bja, 2017-04) Check return codes to ensure packet send successfully! */
 

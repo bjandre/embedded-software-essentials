@@ -14,6 +14,7 @@
    Hardware specific SPI implementation for Beagle Bone Black
  */
 
+#include <assert.h>
 #include <stdbool.h>
 #include <stdint.h>
 #include <stdlib.h>
@@ -30,6 +31,10 @@
 #include "spi-bbb.h"
 
 #include "circular_buffer.h"
+
+#include "async-global.h"
+
+extern volatile async_data_t global_async_data;
 
 /**
    spi state that must be preserved between transmit/receive calls
@@ -53,6 +58,13 @@ void bbb_get_spi_state(bbb_spi_state_t *state, const GPIO_PINS pin);
    \param[in] *state new state of the spi pins.
  */
 void bbb_set_spi_state(bbb_spi_state_t *state, const GPIO_PINS pin);
+
+/**
+   zero out the spi_ioc_transfer structure
+
+   \param[in,out] *transfer
+ */
+void bbb_zero_spi_transfer(struct spi_ioc_transfer *transfer);
 
 SPIStatus bbb_spi_initialize(spi_peripheral_t volatile *this,
                              const uint32_t baud)
@@ -155,13 +167,14 @@ SPIStatus bbb_spi_transmit_n_bytes(spi_peripheral_t *this,
     }
 
     struct spi_ioc_transfer transfer;
+    bbb_zero_spi_transfer(&transfer);
     transfer.tx_buf = (uint32_t)byte;
     transfer.len = num_bytes;
-    
+
     bbb_spi_state_t *state = this->state;
-	int32_t ret = ioctl(state->file_descriptor, SPI_IOC_MESSAGE(1), &transfer);
-	if (ret < 1) {
-		status = SPI_Status_Error;
+    int32_t ret = ioctl(state->file_descriptor, SPI_IOC_MESSAGE(1), &transfer);
+    if (ret < 1) {
+        status = SPI_Status_Error;
     }
 
     return status;
@@ -185,14 +198,15 @@ SPIStatus bbb_spi_polling_transmit_receive_byte(
     uint32_t num_bytes = 1;
         
     struct spi_ioc_transfer transfer;
+    bbb_zero_spi_transfer(&transfer);
     transfer.tx_buf = (uint32_t)byte;
     transfer.rx_buf = (uint32_t)&rx_byte;
     transfer.len = num_bytes;
-    
+
     bbb_spi_state_t *state = this->state;
-	int32_t ret = ioctl(state->file_descriptor, SPI_IOC_MESSAGE(1), &transfer);
-	if (ret < 1) {
-		status = SPI_Status_Error;
+    int32_t ret = ioctl(state->file_descriptor, SPI_IOC_MESSAGE(1), &transfer);
+    if (ret < 1) {
+        status = SPI_Status_Error;
     }
     *byte = rx_byte;
     return status;
@@ -201,6 +215,8 @@ SPIStatus bbb_spi_polling_transmit_receive_byte(
 SPIStatus bbb_spi_polling_transmit_receive_n_bytes(
     spi_peripheral_t volatile *this, const size_t num_bytes)
 {
+    // NOTE: the bytes we transmit/receive are stored in the spi circular
+    // buffers!
     SPIStatus status = SPI_Status_Success;
     // preserve the current state so we can restore it at the end.
     //bbb_spi_state_t state;
@@ -208,16 +224,56 @@ SPIStatus bbb_spi_polling_transmit_receive_n_bytes(
 
     // set CS active low.
 
-    uint8_t byte;
+    if (NULL == this) {
+        status = SPI_Null_Pointer;
+    }
+    if (NULL == this->state) {
+        status = SPI_Null_Pointer;
+    }
+    if (status != SPI_Status_Success) {
+        return status;
+    }
+
+    uint8_t *tx_bytes = malloc(num_bytes);
+    assert(NULL != tx_bytes);
     for (size_t i = 0; i < num_bytes; i++) {
-        CircularBufferRemoveItem(this->transmit_buffer, &byte);
-        this->polling_transmit_receive_byte(this, &byte);
-        CircularBufferAddItem(this->receive_buffer, &byte);
+        {
+            uint32_t interrupt_state = start_critical_region();
+            CircularBufferRemoveItem(global_async_data.nrf24.spi.transmit_buffer, tx_bytes + i);
+            end_critical_region(interrupt_state);
+        }
+    }
+
+    uint8_t *rx_bytes = malloc(num_bytes);
+    assert(NULL != rx_bytes);
+    for (size_t i = 0; i < num_bytes; i++) {
+        *(rx_bytes + i) = 0;
+    }
+
+    struct spi_ioc_transfer transfer;
+    bbb_zero_spi_transfer(&transfer);
+    transfer.tx_buf = (uint32_t)tx_bytes;
+    transfer.rx_buf = (uint32_t)rx_bytes;
+    transfer.len = num_bytes;
+
+    bbb_spi_state_t *state = this->state;
+    int32_t ret = ioctl(state->file_descriptor, SPI_IOC_MESSAGE(1), &transfer);
+    if (ret < 1) {
+        status = SPI_Status_Error;
+    }
+
+    for (size_t i = 0; i < num_bytes; i++) {
+        {
+            uint32_t interrupt_state = start_critical_region();
+            CircularBufferAddItem(global_async_data.nrf24.spi.receive_buffer, rx_bytes + i);
+            end_critical_region(interrupt_state);
+        }
     }
 
     // restore original state of the chip select pin
     //bbb_set_spi_state(&state, this->CS_pin);
-
+    free(tx_bytes);
+    free(rx_bytes);
     return status;
 }
 
@@ -244,6 +300,7 @@ SPIStatus bbb_spi_receive_n_bytes(spi_peripheral_t *this, uint8_t *byte,
     }
             
     struct spi_ioc_transfer transfer;
+    bbb_zero_spi_transfer(&transfer);
     transfer.rx_buf = (uint32_t)byte;
     transfer.len = num_bytes;
     
@@ -272,5 +329,14 @@ void bbb_get_spi_state(bbb_spi_state_t *state, const GPIO_PINS pin)
 
 void bbb_set_spi_state(bbb_spi_state_t *state, const GPIO_PINS pin)
 {
+}
+
+void bbb_zero_spi_transfer(struct spi_ioc_transfer *transfer)
+{
+    size_t num_bytes = sizeof(*transfer);
+    uint8_t *start = (uint8_t*)transfer;
+    for (size_t i = 0; i < num_bytes; i++) {
+        *(start + i) = 0;
+    }
 }
 

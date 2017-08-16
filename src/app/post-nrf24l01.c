@@ -12,7 +12,7 @@
 #include <stdint.h>
 
 #include "platform-defs.h"
-#if (PLATFORM == PLATFORM_FRDM)
+#if (PLATFORM == PLATFORM_FRDM) || (PLATFORM == PLATFORM_BBB)
 #include "nrf24l01.h"
 #include "nrf24l01-const.h"
 #endif
@@ -32,7 +32,7 @@
 POSTstatus post_nrf24_read_status()
 {
     POSTstatus status = POST_SKIPPED;
-#if (PLATFORM == PLATFORM_FRDM)
+#if (PLATFORM == PLATFORM_FRDM) || (PLATFORM == PLATFORM_BBB)
     uint8_t data = 0x00;
     uint8_t expected = 0x0E;
     nrf24_read_status(&data);
@@ -45,7 +45,7 @@ POSTstatus post_nrf24_read_status()
 POSTstatus post_nrf24_read_write_config()
 {
     POSTstatus status = POST_SKIPPED;
-#if (PLATFORM == PLATFORM_FRDM)
+#if (PLATFORM == PLATFORM_FRDM) || (PLATFORM == PLATFORM_BBB)
     /* read the default state */
     uint8_t data = 0x00;
     uint8_t expected = 0x08;
@@ -73,7 +73,7 @@ POSTstatus post_nrf24_read_write_config()
 POSTstatus post_nrf24_read_write_rf_setup()
 {
     POSTstatus status = POST_SKIPPED;
-#if (PLATFORM == PLATFORM_FRDM)
+#if (PLATFORM == PLATFORM_FRDM) || (PLATFORM == PLATFORM_BBB)
     /* read the default state */
     uint8_t data = 0x00;
     uint8_t expected = 0x0F;
@@ -101,7 +101,7 @@ POSTstatus post_nrf24_read_write_rf_setup()
 POSTstatus post_nrf24_read_write_rf_channel()
 {
     POSTstatus status = POST_SKIPPED;
-#if (PLATFORM == PLATFORM_FRDM)
+#if (PLATFORM == PLATFORM_FRDM) || (PLATFORM == PLATFORM_BBB)
     /* read the default state */
     uint8_t data = 0x00;
     uint8_t expected = 0x02;
@@ -129,7 +129,7 @@ POSTstatus post_nrf24_read_write_rf_channel()
 POSTstatus post_nrf24_read_write_tx_addr()
 {
     POSTstatus status = POST_SKIPPED;
-#if (PLATFORM == PLATFORM_FRDM)
+#if (PLATFORM == PLATFORM_FRDM) || (PLATFORM == PLATFORM_BBB)
     /* read the default state */
     uint64_t tx_addr = 0x0;
     uint64_t expected = 0xE7E7E7E7E7;
@@ -159,7 +159,7 @@ POSTstatus post_nrf24_read_write_tx_addr()
 POSTstatus post_nrf24_read_fifo_status()
 {
     POSTstatus status = POST_SKIPPED;
-#if (PLATFORM == PLATFORM_FRDM)
+#if (PLATFORM == PLATFORM_FRDM) || (PLATFORM == PLATFORM_BBB)
     /* read the default state */
     uint8_t data = 0x00;
     uint8_t expected = 0x11;
@@ -173,7 +173,7 @@ POSTstatus post_nrf24_read_fifo_status()
 POSTstatus post_nrf24_flush_tx_fifo()
 {
     POSTstatus status = POST_SKIPPED;
-#if (PLATFORM == PLATFORM_FRDM)
+#if (PLATFORM == PLATFORM_FRDM) || (PLATFORM == PLATFORM_BBB)
     nrf24_flush_tx_fifo();
     status = POST_PASS;
 #endif
@@ -183,7 +183,7 @@ POSTstatus post_nrf24_flush_tx_fifo()
 POSTstatus post_nrf24_flush_rx_fifo()
 {
     POSTstatus status = POST_SKIPPED;
-#if (PLATFORM == PLATFORM_FRDM)
+#if (PLATFORM == PLATFORM_FRDM) || (PLATFORM == PLATFORM_BBB)
     nrf24_flush_rx_fifo();
     status = POST_PASS;
 #endif
