@@ -16,12 +16,12 @@
 
 #include "util.h"
 #include "circular_buffer.h"
-#include "log-item.h"
+#include "log_item.h"
 #include "command.h"
-#include "async-global.h"
+#include "async_global.h"
 
 #if (PLATFORM == PLATFORM_FRDM)
-#include "gpio-frdm-kl25z.h"
+#include "gpio_frdm_kl25z.h"
 #endif
 
 /**

@@ -26,7 +26,7 @@
 #include <stdint.h>
 
 #include "circular_buffer.h"
-#include "communication-peripheral.h"
+#include "communication_peripheral.h"
 
 /**
    Buffers and communication peripheral associated with the logger

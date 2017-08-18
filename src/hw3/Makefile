@@ -35,7 +35,7 @@ HELLO_OBJS = $(HELLO_SRCS:%.c=%.o)
 #------------------------------------------
 REVERSE_EXE = reverse.out
 
-REVERSE_SRCS = reverse.c reverse-main.c
+REVERSE_SRCS = reverse.c reverse_main.c
 
 REVERSE_OBJS = $(REVERSE_SRCS:%.c=%.o)
 

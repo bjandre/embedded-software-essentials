@@ -11,8 +11,8 @@
 #ifndef ESE_APP_PROFILER_H_
 #define ESE_APP_PROFILER_H_
 
-#include "profiling-timer-data.h"
-#include "profiling-timer.h"
+#include "profiling_timer_data.h"
+#include "profiling_timer.h"
 
 /**
   Initialize the profiler

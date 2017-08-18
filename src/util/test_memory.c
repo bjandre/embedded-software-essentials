@@ -15,8 +15,8 @@
 #include <setjmp.h>
 #include <cmocka.h>
 
-#include "memory-common.h"
-#include "memory-cpu.h"
+#include "memory_common.h"
+#include "memory_cpu.h"
 
 #include "test_memory.h"
 

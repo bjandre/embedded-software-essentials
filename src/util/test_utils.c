@@ -14,8 +14,8 @@
 #include "test_memory.h"
 #include "test_data.h"
 #include "test_circular_buffer.h"
-#include "test_bit-operations.h"
-#include "test_math-util.h"
+#include "test_bit_operations.h"
+#include "test_math_util.h"
 
 /**
    main test driver for all platform independent utilities

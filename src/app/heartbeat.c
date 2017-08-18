@@ -10,16 +10,16 @@
 
 #include <stdint.h>
 
-#include "log-item.h"
+#include "log_item.h"
 #include "logger.h"
 #include "heartbeat.h"
 
-#include "platform-defs.h"
+#include "platform_defs.h"
 #if (PLATFORM == PLATFORM_FRDM)
-#include "gpio-frdm-kl25z.h"
+#include "gpio_frdm_kl25z.h"
 #endif
 
-#include "async-global.h"
+#include "async_global.h"
 
 void heartbeat(log_item_t *item)
 {

@@ -11,7 +11,7 @@
 #ifndef ESE_MAIN_POST_H_
 #define ESE_MAIN_POST_H_
 
-#include "log-item.h"
+#include "log_item.h"
 
 /**
    \file post.h

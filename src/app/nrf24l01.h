@@ -13,11 +13,11 @@
 
 #include <stdint.h>
 
-#include "gpio-common.h"
+#include "gpio_common.h"
 
-#include "spi-peripheral.h"
+#include "spi_peripheral.h"
 
-#include "nrf24l01-const.h"
+#include "nrf24l01_const.h"
 
 
 typedef struct _nrf24l01p {

@@ -13,17 +13,17 @@
 #include <stdint.h>
 #include <stdlib.h>
 
-#include "platform-defs.h"
+#include "platform_defs.h"
 
 #ifdef LOGGING_ENABLED
 
-#include "memory-cpu.h"
+#include "memory_cpu.h"
 #include "data.h"
 #include "circular_buffer.h"
-#include "communication-peripheral.h"
-#include "communication-peripheral-factory.h"
+#include "communication_peripheral.h"
+#include "communication_peripheral_factory.h"
 #include "logger.h"
-#include "async-global.h"
+#include "async_global.h"
 
 /**
    logger transmit using polling

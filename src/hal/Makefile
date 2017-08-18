@@ -16,12 +16,12 @@ LIB = \
 	libhal.a
 
 SRCS = \
-	memory-dma.c \
-	post-dma.c \
+	memory_dma.c \
+	post_dma.c \
 	hal.c \
-	communication-peripheral-generic.c \
-	communication-peripheral-factory.c \
-	spi-peripheral-factory.c
+	communication_peripheral_generic.c \
+	communication_peripheral_factory.c \
+	spi_peripheral_factory.c
 
 
 INCLUDES = -I. -I../util -I../main -I../app
@@ -29,9 +29,9 @@ INCLUDES = -I. -I../util -I../main -I../app
 ifeq ($(PLATFORM), $(PLATFORM_ENUM_HOST))
   INCLUDES += -Ihost
 else ifeq ($(PLATFORM), $(PLATFORM_ENUM_BBB))
-  INCLUDES += -Ibeagle-bone-black
+  INCLUDES += -Ibeaglebone_black
 else ifeq ($(PLATFORM), $(PLATFORM_ENUM_FRDM))
-  INCLUDES += -Ifrdm-kl25z
+  INCLUDES += -Ifrdm_kl25z
 endif
 
 OBJS = $(SRCS:%.c=%.o)
@@ -41,8 +41,8 @@ OBJS = $(SRCS:%.c=%.o)
 # subdirectories that will be built.
 SUBDIRS = \
 	host \
-	frdm-kl25z \
-	beagle-bone-black 
+	frdm_kl25z \
+	beaglebone_black 
 
 #
 # macro for executing TARGET in all SUBDIRS

@@ -14,9 +14,9 @@
 #include <stdio.h>
 
 #include "data.h"
-#include "data-set.h"
-#include "memory-common.h"
-#include "memory-cpu.h"
+#include "data_set.h"
+#include "memory_common.h"
+#include "memory_cpu.h"
 #include "project_1.h"
 
 void test_data1(uint8_t *data, uint32_t size);

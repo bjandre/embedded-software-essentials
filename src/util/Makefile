@@ -19,13 +19,13 @@ LIB = \
 	libutil.a
 
 SRCS = \
-	math-util.c \
-	memory-common.c \
-	memory-cpu.c \
+	math_util.c \
+	memory_common.c \
+	memory_cpu.c \
 	data.c \
-	data-set.c \
+	data_set.c \
 	circular_buffer.c \
-	bit-operations.c
+	bit_operations.c
 
 OBJS = $(SRCS:%.c=%.o)
 
@@ -34,11 +34,11 @@ INCLUDES = -I../hal \
 
 
 TEST_SRCS = \
-	test_math-util.c \
+	test_math_util.c \
 	test_memory.c \
 	test_data.c \
 	test_circular_buffer.c \
-	test_bit-operations.c \
+	test_bit_operations.c \
 	test_utils.c
 
 TEST_OBJS = $(TEST_SRCS:%.c=%.o)

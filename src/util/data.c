@@ -15,7 +15,7 @@
 #include <stdlib.h>
 
 #include "data.h"
-#include "memory-common.h"
+#include "memory_common.h"
 
 DataStatus convert_endian32(uint32_t *data, uint32_t length);
 bool is_whitespace(int8_t byte);

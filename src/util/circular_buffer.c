@@ -12,8 +12,8 @@
 #include <stddef.h>
 #include <stdlib.h>
 
-#include "memory-common.h"
-#include "memory-cpu.h"
+#include "memory_common.h"
+#include "memory_cpu.h"
 #include "circular_buffer.h"
 
 /**

@@ -10,16 +10,16 @@
 #include <assert.h>
 #include <stdint.h>
 
-#include "compiler-compat.h"
+#include "compiler_compat.h"
 
-#include "spi-peripheral-factory.h"
+#include "spi_peripheral_factory.h"
 
 #include "nrf24l01.h"
-#include "nrf24l01-const.h"
-#include "async-global.h"
+#include "nrf24l01_const.h"
+#include "async_global.h"
 
 #if (PLATFORM == PLATFORM_FRDM)
-#include "gpio-frdm-kl25z.h"
+#include "gpio_frdm_kl25z.h"
 #else
 #define PTD_NRF24_CHIP_ACTIVATE 0
 #endif

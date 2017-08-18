@@ -17,25 +17,25 @@ LIB = \
 
 SRCS = \
 	nrf24l01.c \
-	post-nrf24l01.c \
-	memory-profile.c \
-	analyze-data.c \
+	post_nrf24l01.c \
+	memory_profile.c \
+	analyze_data.c \
 	heartbeat.c \
 	profiler.c \
-	post-profiler.c \
+	post_profiler.c \
 	message.c \
 	command.c \
 	logger.c \
-	log-item.c
+	log_item.c
 
 INCLUDES = -I. -I../util -I../hal -I../main
 
 ifeq ($(PLATFORM), $(PLATFORM_ENUM_HOST))
   INCLUDES += -I../hal/host
 else ifeq ($(PLATFORM), $(PLATFORM_ENUM_BBB))
-  INCLUDES += -I../hal/beagle-bone-black
+  INCLUDES += -I../hal/beaglebone_black
 else ifeq ($(PLATFORM), $(PLATFORM_ENUM_FRDM))
-  INCLUDES += -I../hal/frdm-kl25z
+  INCLUDES += -I../hal/frdm_kl25z
 endif
 
 OBJS = $(SRCS:%.c=%.o)

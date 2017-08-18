@@ -11,10 +11,10 @@
 #include <limits.h>
 #include <stdbool.h>
 
-#include "profiling-timer.h"
+#include "profiling_timer.h"
 #include "profiler.h"
 
-#include "async-global.h"
+#include "async_global.h"
 
 void initialize_profiler(void)
 {

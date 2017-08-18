@@ -18,8 +18,8 @@ BIN = $(EXE:%.$(EXE_EXTENSION)=%.$(BIN_EXTENSION))
 
 SRCS = \
 	main.c \
-	async-global.c \
-	debug-uart-data.c \
+	async_global.c \
+	debug_uart_data.c \
 	post.c
 
 OBJS = $(SRCS:%.c=%.o)
@@ -43,13 +43,13 @@ LIBS += \
 
 ifeq ($(PLATFORM), $(PLATFORM_ENUM_FRDM))
   INCLUDES += \
-	-I../hal/frdm-kl25z
+	-I../hal/frdm_kl25z
   DEPEND_STARTUP += \
-	../hal/frdm-kl25z/libfrdm_startup.a
+	../hal/frdm_kl25z/libfrdm_startup.a
   DEPEND_LIBS += \
-	../hal/frdm-kl25z/libesefrdm.a 
+	../hal/frdm_kl25z/libesefrdm.a 
   LIBS += \
-	-L../hal/frdm-kl25z -lesefrdm
+	-L../hal/frdm_kl25z -lesefrdm
 else ifeq ($(PLATFORM), $(PLATFORM_ENUM_HOST))
   INCLUDES += \
 	-I../hal/host
@@ -59,11 +59,11 @@ else ifeq ($(PLATFORM), $(PLATFORM_ENUM_HOST))
 	-L../hal/host -lesehost
 else ifeq ($(PLATFORM), $(PLATFORM_ENUM_BBB))
   INCLUDES += \
-	-I../hal/beagle-bone-black
+	-I../hal/beaglebone_black
   DEPEND_LIBS += \
-	../hal/beagle-bone-black/libesebbb.a
+	../hal/beaglebone_black/libesebbb.a
   LIBS += \
-	-L../hal/beagle-bone-black -lesebbb
+	-L../hal/beaglebone_black -lesebbb
 endif
 
 LIBS += \

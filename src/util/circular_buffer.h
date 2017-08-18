@@ -14,7 +14,7 @@
 #include <stdbool.h>
 #include <stddef.h>
 
-#include "compiler-compat.h"
+#include "compiler_compat.h"
 
 /**
    \file circular_buffer.h

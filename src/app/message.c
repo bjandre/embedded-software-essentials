@@ -17,13 +17,13 @@
 
 #include "util.h"
 #include "circular_buffer.h"
-#include "log-item.h"
+#include "log_item.h"
 #include "logger.h"
 
 #include "command.h"
 #include "message.h"
 
-#include "async-global.h"
+#include "async_global.h"
 
 /**
    \file message.c

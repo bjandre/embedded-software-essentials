@@ -10,19 +10,19 @@
 
 #include <stdint.h>
 
-#include "platform-defs.h"
+#include "platform_defs.h"
 #if (PLATFORM == PLATFORM_FRDM)
-#include "gpio-frdm-kl25z.h"
+#include "gpio_frdm_kl25z.h"
 #endif
 
-#include "log-item.h"
+#include "log_item.h"
 
-#include "post-common.h"
+#include "post_common.h"
 #include "post.h"
 
-#include "post-profiler.h"
-#include "post-dma.h"
-#include "post-nrf24l01.h"
+#include "post_profiler.h"
+#include "post_dma.h"
+#include "post_nrf24l01.h"
 
 
 typedef struct _suite_status {

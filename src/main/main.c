@@ -20,31 +20,31 @@
 #include <stdint.h>
 #include <stdlib.h>
 
-#include "platform-defs.h"
+#include "platform_defs.h"
 
 #include "hal.h"
-#include "spi-peripheral-factory.h"
+#include "spi_peripheral_factory.h"
 
 #include "logger.h"
-#include "log-item.h"
+#include "log_item.h"
 #include "message.h"
 #include "command.h"
 
-#include "analyze-data.h"
-#include "debug-uart-data.h"
+#include "analyze_data.h"
+#include "debug_uart_data.h"
 #include "post.h"
 #include "heartbeat.h"
 #include "profiler.h"
-#include "memory-profile.h"
+#include "memory_profile.h"
 
-#include "async-global.h"
+#include "async_global.h"
 
 /* Global, asynchronously accessed data instances */
 volatile async_data_t global_async_data;
 
 #if (PLATFORM == PLATFORM_FRDM)
-#include "gpio-frdm-kl25z.h"
-#include "spi-frdm-kl25z.h"
+#include "gpio_frdm_kl25z.h"
+#include "spi_frdm_kl25z.h"
 #include "nrf24l01.h"
 #elif (PLATFORM == PLATFORM_BBB)
 #include "nrf24l01.h"

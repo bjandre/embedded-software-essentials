@@ -1,12 +1,12 @@
-#include "platform-defs.h"
+#include "platform_defs.h"
 
 #if (PLATFORM == PLATFORM_FRDM)
-#include "initialize-frdm-kl25z.h"
-#include "rtc-frdm-kl25z.h"
-#include "gpio-frdm-kl25z.h"
-#include "pwm-timer-frdm-kl25z.h"
-#include "dma-frdm-kl25z.h"
-#include "spi-frdm-kl25z.h"
+#include "initialize_frdm_kl25z.h"
+#include "rtc_frdm_kl25z.h"
+#include "gpio_frdm_kl25z.h"
+#include "pwm_timer_frdm_kl25z.h"
+#include "dma_frdm_kl25z.h"
+#include "spi_frdm_kl25z.h"
 #endif
 
 #include "hal.h"

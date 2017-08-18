@@ -17,9 +17,9 @@ LIB = \
 	libesehost.a
 
 SRCS = \
-	dma-host.c \
-	uart-host.c \
-	rtc-host.c
+	dma_host.c \
+	uart_host.c \
+	rtc_host.c
 
 OBJS = $(SRCS:%.c=%.o)
 

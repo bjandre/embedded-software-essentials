@@ -17,12 +17,12 @@
 #include <setjmp.h>
 #include <cmocka.h>
 
-#include "profiling-timer-data.h"
+#include "profiling_timer_data.h"
 #include "profiler.h"
 
 #include "test_profiler.h"
 
-#include "async-global.h"
+#include "async_global.h"
 
 volatile async_data_t global_async_data;
 
