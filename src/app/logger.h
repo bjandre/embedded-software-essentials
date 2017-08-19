@@ -31,7 +31,7 @@
 /**
    Buffers and communication peripheral associated with the logger
  */
-typedef struct BinaryLogger {
+typedef struct {
     circular_buffer_t volatile *transmit_buffer;
     circular_buffer_t volatile *receive_buffer;
     communication_peripheral_t comm;
@@ -40,7 +40,7 @@ typedef struct BinaryLogger {
 /**
    Status codes returned by binary logger operations
  */
-typedef enum BinaryLoggerStatus {
+typedef enum {
     BinaryLogger_Success,
     BinaryLogger_Error,
     BinaryLogger_Null_Pointer,

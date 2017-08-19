@@ -48,7 +48,7 @@ void run_test(log_item_t *item, post_test test, const char *name,
     } else if (POST_PASS == status) {
         suite_status->num_tests_pass++;
     } else {/* (POST_PASS != status) */
-        UpdateLogItem(item, POST_ERROR, name_size, (uint8_t *)name);
+        log_item_update(item, POST_ERROR, name_size, (uint8_t *)name);
         log_item(item);
     }
 }
@@ -58,7 +58,7 @@ void power_on_self_tests(log_item_t *item)
 #if (PLATFORM == PLATFORM_FRDM)
     frdm_kl25z_toggle_green_led();
 #endif
-    UpdateLogItemNoPayload(item, POST_START);
+    log_item_update_no_payload(item, POST_START);
     log_item(item);
 
     suite_status_t suite_status;
@@ -82,19 +82,19 @@ void power_on_self_tests(log_item_t *item)
     POST_TEST(item, post_nrf24_flush_tx_fifo, suite_status);
     POST_TEST(item, post_nrf24_flush_rx_fifo, suite_status);
 
-    UpdateLogItem(item, POST_NUM_TESTS_RUN, sizeof(size_t),
-                  &suite_status.num_tests_run);
+    log_item_update(item, POST_NUM_TESTS_RUN, sizeof(size_t),
+                    &suite_status.num_tests_run);
     log_item(item);
 
-    UpdateLogItem(item, POST_NUM_TESTS_SKIPPED, sizeof(size_t),
-                  &suite_status.num_tests_skipped);
+    log_item_update(item, POST_NUM_TESTS_SKIPPED, sizeof(size_t),
+                    &suite_status.num_tests_skipped);
     log_item(item);
 
-    UpdateLogItem(item, POST_NUM_TESTS_PASSED, sizeof(size_t),
-                  &suite_status.num_tests_pass);
+    log_item_update(item, POST_NUM_TESTS_PASSED, sizeof(size_t),
+                    &suite_status.num_tests_pass);
     log_item(item);
 
-    UpdateLogItemNoPayload(item, POST_COMPLETE);
+    log_item_update_no_payload(item, POST_COMPLETE);
     log_item(item);
 #if (PLATFORM == PLATFORM_FRDM)
     frdm_kl25z_toggle_green_led();

@@ -29,7 +29,7 @@ void initialize_logger_data_analysis(data_summary_t *data_summary,
 {
     clear_data_summary(data_summary);
 
-    UpdateLogItemNoPayload(item, DATA_ANALYSIS_STARTED);
+    log_item_update_no_payload(item, DATA_ANALYSIS_STARTED);
     log_item(item);
 }
 
@@ -48,7 +48,7 @@ void analyze_logger_data_event(data_summary_t *data_summary, log_item_t *item)
 
     if (data_available) {
         log_receive_data(1, &byte);
-        logger_status = UpdateLogItem(item, DATA_RECEIVED, 1, &byte);
+        logger_status = log_item_update(item, DATA_RECEIVED, 1, &byte);
         if (BinaryLogger_Success != logger_status) {
             abort();
         }
@@ -59,7 +59,7 @@ void analyze_logger_data_event(data_summary_t *data_summary, log_item_t *item)
 
     if (data_summary->num_received == num_required) {
         log_data_analysis(item, data_summary);
-        UpdateLogItemNoPayload(item, DATA_ANALYSIS_COMPLETED);
+        log_item_update_no_payload(item, DATA_ANALYSIS_COMPLETED);
         log_item(item);
         clear_data_summary(data_summary);
         data_summary->num_received = 0;
@@ -120,19 +120,19 @@ void process_data(data_summary_t *data_summary, uint8_t byte)
 
 void log_data_analysis(log_item_t *item, data_summary_t *summary)
 {
-    UpdateLogItem(item, DATA_ALPHA_COUNT, sizeof(summary->num_alphabetic),
-                  &(summary->num_alphabetic));
+    log_item_update(item, DATA_ALPHA_COUNT, sizeof(summary->num_alphabetic),
+                    &(summary->num_alphabetic));
     log_item(item);
 
-    UpdateLogItem(item, DATA_NUMERIC_COUNT, sizeof(summary->num_numeric),
-                  &(summary->num_numeric));
+    log_item_update(item, DATA_NUMERIC_COUNT, sizeof(summary->num_numeric),
+                    &(summary->num_numeric));
     log_item(item);
 
-    UpdateLogItem(item, DATA_PUNCTUATION_COUNT, sizeof(summary->num_punctuation),
-                  &(summary->num_punctuation));
+    log_item_update(item, DATA_PUNCTUATION_COUNT, sizeof(summary->num_punctuation),
+                    &(summary->num_punctuation));
     log_item(item);
 
-    UpdateLogItem(item, DATA_MISC_COUNT, sizeof(summary->num_misc),
-                  &(summary->num_misc));
+    log_item_update(item, DATA_MISC_COUNT, sizeof(summary->num_misc),
+                    &(summary->num_misc));
     log_item(item);
 }

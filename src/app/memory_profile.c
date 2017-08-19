@@ -42,7 +42,7 @@ void memory_profile(log_item_t *item)
     enable_global_async_profiling_active();
     uint32_t cps = get_clocks_per_second_profiling_timer();
 
-    UpdateLogItem(item, PROFILING_CLOCKS_PER_SEC, sizeof(cps), &(cps));
+    log_item_update(item, PROFILING_CLOCKS_PER_SEC, sizeof(cps), &(cps));
     log_item(item);
     /* NOTE(bja, 2017-04 ) replacing the requested number of bytes from the
      * assignment with multiples of 4 bytes to ensure transfer are evenly
@@ -65,16 +65,17 @@ void memory_profile(log_item_t *item)
 
     const char name_total_bytes[] = "total_bytes";
     for (size_t nb = 0; nb < num_bytes; nb++) {
-        UpdateLogItem(item, PROFILING_START, sizeof(name_total_bytes),
-                      &name_total_bytes);
+        log_item_update(item, PROFILING_START, sizeof(name_total_bytes),
+                        &name_total_bytes);
         log_item(item);
-        UpdateLogItem(item, PROFILING_VALUE, sizeof(uint16_t), bytes + nb);
+        log_item_update(item, PROFILING_VALUE, sizeof(uint16_t), bytes + nb);
         log_item(item);
 
         profile_memset(item, bytes[nb], destination, &set_value);
         profile_memmove(item, bytes[nb], destination, source);
 
-        UpdateLogItem(item, PROFILING_END, sizeof(name_total_bytes), &name_total_bytes);
+        log_item_update(item, PROFILING_END, sizeof(name_total_bytes),
+                        &name_total_bytes);
         log_item(item);
     }
 
@@ -96,13 +97,13 @@ void profile_memmov_dma(uint32_t num_bytes,
     uint32_t average_clocks;
 
     const char name_memmove_dma[] = "memmove_dma";
-    UpdateLogItem(item, PROFILING_START, sizeof(name_memmove_dma),
-                  &name_memmove_dma);
+    log_item_update(item, PROFILING_START, sizeof(name_memmove_dma),
+                    &name_memmove_dma);
     log_item(item);
     for (size_t nbpt = 0; nbpt < num_bytes_per_transfer; nbpt++) {
         total_clocks = 0;
         char str_nbpt = '0' + bytes_per_transfer[nbpt];
-        UpdateLogItem(item, PROFILING_START, sizeof(char), &str_nbpt);
+        log_item_update(item, PROFILING_START, sizeof(char), &str_nbpt);
         log_item(item);
         for (uint8_t i = 0; i < num_trials; i++) {
             bool dma_complete = false;
@@ -117,13 +118,13 @@ void profile_memmov_dma(uint32_t num_bytes,
             total_clocks += elapsed_time(&start_time, &end_time);
         }
         average_clocks = total_clocks / num_trials;
-        UpdateLogItem(item, PROFILING_VALUE, sizeof(uint32_t), &average_clocks);
+        log_item_update(item, PROFILING_VALUE, sizeof(uint32_t), &average_clocks);
         log_item(item);
-        UpdateLogItem(item, PROFILING_END, sizeof(char), &str_nbpt);
+        log_item_update(item, PROFILING_END, sizeof(char), &str_nbpt);
         log_item(item);
     }
-    UpdateLogItem(item, PROFILING_END, sizeof(name_memmove_dma),
-                  &name_memmove_dma);
+    log_item_update(item, PROFILING_END, sizeof(name_memmove_dma),
+                    &name_memmove_dma);
     log_item(item);
 }
 
@@ -139,7 +140,7 @@ void profile_memmove_no_transfer_size(log_item_t *item,
     uint32_t total_clocks;
     uint32_t average_clocks;
 
-    UpdateLogItem(item, PROFILING_START, size_name, name);
+    log_item_update(item, PROFILING_START, size_name, name);
     log_item(item);
 
     total_clocks = 0;
@@ -150,10 +151,10 @@ void profile_memmove_no_transfer_size(log_item_t *item,
         total_clocks += elapsed_time(&start_time, &end_time);
     }
     average_clocks = total_clocks / num_trials;
-    UpdateLogItem(item, PROFILING_VALUE, sizeof(uint32_t), &average_clocks);
+    log_item_update(item, PROFILING_VALUE, sizeof(uint32_t), &average_clocks);
     log_item(item);
 
-    UpdateLogItem(item, PROFILING_END, size_name, name);
+    log_item_update(item, PROFILING_END, size_name, name);
     log_item(item);
 }
 
@@ -187,13 +188,13 @@ void profile_memset_dma(uint32_t num_bytes,
     uint32_t average_clocks;
 
     const char name_memset_dma[] = "memset_dma";
-    UpdateLogItem(item, PROFILING_START, sizeof(name_memset_dma),
-                  &name_memset_dma);
+    log_item_update(item, PROFILING_START, sizeof(name_memset_dma),
+                    &name_memset_dma);
     log_item(item);
     for (size_t nbpt = 0; nbpt < num_bytes_per_transfer; nbpt++) {
         total_clocks = 0;
         char str_nbpt = '0' + bytes_per_transfer[nbpt];
-        UpdateLogItem(item, PROFILING_START, sizeof(char), &str_nbpt);
+        log_item_update(item, PROFILING_START, sizeof(char), &str_nbpt);
         log_item(item);
         for (uint8_t i = 0; i < num_trials; i++) {
             bool dma_complete = false;
@@ -208,13 +209,13 @@ void profile_memset_dma(uint32_t num_bytes,
             total_clocks += elapsed_time(&start_time, &end_time);
         }
         average_clocks = total_clocks / num_trials;
-        UpdateLogItem(item, PROFILING_VALUE, sizeof(uint32_t), &average_clocks);
+        log_item_update(item, PROFILING_VALUE, sizeof(uint32_t), &average_clocks);
         log_item(item);
-        UpdateLogItem(item, PROFILING_END, sizeof(char), &str_nbpt);
+        log_item_update(item, PROFILING_END, sizeof(char), &str_nbpt);
         log_item(item);
     }
-    UpdateLogItem(item, PROFILING_END, sizeof(name_memset_dma),
-                  &name_memset_dma);
+    log_item_update(item, PROFILING_END, sizeof(name_memset_dma),
+                    &name_memset_dma);
     log_item(item);
 }
 
@@ -230,7 +231,7 @@ void profile_memset_no_transfer_size(log_item_t *item,
     uint32_t total_clocks = 0;
     uint32_t average_clocks = 0;
     total_clocks = 0;
-    UpdateLogItem(item, PROFILING_START, size_name, name);
+    log_item_update(item, PROFILING_START, size_name, name);
     log_item(item);
     for (uint8_t i = 0; i < num_trials; i++) {
         get_timer(&start_time);
@@ -239,9 +240,9 @@ void profile_memset_no_transfer_size(log_item_t *item,
         total_clocks += elapsed_time(&start_time, &end_time);
     }
     average_clocks = total_clocks / num_trials;
-    UpdateLogItem(item, PROFILING_VALUE, sizeof(uint32_t), &average_clocks);
+    log_item_update(item, PROFILING_VALUE, sizeof(uint32_t), &average_clocks);
     log_item(item);
-    UpdateLogItem(item, PROFILING_END, size_name, name);
+    log_item_update(item, PROFILING_END, size_name, name);
     log_item(item);
 }
 

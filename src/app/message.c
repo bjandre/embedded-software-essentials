@@ -160,7 +160,7 @@ void state_idle(log_item_t *item, message_t *message, uint8_t byte)
         // Else we are receiving data out of order. We are aren't doing
         // synchronized communication with sender, so we just log the error and
         // drop the message.
-        UpdateLogItemNoPayload(item, MESSAGE_DROPPED_ERROR);
+        log_item_update_no_payload(item, MESSAGE_DROPPED_ERROR);
         log_item(item);
     }
 }
@@ -187,9 +187,9 @@ void state_length_received(log_item_t *item, message_t *message, uint8_t byte)
     // length. From here we transition to receiving data.
 
     if (0x00 != (message->length & byte)) {
-        UpdateLogItem(item, MESSAGE_LENGTH_ERROR, 1, &(message->length));
+        log_item_update(item, MESSAGE_LENGTH_ERROR, 1, &(message->length));
         log_item(item);
-        UpdateLogItem(item, MESSAGE_LENGTH, 1, &byte);
+        log_item_update(item, MESSAGE_LENGTH, 1, &byte);
         log_item(item);
     }
     message->state = MESSAGE_STATE_RECEIVING_DATA;
@@ -224,7 +224,7 @@ void state_message_complete(log_item_t *item, message_t *message, uint8_t byte)
     // into the command buffer, then reset the message back to the idle state.
     UNUSED_VARIABLE(byte);
     verify_checksum(item, message);
-    UpdateLogItem(item, MESSAGE_COMMAND, message->data_length, message->data);
+    log_item_update(item, MESSAGE_COMMAND, message->data_length, message->data);
     log_item(item);
     receive_command_message(message->data_length, message->data);
     reset_message(message);
@@ -236,10 +236,10 @@ void verify_checksum(log_item_t *item, message_t *message)
     is_valid = verify_checksum_xor(message->data_length, message->data,
                                    *(message->checksum));
     if (!is_valid) {
-        UpdateLogItem(item, MESSAGE_CHECKSUM_ERROR, message_checksum_num_bytes,
-                      message->checksum);
+        log_item_update(item, MESSAGE_CHECKSUM_ERROR, message_checksum_num_bytes,
+                        message->checksum);
         log_item(item);
-        UpdateLogItem(item, MESSAGE_CHECKSUM, message->data_length, message->data);
+        log_item_update(item, MESSAGE_CHECKSUM, message->data_length, message->data);
         log_item(item);
     }
 }

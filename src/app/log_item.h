@@ -30,7 +30,7 @@
 /**
    Identifiers for data sent via the binary logger.
  */
-typedef enum BinaryLoggerID {
+typedef enum {
     LOGGER_INITIALIZED,
     RTC_INITIALIZED,
     GPIO_INITIALIZED,
@@ -68,15 +68,15 @@ typedef enum BinaryLoggerID {
     MESSAGE_CHECKSUM,
     MESSAGE_CHECKSUM_ERROR,
     MESSAGE_DROPPED_ERROR,
-} BinaryLoggerID;
+} binary_logger_id_t;
 
 /**
    Container for items sent to the binary logger.
 
    NOTE(bja, 2017-03) logged item is limited to a size of max_payload_bytes
 */
-typedef struct BinaryLoggerItem {
-    BinaryLoggerID id;
+typedef struct {
+    binary_logger_id_t id;
     time_t timestamp;
     logger_size_t payload_num_bytes;
     uint8_t *payload;
@@ -95,7 +95,7 @@ typedef struct BinaryLoggerItem {
      3. one byte - the second is the number of bytes in the log_item_t
      payload_num_bytes.
  */
-BinaryLoggerStatus InitializeLoggerForLogItems(void);
+BinaryLoggerStatus log_item_initialize_logger(void);
 
 /**
    Allocate a log item and internal buffer.
@@ -104,7 +104,7 @@ BinaryLoggerStatus InitializeLoggerForLogItems(void);
 
    \return status of the operation
  */
-BinaryLoggerStatus CreateLogItem(log_item_t **item);
+BinaryLoggerStatus log_item_create(log_item_t **item);
 
 /**
    Update the values stored in a previously allocated log item
@@ -116,8 +116,8 @@ BinaryLoggerStatus CreateLogItem(log_item_t **item);
 
    \return status of the operation
  */
-BinaryLoggerStatus UpdateLogItem(log_item_t *item, BinaryLoggerID id,
-                                 logger_size_t num_bytes, const void *payload);
+BinaryLoggerStatus log_item_update(log_item_t *item, binary_logger_id_t id,
+                                   logger_size_t num_bytes, const void *payload);
 
 /**
    Update the values stored in a previously allocated log item with defaults for no payload.
@@ -127,7 +127,8 @@ BinaryLoggerStatus UpdateLogItem(log_item_t *item, BinaryLoggerID id,
 
    \return status of the operation
  */
-BinaryLoggerStatus UpdateLogItemNoPayload(log_item_t *item, BinaryLoggerID id);
+BinaryLoggerStatus log_item_update_no_payload(log_item_t *item,
+        binary_logger_id_t id);
 
 /**
    Free the internal item memory and the item itself.
@@ -136,7 +137,7 @@ BinaryLoggerStatus UpdateLogItemNoPayload(log_item_t *item, BinaryLoggerID id);
 
    \return status of the operation
  */
-BinaryLoggerStatus DestroyLogItem(log_item_t **item);
+BinaryLoggerStatus log_item_destroy(log_item_t **item);
 
 /**
    Log the user provided item to the global logger.

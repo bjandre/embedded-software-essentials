@@ -26,7 +26,7 @@ void heartbeat(log_item_t *item)
     bool heartbeat_occurred = get_global_async_heartbeat_occurred();
     if (heartbeat_occurred) {
         set_global_async_heartbeat_occurred(false);
-        UpdateLogItemNoPayload(item, HEARTBEAT);
+        log_item_update_no_payload(item, HEARTBEAT);
         log_item(item);
 #if (PLATFORM == PLATFORM_FRDM)
         frdm_kl25z_heartbeat_led();

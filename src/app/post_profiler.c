@@ -44,10 +44,10 @@ POSTstatus post_profiler_nop()
     if (profile_time > profile_time_max ||
             profile_time < profile_time_min) {
         log_item_t *item;
-        CreateLogItem(&item);
-        UpdateLogItem(item, WARNING, sizeof(profile_time), &profile_time);
+        log_item_create(&item);
+        log_item_update(item, WARNING, sizeof(profile_time), &profile_time);
         log_item(item);
-        DestroyLogItem(&item);
+        log_item_destroy(&item);
         status = POST_FAIL;
     }
     return status;

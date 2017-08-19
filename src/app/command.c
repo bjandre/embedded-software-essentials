@@ -137,7 +137,7 @@ void command_help(log_item_t *item, command_message_t const *message)
     uint8_t cmd = 0;
     while (known_commands[cmd].execute != NULL) {
         uint32_t length = strlen(known_commands[cmd].help);
-        UpdateLogItem(item, HELP_COMMAND, length, known_commands[cmd].help);
+        log_item_update(item, HELP_COMMAND, length, known_commands[cmd].help);
         log_item(item);
         cmd++;
     }
@@ -148,12 +148,12 @@ void command_echo(log_item_t *item, command_message_t const *message)
     /**
        command has no payload
      */
-    UpdateLogItem(item, MESSAGE_COMMAND, 1, (void *) & (message->command));
+    log_item_update(item, MESSAGE_COMMAND, 1, (void *) & (message->command));
     log_item(item);
-    UpdateLogItem(item, MESSAGE_LENGTH, 1, (void *) & (message->payload_length));
+    log_item_update(item, MESSAGE_LENGTH, 1, (void *) & (message->payload_length));
     log_item(item);
-    UpdateLogItem(item, MESSAGE_PAYLOAD, message->payload_length,
-                  (void *) & (message->payload));
+    log_item_update(item, MESSAGE_PAYLOAD, message->payload_length,
+                    (void *) & (message->payload));
     log_item(item);
 }
 
@@ -188,9 +188,9 @@ void command_rgb_toggle(log_item_t *item, command_message_t const *message)
     UNUSED_VARIABLE(message);
 
 #if (PLATFORM == PLATFORM_HOST)
-    UpdateLogItem(item, MESSAGE_COMMAND, 1, (void *) & (message->command));
+    log_item_update(item, MESSAGE_COMMAND, 1, (void *) & (message->command));
     log_item(item);
-    UpdateLogItem(item, MESSAGE_PAYLOAD, 1, (void *) & (message->payload));
+    log_item_update(item, MESSAGE_PAYLOAD, 1, (void *) & (message->payload));
     log_item(item);
 #elif (PLATFORM == PLATFORM_FRDM)
     if (red_led == *(message->payload)) {
@@ -221,9 +221,9 @@ void command_rgb_brightness(log_item_t *item, command_message_t const *message)
     UNUSED_VARIABLE(message);
 
 #if (PLATFORM == PLATFORM_HOST)
-    UpdateLogItem(item, MESSAGE_COMMAND, 1, (void *) & (message->command));
+    log_item_update(item, MESSAGE_COMMAND, 1, (void *) & (message->command));
     log_item(item);
-    UpdateLogItem(item, MESSAGE_PAYLOAD, 2, (void *) & (message->payload));
+    log_item_update(item, MESSAGE_PAYLOAD, 2, (void *) & (message->payload));
     log_item(item);
 #elif (PLATFORM == PLATFORM_FRDM)
     uint8_t led = message->payload[0];

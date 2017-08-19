@@ -30,12 +30,12 @@ static const logger_size_t zero_payload_bytes =
     0;/*!< consant for zero payload size */
 static const void *null_payload = NULL;/*!< constant for a null payload */
 
-BinaryLoggerStatus InitializeLoggerForLogItems(void)
+BinaryLoggerStatus log_item_initialize_logger(void)
 {
     BinaryLoggerStatus status = BinaryLogger_Success;
     uint16_t magic_number = 0x4577u;
     log_data(sizeof(magic_number), (uint8_t *)(&magic_number));
-    uint8_t data = sizeof(BinaryLoggerID);
+    uint8_t data = sizeof(binary_logger_id_t);
     log_data(sizeof(data), (uint8_t *)(&data));
     data = sizeof(time_t);
     log_data(sizeof(data), (uint8_t *)(&data));
@@ -45,7 +45,7 @@ BinaryLoggerStatus InitializeLoggerForLogItems(void)
 }
 
 
-BinaryLoggerStatus CreateLogItem(log_item_t **item)
+BinaryLoggerStatus log_item_create(log_item_t **item)
 {
     BinaryLoggerStatus status = BinaryLogger_Success;
     *item = malloc(sizeof(log_item_t));
@@ -60,13 +60,13 @@ BinaryLoggerStatus CreateLogItem(log_item_t **item)
         }
     }
     if (BinaryLogger_Success != status) {
-        DestroyLogItem(item);
+        log_item_destroy(item);
     }
     return status;
 }
 
-BinaryLoggerStatus UpdateLogItem(log_item_t *item, BinaryLoggerID id,
-                                 logger_size_t num_bytes, const void *payload)
+BinaryLoggerStatus log_item_update(log_item_t *item, binary_logger_id_t id,
+                                   logger_size_t num_bytes, const void *payload)
 {
     BinaryLoggerStatus status = BinaryLogger_Success;
     if (NULL == item) {
@@ -95,9 +95,10 @@ BinaryLoggerStatus UpdateLogItem(log_item_t *item, BinaryLoggerID id,
     return status;
 }
 
-BinaryLoggerStatus UpdateLogItemNoPayload(log_item_t *item, BinaryLoggerID id)
+BinaryLoggerStatus log_item_update_no_payload(log_item_t *item,
+        binary_logger_id_t id)
 {
-    return UpdateLogItem(item, id, zero_payload_bytes, null_payload);
+    return log_item_update(item, id, zero_payload_bytes, null_payload);
 }
 
 BinaryLoggerStatus log_item(const log_item_t *item)
@@ -121,7 +122,7 @@ BinaryLoggerStatus log_item(const log_item_t *item)
     return status;
 }
 
-BinaryLoggerStatus DestroyLogItem(log_item_t **item)
+BinaryLoggerStatus log_item_destroy(log_item_t **item)
 {
     BinaryLoggerStatus status = BinaryLogger_Success;
     if (NULL != *item) {
@@ -136,14 +137,14 @@ BinaryLoggerStatus DestroyLogItem(log_item_t **item)
 /* simply return status OK. These may be removed by the linker when link
    time optimization in enabled. If profiling shows that they are not, we
    can replace them with a macro that substitutes status ok. */
-BinaryLoggerStatus CreateLogItem(log_item_t **item)
+BinaryLoggerStatus log_item_create(log_item_t **item)
 {
     (void)item;
     return BinaryLogger_Success;
 }
 
-BinaryLoggerStatus UpdateLogItem(log_item_t *item, BinaryLoggerID id,
-                                 logger_size_t num_bytes, const void *payload)
+BinaryLoggerStatus log_item_update(log_item_t *item, binary_logger_id_t id,
+                                   logger_size_t num_bytes, const void *payload)
 {
     (void)item;
     (void)num_bytes;
@@ -151,7 +152,7 @@ BinaryLoggerStatus UpdateLogItem(log_item_t *item, BinaryLoggerID id,
     return BinaryLogger_Success;
 }
 
-BinaryLoggerStatus DestroyLogItem(log_item_t **item)
+BinaryLoggerStatus log_item_destroy(log_item_t **item)
 {
     (void)item;
     return BinaryLogger_Success;

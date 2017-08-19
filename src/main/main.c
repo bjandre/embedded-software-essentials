@@ -142,43 +142,43 @@ void initialize(log_item_t **item)
         abort();
     }
 
-    InitializeLoggerForLogItems();
-    logger_status = CreateLogItem(item);
+    log_item_initialize_logger();
+    logger_status = log_item_create(item);
     if (BinaryLogger_Success != logger_status) {
         abort();
     }
-    logger_status = UpdateLogItemNoPayload(*item, LOGGER_INITIALIZED);
+    logger_status = log_item_update_no_payload(*item, LOGGER_INITIALIZED);
     if (BinaryLogger_Success != logger_status) {
         abort();
     }
     log_item(*item);
 
     initialize_rtc();
-    UpdateLogItemNoPayload(*item, RTC_INITIALIZED);
+    log_item_update_no_payload(*item, RTC_INITIALIZED);
     log_item(*item);
 
     initialize_gpio();
-    UpdateLogItemNoPayload(*item, GPIO_INITIALIZED);
+    log_item_update_no_payload(*item, GPIO_INITIALIZED);
     log_item(*item);
 
     initialize_dma();
-    UpdateLogItemNoPayload(*item, DMA_INITIALIZED);
+    log_item_update_no_payload(*item, DMA_INITIALIZED);
     log_item(*item);
 
     initialize_spi();
-    UpdateLogItemNoPayload(*item, SPI_INITIALIZED);
+    log_item_update_no_payload(*item, SPI_INITIALIZED);
     log_item(*item);
 
-    UpdateLogItemNoPayload(*item, SYSTEM_INITIALIZED);
+    log_item_update_no_payload(*item, SYSTEM_INITIALIZED);
     log_item(*item);
 
 }
 
 void shutdown(log_item_t **item)
 {
-    UpdateLogItemNoPayload(*item, SYSTEM_HALTED);
+    log_item_update_no_payload(*item, SYSTEM_HALTED);
     log_item(*item);
-    DestroyLogItem(item);
+    log_item_destroy(item);
     log_flush();
     BinaryLoggerDestroy();
 #if (PLATFORM == PLATFORM_FRDM)
