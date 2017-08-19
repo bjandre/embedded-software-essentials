@@ -10,12 +10,8 @@
 
 #include <stdint.h>
 
-#include "platform_defs.h"
-#if (PLATFORM == PLATFORM_FRDM)
-#include "gpio_frdm_kl25z.h"
-#endif
-
 #include "log_item.h"
+#include "leds.h"
 
 #include "post_common.h"
 #include "post.h"
@@ -55,9 +51,8 @@ void run_test(log_item_t *item, post_test test, const char *name,
 
 void power_on_self_tests(log_item_t *item)
 {
-#if (PLATFORM == PLATFORM_FRDM)
-    frdm_kl25z_toggle_green_led();
-#endif
+    leds_on_off(LEDS_GREEN);
+
     log_item_update_no_payload(item, POST_START);
     log_item(item);
 
@@ -96,7 +91,6 @@ void power_on_self_tests(log_item_t *item)
 
     log_item_update_no_payload(item, POST_COMPLETE);
     log_item(item);
-#if (PLATFORM == PLATFORM_FRDM)
-    frdm_kl25z_toggle_green_led();
-#endif
+
+    leds_on_off(LEDS_GREEN);
 }

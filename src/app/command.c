@@ -18,11 +18,8 @@
 #include "circular_buffer.h"
 #include "log_item.h"
 #include "command.h"
+#include "leds.h"
 #include "async_global.h"
-
-#if (PLATFORM == PLATFORM_FRDM)
-#include "gpio_frdm_kl25z.h"
-#endif
 
 /**
 
@@ -48,13 +45,6 @@ static const command_t known_commands[] = {
     { &command_rgb_brightness, "rgb brightness - cycle through led brightness." },
     { NULL, ""},
 };
-
-#if (PLATFORM == PLATFORM_FRDM)
-static const uint8_t red_led = 0x01;
-static const uint8_t green_led = 0x02;
-static const uint8_t increase_brightness = 0x01;
-static const uint8_t decrease_brightness = 0x02;
-#endif
 
 static const size_t max_buffer_commands = 8;
 static circular_buffer_t volatile *command_buffer;
@@ -184,31 +174,14 @@ void command_rgb_toggle(log_item_t *item, command_message_t const *message)
     /**
        command has a 1 byte payload, the color of the led to toggle.
      */
-    UNUSED_VARIABLE(item);
-    UNUSED_VARIABLE(message);
 
-#if (PLATFORM == PLATFORM_HOST)
     log_item_update(item, MESSAGE_COMMAND, 1, (void *) & (message->command));
     log_item(item);
     log_item_update(item, MESSAGE_PAYLOAD, 1, (void *) & (message->payload));
     log_item(item);
-#elif (PLATFORM == PLATFORM_FRDM)
-    if (red_led == *(message->payload)) {
-        if (TPM2->CONTROLS[0].CnV == 0) {
-            TPM2->CONTROLS[0].CnV = TPM2->MOD / 8;
-        } else {
-            TPM2->CONTROLS[0].CnV = 0;
-        }
-    } else if (green_led == *(message->payload)) {
-        if (TPM2->CONTROLS[1].CnV == 0) {
-            TPM2->CONTROLS[1].CnV = TPM2->MOD / 8;
-        } else {
-            TPM2->CONTROLS[1].CnV = 0;
-        }
-    }
-    // NOTE(bja, 2017-04) blue is not included here because it is used for the
-    // heartbeat
-#endif
+
+    leds_toggle(*(message->payload));
+
 }
 void command_rgb_brightness(log_item_t *item, command_message_t const *message)
 {
@@ -217,29 +190,12 @@ void command_rgb_brightness(log_item_t *item, command_message_t const *message)
          byte 1 - color to change.
          byte 2 - increase or decrease brightness.
      */
-    UNUSED_VARIABLE(item);
-    UNUSED_VARIABLE(message);
-
-#if (PLATFORM == PLATFORM_HOST)
     log_item_update(item, MESSAGE_COMMAND, 1, (void *) & (message->command));
     log_item(item);
     log_item_update(item, MESSAGE_PAYLOAD, 2, (void *) & (message->payload));
     log_item(item);
-#elif (PLATFORM == PLATFORM_FRDM)
+
     uint8_t led = message->payload[0];
     uint8_t change = message->payload[1];
-    if (increase_brightness == change) {
-        if (red_led == led) {
-            TPM2->CONTROLS[0].CnV <<= 1;
-        } else if (green_led == led) {
-            TPM2->CONTROLS[1].CnV <<= 1;
-        }
-    } else if (decrease_brightness == change) {
-        if (red_led == led) {
-            TPM2->CONTROLS[0].CnV >>= 1;
-        } else if (green_led == led) {
-            TPM2->CONTROLS[1].CnV >>= 1;
-        }
-    }
-#endif
+    leds_change_intensity(led, change);
 }

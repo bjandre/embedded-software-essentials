@@ -12,12 +12,8 @@
 
 #include "log_item.h"
 #include "binary_logger.h"
+#include "leds.h"
 #include "heartbeat.h"
-
-#include "platform_defs.h"
-#if (PLATFORM == PLATFORM_FRDM)
-#include "gpio_frdm_kl25z.h"
-#endif
 
 #include "async_global.h"
 
@@ -28,8 +24,6 @@ void heartbeat(log_item_t *item)
         set_global_async_heartbeat_occurred(false);
         log_item_update_no_payload(item, HEARTBEAT);
         log_item(item);
-#if (PLATFORM == PLATFORM_FRDM)
-        frdm_kl25z_heartbeat_led();
-#endif
+        leds_heartbeat();
     }
 }

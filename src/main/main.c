@@ -42,10 +42,7 @@
 /* Global, asynchronously accessed data instances */
 volatile async_data_t global_async_data;
 
-#if (PLATFORM == PLATFORM_FRDM)
-#include "gpio_frdm_kl25z.h"
-#include "nrf24l01.h"
-#elif (PLATFORM == PLATFORM_BBB)
+#if (PLATFORM == PLATFORM_FRDM) || (PLATFORM == PLATFORM_BBB)
 #include "nrf24l01.h"
 #endif
 
@@ -65,13 +62,6 @@ void initialize(log_item_t **item);
   \param[in] **item pointer to log item that will be freed
  */
 void shutdown(log_item_t **item);
-
-/**
-  Generic routine to update led status.
-
-  Wrapper around platform specific code.
- */
-void update_leds();
 
 
 int main(int argc, char **argv)
@@ -183,10 +173,4 @@ void shutdown(log_item_t **item)
     shutdown_hardware();
 }
 
-void update_leds(void)
-{
-#if (PLATFORM == PLATFORM_FRDM)
-    frdm_kl25z_toggle_red_led();
-#endif
-}
 

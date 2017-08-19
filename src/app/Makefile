@@ -20,6 +20,7 @@ SRCS = \
 	post_nrf24l01.c \
 	memory_profile.c \
 	analyze_data.c \
+	leds.c \
 	heartbeat.c \
 	profiler.c \
 	post_profiler.c \
