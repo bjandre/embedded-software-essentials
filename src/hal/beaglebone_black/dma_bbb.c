@@ -28,7 +28,7 @@ void bbb_initialize_dma(void)
 
 
 MemStatus bbb_memmove_dma(uint8_t *destination, uint8_t const *const source,
-                           uint32_t const num_bytes, uint8_t const bytes_per_transfer)
+                          uint32_t const num_bytes, uint8_t const bytes_per_transfer)
 {
     if (NULL == destination || NULL == source) {
         return MemStatus_Null_Pointer;
@@ -47,7 +47,7 @@ MemStatus bbb_memmove_dma(uint8_t *destination, uint8_t const *const source,
 }
 
 MemStatus bbb_memset_dma(uint8_t *destination, uint8_t const *const source,
-                          uint32_t const num_bytes, uint8_t const bytes_per_transfer)
+                         uint32_t const num_bytes, uint8_t const bytes_per_transfer)
 {
     if (NULL == destination || NULL == source) {
         return MemStatus_Null_Pointer;

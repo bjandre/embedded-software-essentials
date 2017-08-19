@@ -72,7 +72,7 @@ SPIStatus bbb_spi_initialize(spi_peripheral_t volatile *this,
     /*
 
        * P9\_17 - dt offset 0x15c - mode 0 - SPI0\_CS0 - chip select
-       * P9\_18 - dt offset 0x158 - mode 0 - SPI0\_D1 - data out - MOSI 
+       * P9\_18 - dt offset 0x158 - mode 0 - SPI0\_D1 - data out - MOSI
        * P9\_21 - dt offset 0x154 - mode 0 - SPI0\_D0 - data in MISO
        * P9\_22 - dt offset 0x150 - mode 0 - SPI0\_SCLK - clock
 
@@ -110,7 +110,7 @@ SPIStatus bbb_spi_initialize(spi_peripheral_t volatile *this,
     // mode |= SPI_3WIRE;
     // mode |= SPI_NO_CS;
 
-	int32_t ret = ioctl(state->file_descriptor, SPI_IOC_WR_MODE32, &mode);
+    int32_t ret = ioctl(state->file_descriptor, SPI_IOC_WR_MODE32, &mode);
     if (-1 == ret) {
         status = SPI_Initialization_Error;
         return status;
@@ -127,7 +127,7 @@ SPIStatus bbb_spi_initialize(spi_peripheral_t volatile *this,
     }
 
     this->state = state;
-    
+
     return status;
 }
 
@@ -196,7 +196,7 @@ SPIStatus bbb_spi_polling_transmit_receive_byte(
 
     uint8_t rx_byte;
     uint32_t num_bytes = 1;
-        
+
     struct spi_ioc_transfer transfer;
     bbb_zero_spi_transfer(&transfer);
     transfer.tx_buf = (uint32_t)byte;
@@ -239,7 +239,8 @@ SPIStatus bbb_spi_polling_transmit_receive_n_bytes(
     for (size_t i = 0; i < num_bytes; i++) {
         {
             uint32_t interrupt_state = start_critical_region();
-            CircularBufferRemoveItem(global_async_data.nrf24.spi.transmit_buffer, tx_bytes + i);
+            CircularBufferRemoveItem(global_async_data.nrf24.spi.transmit_buffer,
+                                     tx_bytes + i);
             end_critical_region(interrupt_state);
         }
     }
@@ -286,7 +287,7 @@ SPIStatus bbb_spi_receive_byte(spi_peripheral_t *this, uint8_t *byte)
 
 
 SPIStatus bbb_spi_receive_n_bytes(spi_peripheral_t *this, uint8_t *byte,
-        const size_t num_bytes)
+                                  const size_t num_bytes)
 {
     SPIStatus status = SPI_Status_Success;
     if (NULL == this) {
@@ -298,16 +299,16 @@ SPIStatus bbb_spi_receive_n_bytes(spi_peripheral_t *this, uint8_t *byte,
     if (status != SPI_Status_Success) {
         return status;
     }
-            
+
     struct spi_ioc_transfer transfer;
     bbb_zero_spi_transfer(&transfer);
     transfer.rx_buf = (uint32_t)byte;
     transfer.len = num_bytes;
-    
+
     bbb_spi_state_t *state = this->state;
-	int32_t ret = ioctl(state->file_descriptor, SPI_IOC_MESSAGE(1), &transfer);
-	if (ret < 1) {
-		status = SPI_Status_Error;
+    int32_t ret = ioctl(state->file_descriptor, SPI_IOC_MESSAGE(1), &transfer);
+    if (ret < 1) {
+        status = SPI_Status_Error;
     }
     return status;
 }
@@ -334,7 +335,7 @@ void bbb_set_spi_state(bbb_spi_state_t *state, const GPIO_PINS pin)
 void bbb_zero_spi_transfer(struct spi_ioc_transfer *transfer)
 {
     size_t num_bytes = sizeof(*transfer);
-    uint8_t *start = (uint8_t*)transfer;
+    uint8_t *start = (uint8_t *)transfer;
     for (size_t i = 0; i < num_bytes; i++) {
         *(start + i) = 0;
     }

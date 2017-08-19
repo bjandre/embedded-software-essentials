@@ -65,7 +65,7 @@ void bbb_initialize_dma(void);
  *   * do nothing
  */
 MemStatus bbb_memmove_dma(uint8_t *destination, uint8_t const *const source,
-                           uint32_t const num_items, uint8_t const bytes_per_item);
+                          uint32_t const num_items, uint8_t const bytes_per_item);
 
 /**
  * Take a pointer to a destination memory location, a number of items, a source
@@ -81,7 +81,7 @@ MemStatus bbb_memmove_dma(uint8_t *destination, uint8_t const *const source,
  *
  */
 MemStatus bbb_memset_dma(uint8_t *destination, uint8_t const *const source,
-                          uint32_t const num_items, uint8_t const bytes_per_item);
+                         uint32_t const num_items, uint8_t const bytes_per_item);
 
 
 #endif /* ESE_HAL_DMA_BBB_H_ */

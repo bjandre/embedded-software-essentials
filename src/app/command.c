@@ -50,10 +50,10 @@ static const command_t known_commands[] = {
 };
 
 #if (PLATFORM == PLATFORM_FRDM)
-    static const uint8_t red_led = 0x01;
-    static const uint8_t green_led = 0x02;
-    static const uint8_t increase_brightness = 0x01;
-    static const uint8_t decrease_brightness = 0x02;
+static const uint8_t red_led = 0x01;
+static const uint8_t green_led = 0x02;
+static const uint8_t increase_brightness = 0x01;
+static const uint8_t decrease_brightness = 0x02;
 #endif
 
 static const size_t max_buffer_commands = 8;

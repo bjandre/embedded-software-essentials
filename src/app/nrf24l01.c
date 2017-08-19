@@ -176,7 +176,7 @@ void nrf24_read_register(NRF24_register reg, NRF24_size_t num_bytes,
     {
         uint32_t interrupt_state = start_critical_region();
         status = global_async_data.nrf24.spi.polling_transmit_receive_n_bytes(
-            &(global_async_data.nrf24.spi), total_bytes);
+                     &(global_async_data.nrf24.spi), total_bytes);
         end_critical_region(interrupt_state);
     }
     nrf24_chip_deactivate();

@@ -31,7 +31,7 @@
    \return status of the operation
  */
 SPIStatus bbb_spi_initialize(spi_peripheral_t volatile *this,
-                                    const uint32_t speed);
+                             const uint32_t speed);
 
 /**
    bbb specific shutdown for the spi. Conforms to the call
@@ -52,7 +52,7 @@ SPIStatus bbb_spi_shutdown(spi_peripheral_t volatile *this);
    \return status of the operation
  */
 SPIStatus bbb_spi_transmit_byte(spi_peripheral_t *this,
-                                       const uint8_t byte);
+                                const uint8_t byte);
 
 /**
    bbb specific initialization for the spi transmit_n_bytes. Conforms to the
@@ -64,7 +64,7 @@ SPIStatus bbb_spi_transmit_byte(spi_peripheral_t *this,
    \return status of the operation
  */
 SPIStatus bbb_spi_transmit_n_bytes(spi_peripheral_t *this,
-        uint8_t const *const byte, const size_t num_bytes);
+                                   uint8_t const *const byte, const size_t num_bytes);
 
 /**
    bbb specific initialization for the spi receive_byte. Conforms to the
@@ -77,7 +77,7 @@ SPIStatus bbb_spi_transmit_n_bytes(spi_peripheral_t *this,
  */
 
 SPIStatus bbb_spi_receive_byte(spi_peripheral_t *this,
-                                      uint8_t *byte);
+                               uint8_t *byte);
 
 /**
    bbb specific initialization for the spi receive_n_byte. Conforms to the
@@ -89,7 +89,7 @@ SPIStatus bbb_spi_receive_byte(spi_peripheral_t *this,
    \return status of the operation
  */
 SPIStatus bbb_spi_receive_n_bytes(spi_peripheral_t *this,
-        uint8_t *bytes, const size_t num_bytes);
+                                  uint8_t *bytes, const size_t num_bytes);
 
 /**
    bbb specific initialization for the spi
