@@ -239,8 +239,8 @@ SPIStatus bbb_spi_polling_transmit_receive_n_bytes(
     for (size_t i = 0; i < num_bytes; i++) {
         {
             uint32_t interrupt_state = start_critical_region();
-            CircularBufferRemoveItem(global_async_data.nrf24.spi.transmit_buffer,
-                                     tx_bytes + i);
+            circular_buffer_remove_item(global_async_data.nrf24.spi.transmit_buffer,
+                                        tx_bytes + i);
             end_critical_region(interrupt_state);
         }
     }
@@ -266,7 +266,8 @@ SPIStatus bbb_spi_polling_transmit_receive_n_bytes(
     for (size_t i = 0; i < num_bytes; i++) {
         {
             uint32_t interrupt_state = start_critical_region();
-            CircularBufferAddItem(global_async_data.nrf24.spi.receive_buffer, rx_bytes + i);
+            circular_buffer_add_item(global_async_data.nrf24.spi.receive_buffer,
+                                     rx_bytes + i);
             end_critical_region(interrupt_state);
         }
     }

@@ -66,18 +66,18 @@ SPIStatus SPICreate(spi_peripheral_t volatile *spi,
         spi->initialize(spi, 0);
 
         const size_t bytes_per_item = 1;
-        CircularBufferStatus cb_status = CircularBufferNew(
-                                             &(spi->transmit_buffer),
-                                             num_bytes_buffer,
-                                             bytes_per_item);
-        if (CircularBuffer_Success != cb_status) {
+        circular_buffer_status_t cb_status = circular_buffer_new(
+                &(spi->transmit_buffer),
+                num_bytes_buffer,
+                bytes_per_item);
+        if (CIRCULAR_BUFFER_SUCCESS != cb_status) {
             status = SPI_Buffer_Error;
         }
-        cb_status = CircularBufferNew(
+        cb_status = circular_buffer_new(
                         &(spi->receive_buffer),
                         num_bytes_buffer,
                         bytes_per_item);
-        if (CircularBuffer_Success != cb_status) {
+        if (CIRCULAR_BUFFER_SUCCESS != cb_status) {
             status = SPI_Buffer_Error;
         }
     }
@@ -148,10 +148,10 @@ void SPIDestroy(spi_peripheral_t volatile *spi)
 {
     if (NULL != spi) {
         if (NULL != spi->transmit_buffer) {
-            CircularBufferDestroy(&(spi->transmit_buffer));
+            circular_buffer_destroy(&(spi->transmit_buffer));
         }
         if (NULL != spi->receive_buffer) {
-            CircularBufferDestroy(&(spi->receive_buffer));
+            circular_buffer_destroy(&(spi->receive_buffer));
         }
         SPIClear(spi);
     }

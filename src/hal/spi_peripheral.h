@@ -165,12 +165,12 @@ struct spi_peripheral_t {
     /**
        transmit buffer
      */
-    CircularBuffer_t volatile *transmit_buffer;
+    circular_buffer_t volatile *transmit_buffer;
 
     /**
        receive buffer
      */
-    CircularBuffer_t volatile *receive_buffer;
+    circular_buffer_t volatile *receive_buffer;
 
 };
 

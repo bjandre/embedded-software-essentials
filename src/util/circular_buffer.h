@@ -36,7 +36,7 @@
 
 */
 
-typedef struct CircularBuffer_t {
+typedef struct circular_buffer_t {
     void *buffer;/* Pointer to original memory location for the buffer */
     void *head;/* Pointer to Head */
     void *tail;/* Pointer to Tail */
@@ -45,22 +45,22 @@ typedef struct CircularBuffer_t {
     size_t bytes_per_item;/* size of each item in bytes */
     size_t num_bytes_allocated;/* Allocated size of the buffer */
     void *buffer_end;/* End of the allocated buffer. */
-} CircularBuffer_t;
+} circular_buffer_t;
 
 
 /**
    Status code returned by all circular buffer operations
  */
-typedef enum CircularBufferStatus {
-    CircularBuffer_Success,
-    CircularBuffer_Is_Full,
-    CircularBuffer_Is_Empty,
-    CircularBuffer_Null_Pointer,
-    CircularBuffer_No_Num_Items,
-    CircularBuffer_No_Bytes_Per_Item,
-    CircularBuffer_Buffer_Allocation_Failure,
-    CircularBuffer_Copy_Error
-} CircularBufferStatus;
+typedef enum circular_buffer_status_t {
+    CIRCULAR_BUFFER_SUCCESS,
+    CIRCULAR_BUFFER_IS_FULL,
+    CIRCULAR_BUFFER_IS_EMPTY,
+    CIRCULAR_BUFFER_NULL_POINTER,
+    CIRCULAR_BUFFER_NO_NUM_ITEMS,
+    CIRCULAR_BUFFER_NO_BYTES_PER_ITEMS,
+    CIRCULAR_BUFFER_BUFFER_ALLOCATION_FAILURE,
+    CIRCULAR_BUFFER_COPY_ERROR
+} circular_buffer_status_t;
 
 /**
    Adds an item to the circular_buffer.
@@ -68,9 +68,10 @@ typedef enum CircularBufferStatus {
    \param[in,out] *cb - pointer to circular buffer
    \param[in] item - to be added
 
-   \return CircularBufferStatus corresponding to action or buffer status
+   \return circular_buffer_status_t corresponding to action or buffer status
  */
-CircularBufferStatus CircularBufferAddItem(CircularBuffer_t volatile *cb,
+circular_buffer_status_t circular_buffer_add_item(circular_buffer_t volatile
+        *cb,
         void *item);
 
 /**
@@ -79,9 +80,10 @@ CircularBufferStatus CircularBufferAddItem(CircularBuffer_t volatile *cb,
    \param[in,out] *cb - pointer to circular buffer
    \param[out] *item - location to store removed item. Must be at least bytes_per_item in size.
 
-   \return CircularBufferStatus corresponding to action or buffer status
+   \return circular_buffer_status_t corresponding to action or buffer status
  */
-CircularBufferStatus CircularBufferRemoveItem(CircularBuffer_t volatile *cb,
+circular_buffer_status_t circular_buffer_remove_item(circular_buffer_t volatile
+        *cb,
         void *item);
 
 #pragma GCC diagnostic push
@@ -92,18 +94,18 @@ CircularBufferStatus CircularBufferRemoveItem(CircularBuffer_t volatile *cb,
    \param[in,out] *cb - pointer to circular buffer
    \param[out] *is_full - boolean indicating if the buffer is full.
 
-   \return CircularBufferStatus corresponding to action or buffer status
+   \return circular_buffer_status_t corresponding to action or buffer status
             Note:
-            this returns CircularBuffer_Success or CircularBuffer_Null. CircularBuffer_Is_Full only returned when
+            this returns CIRCULAR_BUFFER_SUCCESS or circular_buffer__Null. CIRCULAR_BUFFER_IS_FULL only returned when
             trying to add an item to a full buffer.
  */
-__attribute__( ( always_inline ) ) __STATIC_INLINE CircularBufferStatus
-CircularBufferIsFull(CircularBuffer_t volatile *cb,
-                     bool *is_full)
+__attribute__( ( always_inline ) ) __STATIC_INLINE circular_buffer_status_t
+circular_buffer_is_full(circular_buffer_t volatile *cb,
+                        bool *is_full)
 {
-    CircularBufferStatus status = CircularBuffer_Success;
+    circular_buffer_status_t status = CIRCULAR_BUFFER_SUCCESS;
     if (NULL == cb || NULL == is_full) {
-        status = CircularBuffer_Null_Pointer;
+        status = CIRCULAR_BUFFER_NULL_POINTER;
     } else {
         *is_full = false;
         if (cb->bytes_used > cb->num_bytes_allocated - cb->bytes_per_item) {
@@ -120,18 +122,18 @@ CircularBufferIsFull(CircularBuffer_t volatile *cb,
    \param[in,out] *cb - pointer to circular buffer
    \param[out] *is_empty - boolean indicating if the buffer is empty.
 
-   \return CircularBufferStatus corresponding to action or buffer status
+   \return circular_buffer_status_t corresponding to action or buffer status
             Note:
-            this returns CircularBuffer_Success or CircularBuffer_Null. CircularBuffer_Empyt only returned when
+            this returns CIRCULAR_BUFFER_SUCCESS or circular_buffer__Null. circular_buffer__Empyt only returned when
             trying to remove an item from an empty buffer.
  */
-__attribute__( ( always_inline ) ) __STATIC_INLINE CircularBufferStatus
-CircularBufferIsEmpty(CircularBuffer_t volatile *cb,
-                      bool *is_empty)
+__attribute__( ( always_inline ) ) __STATIC_INLINE circular_buffer_status_t
+circular_buffer_is_empty(circular_buffer_t volatile *cb,
+                         bool *is_empty)
 {
-    CircularBufferStatus status = CircularBuffer_Success;
+    circular_buffer_status_t status = CIRCULAR_BUFFER_SUCCESS;
     if (NULL == cb || NULL == is_empty) {
-        status = CircularBuffer_Null_Pointer;
+        status = CIRCULAR_BUFFER_NULL_POINTER;
     } else {
         *is_empty = false;
         if (cb->bytes_used < cb->bytes_per_item) {
@@ -151,9 +153,10 @@ CircularBufferIsEmpty(CircularBuffer_t volatile *cb,
    \param[in] index - index from the tail. Must be 0 <= index < num_items
    \param[out] *item - space to return the item, Must be at least bytes_per_item in size.
 
-   \return CircularBufferStatus corresponding to action or buffer status
+   \return circular_buffer_status_t corresponding to action or buffer status
  */
-CircularBufferStatus CircularBufferPeakItem(CircularBuffer_t volatile *cb,
+circular_buffer_status_t circular_buffer_peak_item(circular_buffer_t volatile
+        *cb,
         const size_t index, void *item);
 
 /**
@@ -164,20 +167,22 @@ CircularBufferStatus CircularBufferPeakItem(CircularBuffer_t volatile *cb,
    \param[in] num_items - number of items to store in the buffer.
    \param[in] bytes_per_item - the number of bytes per item stored in the buffer.
 
-   \return CircularBufferStatus corresponding to action or buffer status
+   \return circular_buffer_status_t corresponding to action or buffer status
  */
-CircularBufferStatus CircularBufferNew(volatile CircularBuffer_t *volatile *cb,
-                                       const size_t num_items,
-                                       const size_t bytes_per_item);
+circular_buffer_status_t circular_buffer_new(volatile circular_buffer_t
+        *volatile *cb,
+        const size_t num_items,
+        const size_t bytes_per_item);
 
 /**
    Frees the circular buffer from dynamic memory
 
    \param[in,out] *cb - pointer to circular buffer
 
-   \return CircularBufferStatus corresponding to action or buffer status
+   \return circular_buffer_status_t corresponding to action or buffer status
  */
-CircularBufferStatus CircularBufferDestroy(volatile CircularBuffer_t *volatile
+circular_buffer_status_t circular_buffer_destroy(volatile circular_buffer_t
+        *volatile
         *cb);
 
 #endif/* ESE_UTIL_CIRCULAR_BUFFER_H_ */

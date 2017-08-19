@@ -244,9 +244,9 @@ SPIStatus frdm_kl25z_spi_polling_transmit_receive_n_bytes(
 
     uint8_t byte;
     for (size_t i = 0; i < num_bytes; i++) {
-        CircularBufferRemoveItem(this->transmit_buffer, &byte);
+        circular_buffer_remove_item(this->transmit_buffer, &byte);
         this->polling_transmit_receive_byte(this, &byte);
-        CircularBufferAddItem(this->receive_buffer, &byte);
+        circular_buffer_add_item(this->receive_buffer, &byte);
     }
 
     // restore original state of the chip select pin

@@ -141,11 +141,11 @@ uint32_t process_message(log_item_t *item, message_t *message)
 #ifdef TESTING_MOCK_INTERRUPT
         logger_polling_receive(1);
 #endif
-        CircularBufferIsEmpty(global_async_data.logger->receive_buffer,
-                              &msg_buffer_empty);
+        circular_buffer_is_empty(global_async_data.logger->receive_buffer,
+                                 &msg_buffer_empty);
         if (!msg_buffer_empty) {
             uint8_t byte;
-            CircularBufferRemoveItem(global_async_data.logger->receive_buffer, &byte);
+            circular_buffer_remove_item(global_async_data.logger->receive_buffer, &byte);
             message_vtable[message->state](item, message, byte);
         }
     } while ((!msg_buffer_empty));

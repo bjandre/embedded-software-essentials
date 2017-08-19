@@ -32,8 +32,8 @@
    Buffers and communication peripheral associated with the logger
  */
 typedef struct BinaryLogger {
-    CircularBuffer_t volatile *transmit_buffer;
-    CircularBuffer_t volatile *receive_buffer;
+    circular_buffer_t volatile *transmit_buffer;
+    circular_buffer_t volatile *receive_buffer;
     communication_peripheral_t comm;
 } BinaryLogger_t;
 

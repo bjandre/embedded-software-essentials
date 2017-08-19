@@ -141,7 +141,7 @@ CommStatus frdm_kl25z_uart_flush_transmit_buffer(communication_peripheral_t
 
 extern void UART0_IRQHandler(void)
 {
-    CircularBufferStatus cb_status = CircularBuffer_Success;
+    circular_buffer_status_t cb_status = CIRCULAR_BUFFER_SUCCESS;
     uint8_t byte;
     uint32_t interrupt_state;
     // What triggered the interrupt...
@@ -150,12 +150,12 @@ extern void UART0_IRQHandler(void)
         byte = UART0->D;
         {
             interrupt_state = start_critical_region();
-            cb_status = CircularBufferAddItem(global_async_data.logger->receive_buffer,
-                                              &byte);
+            cb_status = circular_buffer_add_item(global_async_data.logger->receive_buffer,
+                                                 &byte);
             set_global_async_logger_data_available(true);
             end_critical_region(interrupt_state);
         }
-        if (CircularBuffer_Success == cb_status) {
+        if (CIRCULAR_BUFFER_SUCCESS == cb_status) {
             // do nothing? status flag is automatically reset
         } else {
             // error handling?
@@ -164,11 +164,12 @@ extern void UART0_IRQHandler(void)
         // transmit data register empty
         {
             interrupt_state = start_critical_region();
-            cb_status = CircularBufferRemoveItem(global_async_data.logger->transmit_buffer,
-                                                 &byte);
+            cb_status = circular_buffer_remove_item(
+                            global_async_data.logger->transmit_buffer,
+                            &byte);
             end_critical_region(interrupt_state);
         }
-        if (CircularBuffer_Success == cb_status) {
+        if (CIRCULAR_BUFFER_SUCCESS == cb_status) {
             // successfully removed item.
             UART0->D = byte;
         } else {

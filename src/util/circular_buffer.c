@@ -17,17 +17,17 @@
 #include "circular_buffer.h"
 
 /**
-   ClearCircularBuffer()
+   Clearcircular_buffer_()
 
    Set all internall pointers and sizes to NULL or zero.
 
    Params: cb - pointer to a circular buffer to be cleared.
  */
-void ClearCircularBuffer(CircularBuffer_t volatile *cb);
+void Clearcircular_buffer_(circular_buffer_t volatile *cb);
 
 /**
 
-   InitCircularBuffer()
+   Initcircular_buffer_()
 
    Initialize a circular buffer, allocating internal memory, setting up
    pointers, and internal sizes.
@@ -38,9 +38,9 @@ void ClearCircularBuffer(CircularBuffer_t volatile *cb);
           bytes_per_item - the number of bytes per item to be stored.
 
  */
-CircularBufferStatus InitCircularBuffer(CircularBuffer_t volatile *cb,
-                                        const size_t num_items,
-                                        const size_t bytes_per_item);
+circular_buffer_status_t Initcircular_buffer_(circular_buffer_t volatile *cb,
+        const size_t num_items,
+        const size_t bytes_per_item);
 
 /**
 
@@ -53,10 +53,11 @@ CircularBufferStatus InitCircularBuffer(CircularBuffer_t volatile *cb,
            current_position - the current position to be incremented.
 
  */
-void *NextBufferPosition(CircularBuffer_t volatile *cb, void *current_position);
+void *NextBufferPosition(circular_buffer_t volatile *cb,
+                         void *current_position);
 
 
-void *NextBufferPosition(CircularBuffer_t volatile *cb, void *current_position)
+void *NextBufferPosition(circular_buffer_t volatile *cb, void *current_position)
 {
     void *new_position = current_position + cb->bytes_per_item;
     if (new_position > cb->buffer_end - cb->bytes_per_item) {
@@ -65,53 +66,56 @@ void *NextBufferPosition(CircularBuffer_t volatile *cb, void *current_position)
     return new_position;
 }
 
-CircularBufferStatus CircularBufferAddItem(CircularBuffer_t volatile *cb,
+circular_buffer_status_t circular_buffer_add_item(circular_buffer_t volatile
+        *cb,
         void *item)
 {
-    CircularBufferStatus status = CircularBuffer_Success;
+    circular_buffer_status_t status = CIRCULAR_BUFFER_SUCCESS;
     if (NULL == item || NULL == cb) {
-        status = CircularBuffer_Null_Pointer;
+        status = CIRCULAR_BUFFER_NULL_POINTER;
     } else if (cb->bytes_used + cb->bytes_per_item > cb->num_bytes_allocated) {
-        status = CircularBuffer_Is_Full;
+        status = CIRCULAR_BUFFER_IS_FULL;
     } else {
         MemStatus memstat = memmove_cpu(cb->head, item, cb->bytes_per_item);
         if (MemStatus_Success == memstat) {
             cb->head = NextBufferPosition(cb, cb->head);
             cb->bytes_used += cb->bytes_per_item;
         } else {
-            status = CircularBuffer_Copy_Error;
+            status = CIRCULAR_BUFFER_COPY_ERROR;
         }
     }
     return status;
 }
 
-CircularBufferStatus CircularBufferRemoveItem(CircularBuffer_t volatile *cb,
+circular_buffer_status_t circular_buffer_remove_item(circular_buffer_t volatile
+        *cb,
         void *item)
 {
-    CircularBufferStatus status = CircularBuffer_Success;
+    circular_buffer_status_t status = CIRCULAR_BUFFER_SUCCESS;
     if (NULL == item || NULL == cb) {
-        status = CircularBuffer_Null_Pointer;
+        status = CIRCULAR_BUFFER_NULL_POINTER;
     } else if (cb->bytes_used < cb->bytes_per_item) {
-        status = CircularBuffer_Is_Empty;
+        status = CIRCULAR_BUFFER_IS_EMPTY;
     } else {
         MemStatus memstat = memmove_cpu(item, cb->tail, cb->bytes_per_item);
         if (MemStatus_Success == memstat) {
             cb->tail = NextBufferPosition(cb, cb->tail);
             cb->bytes_used -= cb->bytes_per_item;
         } else {
-            status = CircularBuffer_Copy_Error;
+            status = CIRCULAR_BUFFER_COPY_ERROR;
         }
     }
     return status;
 }
 
 
-CircularBufferStatus CircularBufferPeakItem(CircularBuffer_t volatile *cb,
+circular_buffer_status_t circular_buffer_peak_item(circular_buffer_t volatile
+        *cb,
         const size_t index, void *item)
 {
-    CircularBufferStatus status = CircularBuffer_Success;
+    circular_buffer_status_t status = CIRCULAR_BUFFER_SUCCESS;
     if (NULL == item || NULL == cb) {
-        status = CircularBuffer_Null_Pointer;
+        status = CIRCULAR_BUFFER_NULL_POINTER;
     } else {
         void *position = cb->tail + cb->bytes_per_item * index;
         if (position > cb->buffer_end - cb->bytes_per_item) {
@@ -122,60 +126,61 @@ CircularBufferStatus CircularBufferPeakItem(CircularBuffer_t volatile *cb,
         if (MemStatus_Success == memstat) {
             /* success! */
         } else {
-            status = CircularBuffer_Copy_Error;
+            status = CIRCULAR_BUFFER_COPY_ERROR;
         }
     }
     return status;
 }
 
-CircularBufferStatus CircularBufferNew(volatile CircularBuffer_t *volatile *cb,
-                                       const size_t num_items,
-                                       const size_t bytes_per_item)
+circular_buffer_status_t circular_buffer_new(volatile circular_buffer_t
+        *volatile *cb,
+        const size_t num_items,
+        const size_t bytes_per_item)
 {
     /* NOTE: the result of malloc(0) is implementation defined, and is not */
     /* guarenteed to be a NULL pointer. */
-    CircularBufferStatus status = CircularBuffer_Success;
+    circular_buffer_status_t status = CIRCULAR_BUFFER_SUCCESS;
 
-    *cb = malloc(sizeof(CircularBuffer_t));
+    *cb = malloc(sizeof(circular_buffer_t));
 
     if (NULL == *cb) {
-        status = CircularBuffer_Buffer_Allocation_Failure;
+        status = CIRCULAR_BUFFER_BUFFER_ALLOCATION_FAILURE;
     } else {
-        ClearCircularBuffer(*cb);
-        status = InitCircularBuffer(*cb, num_items, bytes_per_item);
-        if (CircularBuffer_Success == status) {
+        Clearcircular_buffer_(*cb);
+        status = Initcircular_buffer_(*cb, num_items, bytes_per_item);
+        if (CIRCULAR_BUFFER_SUCCESS == status) {
         } else {
             /* free any memory that might have been allocated. Don't save the */
             /* status because it's meaningless and we want to report the error */
             /* that was returned by Init. */
-            CircularBufferDestroy(cb);
+            circular_buffer_destroy(cb);
         }
     }
 
     return status;
 }
 
-CircularBufferStatus InitCircularBuffer(CircularBuffer_t volatile *cb,
-                                        const size_t num_items,
-                                        const size_t bytes_per_item)
+circular_buffer_status_t Initcircular_buffer_(circular_buffer_t volatile *cb,
+        const size_t num_items,
+        const size_t bytes_per_item)
 {
     /* NOTE: the result of malloc(0) is implementation defined, and is not */
     /* guarenteed to be a NULL pointer. */
 
-    CircularBufferStatus status = CircularBuffer_Success;
+    circular_buffer_status_t status = CIRCULAR_BUFFER_SUCCESS;
     if (NULL == cb) {
-        status = CircularBuffer_Null_Pointer;
+        status = CIRCULAR_BUFFER_NULL_POINTER;
     }
 
     if (0 == num_items) {
-        status = CircularBuffer_No_Num_Items;
+        status = CIRCULAR_BUFFER_NO_NUM_ITEMS;
     }
 
     if (0 == bytes_per_item) {
-        status = CircularBuffer_No_Bytes_Per_Item;
+        status = CIRCULAR_BUFFER_NO_BYTES_PER_ITEMS;
     }
 
-    if (CircularBuffer_Success == status) {
+    if (CIRCULAR_BUFFER_SUCCESS == status) {
         cb->num_items = num_items;
         cb->bytes_per_item = bytes_per_item;
         cb->num_bytes_allocated = cb->bytes_per_item *
@@ -183,7 +188,7 @@ CircularBufferStatus InitCircularBuffer(CircularBuffer_t volatile *cb,
 
         cb->buffer = malloc(cb->num_bytes_allocated);
         if (NULL == cb->buffer) {
-            status = CircularBuffer_Buffer_Allocation_Failure;
+            status = CIRCULAR_BUFFER_BUFFER_ALLOCATION_FAILURE;
         }
         cb->head = cb->buffer;
         cb->tail = cb->buffer;
@@ -193,7 +198,8 @@ CircularBufferStatus InitCircularBuffer(CircularBuffer_t volatile *cb,
     return status;
 }
 
-CircularBufferStatus CircularBufferDestroy(volatile CircularBuffer_t *volatile
+circular_buffer_status_t circular_buffer_destroy(volatile circular_buffer_t
+        *volatile
         *cb)
 {
     if (NULL != *cb) {
@@ -202,10 +208,10 @@ CircularBufferStatus CircularBufferDestroy(volatile CircularBuffer_t *volatile
     free((void *)*cb);
     *cb = NULL;
 
-    return CircularBuffer_Success;
+    return CIRCULAR_BUFFER_SUCCESS;
 }
 
-void ClearCircularBuffer(CircularBuffer_t volatile *cb)
+void Clearcircular_buffer_(circular_buffer_t volatile *cb)
 {
     cb->buffer = NULL;
     cb->head = NULL;

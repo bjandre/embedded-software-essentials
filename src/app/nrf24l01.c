@@ -153,7 +153,7 @@ void nrf24_read_register(NRF24_register reg, NRF24_size_t num_bytes,
     uint8_t cmd = nrf24_create_cmd_read_register(reg);
     {
         uint32_t interrupt_state = start_critical_region();
-        CircularBufferAddItem(global_async_data.nrf24.spi.transmit_buffer, &cmd);
+        circular_buffer_add_item(global_async_data.nrf24.spi.transmit_buffer, &cmd);
         end_critical_region(interrupt_state);
     }
     /* need to send num_bytes of no-op to received num_bytes */
@@ -161,7 +161,7 @@ void nrf24_read_register(NRF24_register reg, NRF24_size_t num_bytes,
         cmd = NRF24_CMD_NOP;
         {
             uint32_t interrupt_state = start_critical_region();
-            CircularBufferAddItem(global_async_data.nrf24.spi.transmit_buffer, &cmd);
+            circular_buffer_add_item(global_async_data.nrf24.spi.transmit_buffer, &cmd);
             end_critical_region(interrupt_state);
         }
     }
@@ -192,14 +192,14 @@ void nrf24_read_register(NRF24_register reg, NRF24_size_t num_bytes,
     while (is_empty) {
         {
             uint32_t interrupt_state = start_critical_region();
-            CircularBufferIsEmpty(
+            circular_buffer_is_empty(
                 global_async_data.nrf24.spi.receive_buffer, &is_empty);
             end_critical_region(interrupt_state);
         }
     }
     {
         uint32_t interrupt_state = start_critical_region();
-        CircularBufferRemoveItem(
+        circular_buffer_remove_item(
             global_async_data.nrf24.spi.receive_buffer, &byte);
         end_critical_region(interrupt_state);
     }
@@ -212,14 +212,14 @@ void nrf24_read_register(NRF24_register reg, NRF24_size_t num_bytes,
         while (is_empty) {
             {
                 uint32_t interrupt_state = start_critical_region();
-                CircularBufferIsEmpty(
+                circular_buffer_is_empty(
                     global_async_data.nrf24.spi.receive_buffer, &is_empty);
                 end_critical_region(interrupt_state);
             }
         }
         {
             uint32_t interrupt_state = start_critical_region();
-            CircularBufferRemoveItem(
+            circular_buffer_remove_item(
                 global_async_data.nrf24.spi.receive_buffer, &byte);
             end_critical_region(interrupt_state);
         }
@@ -239,15 +239,15 @@ void nrf24_write_register(NRF24_register reg, uint8_t num_bytes,
     uint8_t cmd = nrf24_create_cmd_write_register(reg);
     {
         uint32_t interrupt_state = start_critical_region();
-        CircularBufferAddItem(global_async_data.nrf24.spi.transmit_buffer, &cmd);
+        circular_buffer_add_item(global_async_data.nrf24.spi.transmit_buffer, &cmd);
         end_critical_region(interrupt_state);
     }
     /* need to send num_bytes of data */
     for (i = 0; i < num_bytes; i++) {
         {
             uint32_t interrupt_state = start_critical_region();
-            CircularBufferAddItem(global_async_data.nrf24.spi.transmit_buffer,
-                                  (data + i));
+            circular_buffer_add_item(global_async_data.nrf24.spi.transmit_buffer,
+                                     (data + i));
             end_critical_region(interrupt_state);
         }
     }
@@ -281,14 +281,14 @@ void nrf24_write_register(NRF24_register reg, uint8_t num_bytes,
     while (is_empty) {
         {
             uint32_t interrupt_state = start_critical_region();
-            CircularBufferIsEmpty(
+            circular_buffer_is_empty(
                 global_async_data.nrf24.spi.receive_buffer, &is_empty);
             end_critical_region(interrupt_state);
         }
     }
     {
         uint32_t interrupt_state = start_critical_region();
-        CircularBufferRemoveItem(
+        circular_buffer_remove_item(
             global_async_data.nrf24.spi.receive_buffer, &byte);
         end_critical_region(interrupt_state);
     }
@@ -301,14 +301,14 @@ void nrf24_write_register(NRF24_register reg, uint8_t num_bytes,
         while (is_empty) {
             {
                 uint32_t interrupt_state = start_critical_region();
-                CircularBufferIsEmpty(
+                circular_buffer_is_empty(
                     global_async_data.nrf24.spi.receive_buffer, &is_empty);
                 end_critical_region(interrupt_state);
             }
         }
         {
             uint32_t interrupt_state = start_critical_region();
-            CircularBufferRemoveItem(
+            circular_buffer_remove_item(
                 global_async_data.nrf24.spi.receive_buffer, &byte);
             end_critical_region(interrupt_state);
         }

@@ -57,18 +57,18 @@ static const uint8_t decrease_brightness = 0x02;
 #endif
 
 static const size_t max_buffer_commands = 8;
-static CircularBuffer_t volatile *command_buffer;
+static circular_buffer_t volatile *command_buffer;
 
 command_status_t initialize_command_interpreter(void)
 {
     command_status_t command_status = COMMAND_SUCCESS;
-    CircularBufferStatus cb_status = CircularBuffer_Success;
+    circular_buffer_status_t cb_status = CIRCULAR_BUFFER_SUCCESS;
     const size_t bytes_per_item = sizeof(command_message_t);
-    cb_status = CircularBufferNew(&command_buffer,
-                                  max_buffer_commands,
-                                  bytes_per_item);
+    cb_status = circular_buffer_new(&command_buffer,
+                                    max_buffer_commands,
+                                    bytes_per_item);
 
-    if (CircularBuffer_Success != cb_status) {
+    if (CIRCULAR_BUFFER_SUCCESS != cb_status) {
         abort();
     }
     return command_status;
@@ -76,7 +76,7 @@ command_status_t initialize_command_interpreter(void)
 
 void shutdown_command_interpreter(void)
 {
-    CircularBufferDestroy(&command_buffer);
+    circular_buffer_destroy(&command_buffer);
 }
 
 void receive_command_message(uint8_t length, uint8_t *data)
@@ -94,15 +94,15 @@ void receive_command_message(uint8_t length, uint8_t *data)
     message.payload_length = length - 1u;
     memmove(message.payload, data + 1, message.payload_length);
 
-    CircularBufferStatus cb_status = CircularBuffer_Success;
+    circular_buffer_status_t cb_status = CIRCULAR_BUFFER_SUCCESS;
     bool cmd_buffer_is_full = false;
-    cb_status = CircularBufferIsFull(command_buffer, &cmd_buffer_is_full);
-    if (CircularBuffer_Success != cb_status) {
+    cb_status = circular_buffer_is_full(command_buffer, &cmd_buffer_is_full);
+    if (CIRCULAR_BUFFER_SUCCESS != cb_status) {
         abort();
     }
     if (!cmd_buffer_is_full) {
-        cb_status = CircularBufferAddItem(command_buffer, &message);
-        if (CircularBuffer_Success != cb_status) {
+        cb_status = circular_buffer_add_item(command_buffer, &message);
+        if (CIRCULAR_BUFFER_SUCCESS != cb_status) {
             abort();
         }
     }
@@ -111,16 +111,16 @@ void receive_command_message(uint8_t length, uint8_t *data)
 command_status_t process_commands(log_item_t *item)
 {
     command_status_t status = COMMAND_SUCCESS;
-    CircularBufferStatus cb_status = CircularBuffer_Success;
+    circular_buffer_status_t cb_status = CIRCULAR_BUFFER_SUCCESS;
     bool cmd_buffer_is_empty = true;
-    cb_status = CircularBufferIsEmpty(command_buffer, &cmd_buffer_is_empty);
-    if (CircularBuffer_Success != cb_status) {
+    cb_status = circular_buffer_is_empty(command_buffer, &cmd_buffer_is_empty);
+    if (CIRCULAR_BUFFER_SUCCESS != cb_status) {
         abort();
     }
     command_message_t message;
     if (!cmd_buffer_is_empty) {
-        cb_status = CircularBufferRemoveItem(command_buffer, &message);
-        if (CircularBuffer_Success != cb_status) {
+        cb_status = circular_buffer_remove_item(command_buffer, &message);
+        if (CIRCULAR_BUFFER_SUCCESS != cb_status) {
             abort();
         }
         known_commands[message.command].execute(item, &message);
