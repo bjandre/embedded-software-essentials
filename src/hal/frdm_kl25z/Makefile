@@ -18,6 +18,7 @@ LIB = \
 
 SRCS = \
 	initialize_frdm_kl25z.c \
+	shutdown_frdm_kl25z.c \
 	pwm_timer_frdm_kl25z.c \
 	profiling_timer_frdm_kl25z.c \
 	rtc_frdm_kl25z.c \

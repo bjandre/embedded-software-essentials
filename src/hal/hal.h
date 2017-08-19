@@ -46,4 +46,11 @@ void initialize_spi(void);
  */
 void initialize_dma(void);
 
+/*
+  Generic interface routine to shutdown hardware.
+
+  Wrapper around platform specific code.
+ */
+void shutdown_hardware(void);
+
 #endif/* ESE_HAL_HAL_H_ */

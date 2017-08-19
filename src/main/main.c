@@ -44,7 +44,6 @@ volatile async_data_t global_async_data;
 
 #if (PLATFORM == PLATFORM_FRDM)
 #include "gpio_frdm_kl25z.h"
-#include "spi_frdm_kl25z.h"
 #include "nrf24l01.h"
 #elif (PLATFORM == PLATFORM_BBB)
 #include "nrf24l01.h"
@@ -181,9 +180,7 @@ void shutdown(log_item_t **item)
     log_item_destroy(item);
     binary_logger_flush();
     binary_logger_destroy();
-#if (PLATFORM == PLATFORM_FRDM)
-    NVIC_SystemReset();
-#endif
+    shutdown_hardware();
 }
 
 void update_leds(void)

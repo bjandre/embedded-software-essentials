@@ -7,6 +7,7 @@
 #include "pwm_timer_frdm_kl25z.h"
 #include "dma_frdm_kl25z.h"
 #include "spi_frdm_kl25z.h"
+#include "shutdown_frdm_kl25z.h"
 #endif
 
 #include "hal.h"
@@ -44,5 +45,12 @@ void initialize_dma(void)
 {
 #if (PLATFORM == PLATFORM_FRDM)
     frdm_kl25z_initialize_dma();
+#endif
+}
+
+void shutdown_hardware(void)
+{
+#if (PLATFORM == PLATFORM_FRDM)
+    frdm_kl25z_shutdown();
 #endif
 }
