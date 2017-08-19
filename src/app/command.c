@@ -165,7 +165,7 @@ void command_get_rtc_epoch(log_item_t *item, command_message_t const *message)
     UNUSED_VARIABLE(item);
     UNUSED_VARIABLE(message);
     time_t timestamp = get_global_async_heartbeat_timestamp();
-    log_data(sizeof(timestamp), (uint8_t *)(&timestamp));
+    binary_logger_log_data(sizeof(timestamp), (uint8_t *)(&timestamp));
 }
 
 void command_software_reset(log_item_t *item, command_message_t const *message)

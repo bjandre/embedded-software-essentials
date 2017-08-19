@@ -12,7 +12,7 @@
 #define ESE_APP_LOGGER_H_
 
 /**
-   \file logger.h
+   \file binary_logger.h
 
    Binary Logger implemenation. Implementation is flexible and works on a
    generic communication peripheral, which can be hardware uart, spi or software
@@ -35,19 +35,19 @@ typedef struct {
     circular_buffer_t volatile *transmit_buffer;
     circular_buffer_t volatile *receive_buffer;
     communication_peripheral_t comm;
-} BinaryLogger_t;
+} binary_logger_t;
 
 /**
    Status codes returned by binary logger operations
  */
 typedef enum {
-    BinaryLogger_Success,
-    BinaryLogger_Error,
-    BinaryLogger_Null_Pointer,
-    BinaryLogger_Item_Alloc_Error,
-    BinaryLogger_Null_Item,
-    BinaryLogger_Null_Data,
-} BinaryLoggerStatus;
+    BINARY_LOGGER_SUCCESS,
+    BINARY_LOGGER_ERROR,
+    BINARY_LOGGER_NULL_POINTER,
+    BINARY_LOGGER_ITEM_ALLOC_ERROR,
+    BINARY_LOGGER_NULL_ITEM,
+    BINARY_LOGGER_NULL_DATA,
+} binary_logger_status_t;
 
 /**
    define a type for for the sizes used to interact with the logger
@@ -61,14 +61,14 @@ typedef uint8_t logger_size_t;
 
    \return status of the operation
  */
-BinaryLoggerStatus BinaryLoggerCreate(logger_size_t num_bytes);
+binary_logger_status_t binary_logger_create(logger_size_t num_bytes);
 
 /**
    Destroy the global binary logger and free all internal memory
 
    \return status of the operation
  */
-void BinaryLoggerDestroy(void);
+void binary_logger_destroy(void);
 
 /**
    Log the specified number of bytes from the provided buffer.
@@ -78,7 +78,8 @@ void BinaryLoggerDestroy(void);
 
    \return status of the operation
  */
-BinaryLoggerStatus log_data(logger_size_t num_bytes, uint8_t *buffer);
+binary_logger_status_t binary_logger_log_data(logger_size_t num_bytes,
+        uint8_t *buffer);
 
 /**
    Log the null terminated c string.
@@ -87,7 +88,7 @@ BinaryLoggerStatus log_data(logger_size_t num_bytes, uint8_t *buffer);
 
    \return status of the operation
  */
-BinaryLoggerStatus log_string(uint8_t *string);
+binary_logger_status_t binary_logger_log_string(uint8_t *string);
 
 /**
    Log the 32 bit integer
@@ -96,7 +97,7 @@ BinaryLoggerStatus log_string(uint8_t *string);
 
    \return status of the operation
  */
-BinaryLoggerStatus log_integer(int32_t integer);
+binary_logger_status_t binary_logger_log_integer(int32_t integer);
 
 
 /**
@@ -104,7 +105,7 @@ BinaryLoggerStatus log_integer(int32_t integer);
 
    \return status of the operation
  */
-BinaryLoggerStatus log_flush(void);
+binary_logger_status_t binary_logger_flush(void);
 
 /**
    Extract data from the receive buffer and return it to the user.
@@ -124,13 +125,14 @@ BinaryLoggerStatus log_flush(void);
 
    \return status of the operation
  */
-BinaryLoggerStatus log_receive_data(logger_size_t num_bytes, uint8_t *buffer);
+binary_logger_status_t binary_logger_receive_data(logger_size_t num_bytes,
+        uint8_t *buffer);
 
 /**
    logger receive using polling
 
    \param num_bytes number of bytes to receive
  */
-BinaryLoggerStatus logger_polling_receive(logger_size_t num_bytes);
+binary_logger_status_t binary_logger_polling_receive(logger_size_t num_bytes);
 
 #endif/* ESE_APP_LOGGER_H_ */

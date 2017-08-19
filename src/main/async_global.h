@@ -59,7 +59,7 @@ __STATIC_INLINE void end_critical_region(uint32_t original_state)
 #define end_critical_region(state) (void)state;
 #endif
 
-#include "logger.h"
+#include "binary_logger.h"
 #include "profiling_timer_data.h"
 #include "nrf24l01.h"
 
@@ -81,7 +81,7 @@ typedef struct AsynchronousData {
     bool dma_complete; /*!< flag indicating a dma transfer has completed. */
     bool logger_data_available; /*!< flag indicating data is available to be retreived
                             from logger receive buffer */
-    BinaryLogger_t *logger; /*!< global logger */
+    binary_logger_t *logger; /*!< global logger */
     bool heartbeat_occurred;
     time_t heartbeat_timestamp; /*!< heartbeat timestamp */
 
@@ -159,7 +159,7 @@ __STATIC_INLINE void set_global_async_logger_data_available(
    Thread / interrupt safe write of logger from the global_async_data struct
 
  */
-__STATIC_INLINE void set_global_async_logger(BinaryLogger_t *logger)
+__STATIC_INLINE void set_global_async_logger(binary_logger_t *logger)
 {
     extern volatile async_data_t global_async_data;
     uint32_t interrupt_status = start_critical_region();

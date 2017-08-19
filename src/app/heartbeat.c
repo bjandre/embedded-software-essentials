@@ -11,7 +11,7 @@
 #include <stdint.h>
 
 #include "log_item.h"
-#include "logger.h"
+#include "binary_logger.h"
 #include "heartbeat.h"
 
 #include "platform_defs.h"

@@ -22,7 +22,7 @@
 #include "circular_buffer.h"
 #include "communication_peripheral.h"
 #include "communication_peripheral_factory.h"
-#include "logger.h"
+#include "binary_logger.h"
 #include "async_global.h"
 
 /**
@@ -36,24 +36,24 @@ static const uint32_t debugger_baud = 115200u;/*!< UART debugger baud */
 static const logger_size_t bytes_per_item = sizeof(
             uint8_t);/*!< number of bytes per sent via logger */
 
-BinaryLoggerStatus BinaryLoggerCreate(logger_size_t num_bytes)
+binary_logger_status_t binary_logger_create(logger_size_t num_bytes)
 {
-    BinaryLoggerStatus status = BinaryLogger_Success;
+    binary_logger_status_t status = BINARY_LOGGER_SUCCESS;
     circular_buffer_status_t cb_status;
     logger_size_t num_buffer_items = num_bytes / bytes_per_item;
 
-    BinaryLogger_t *logger = malloc(sizeof(BinaryLogger_t));
+    binary_logger_t *logger = malloc(sizeof(binary_logger_t));
     cb_status = circular_buffer_new(&(logger->transmit_buffer),
                                     num_buffer_items,
                                     bytes_per_item);
     if (CIRCULAR_BUFFER_SUCCESS != cb_status) {
-        return BinaryLogger_Error;
+        return BINARY_LOGGER_ERROR;
     }
     cb_status = circular_buffer_new(&(logger->receive_buffer),
                                     num_buffer_items,
                                     bytes_per_item);
     if (CIRCULAR_BUFFER_SUCCESS != cb_status) {
-        return BinaryLogger_Error;
+        return BINARY_LOGGER_ERROR;
     }
 
     CommStatus comm_status = CommCreate(&(logger->comm),
@@ -70,11 +70,11 @@ BinaryLoggerStatus BinaryLoggerCreate(logger_size_t num_bytes)
     return status;
 }
 
-void BinaryLoggerDestroy(void)
+void binary_logger_destroy(void)
 {
     {
         uint32_t interrupt_state = start_critical_region();
-        BinaryLogger_t *logger = global_async_data.logger;
+        binary_logger_t *logger = global_async_data.logger;
         if (NULL != logger) {
             circular_buffer_destroy(&(logger->transmit_buffer));
             circular_buffer_destroy(&(logger->receive_buffer));
@@ -84,9 +84,10 @@ void BinaryLoggerDestroy(void)
     }
 }
 
-BinaryLoggerStatus log_data(logger_size_t num_bytes, uint8_t *buffer)
+binary_logger_status_t binary_logger_log_data(logger_size_t num_bytes,
+        uint8_t *buffer)
 {
-    BinaryLoggerStatus status = BinaryLogger_Success;
+    binary_logger_status_t status = BINARY_LOGGER_SUCCESS;
     circular_buffer_status_t cb_status;
     uint32_t interrupt_state;
     for (logger_size_t n = 0; n < num_bytes; n++) {
@@ -161,33 +162,33 @@ void logger_polling_transmit_byte(void)
         }
     }
 }
-BinaryLoggerStatus log_string(uint8_t *string)
+binary_logger_status_t binary_logger_log_string(uint8_t *string)
 {
-    BinaryLoggerStatus status = BinaryLogger_Success;
+    binary_logger_status_t status = BINARY_LOGGER_SUCCESS;
     size_t string_length = 0;
     while (*(string + string_length) != '\0') {
         string_length++;
     }
-    log_data(string_length, (uint8_t *)string);
+    binary_logger_log_data(string_length, (uint8_t *)string);
     return status;
 }
 
-BinaryLoggerStatus log_integer(int32_t integer)
+binary_logger_status_t binary_logger_log_integer(int32_t integer)
 {
-    BinaryLoggerStatus status = BinaryLogger_Success;
+    binary_logger_status_t status = BINARY_LOGGER_SUCCESS;
     const size_t max_digits = 32;
     char string[max_digits];
     const uint8_t null_char = '\0';
     memset_cpu((uint8_t *)string, &null_char, max_digits);
     uint32_t decimal_base = 10;
     my_itoa((int8_t *)string, integer, decimal_base);
-    log_string((uint8_t *)string);
+    binary_logger_log_string((uint8_t *)string);
     return status;
 }
 
-BinaryLoggerStatus log_flush(void)
+binary_logger_status_t binary_logger_flush(void)
 {
-    BinaryLoggerStatus status = BinaryLogger_Success;
+    binary_logger_status_t status = BINARY_LOGGER_SUCCESS;
     circular_buffer_status_t cb_status;
 
     bool is_empty = false;
@@ -199,23 +200,24 @@ BinaryLoggerStatus log_flush(void)
             end_critical_region(interrupt_state);
         }
         if (CIRCULAR_BUFFER_SUCCESS != cb_status) {
-            status = BinaryLogger_Error;
+            status = BINARY_LOGGER_ERROR;
             break;
         }
     } while (!is_empty);
     return status;
 }
 
-BinaryLoggerStatus log_receive_data(logger_size_t num_bytes, uint8_t *buffer)
+binary_logger_status_t binary_logger_receive_data(logger_size_t num_bytes,
+        uint8_t *buffer)
 {
-    BinaryLoggerStatus status = BinaryLogger_Success;
+    binary_logger_status_t status = BINARY_LOGGER_SUCCESS;
     circular_buffer_status_t cb_status = CIRCULAR_BUFFER_SUCCESS;
 
 #if (PLATFORM == PLATFORM_FRDM) && (LOGGER_ALGORITHM == LOGGER_INTERRUPTS)
     /* extraction from comm receive data register and pack into the circular */
     /* buffer is done by the communication peripheral interrupt handler */
 #else/* LOGGER_ALGORITHM == LOGGER_POLLING */
-    status = logger_polling_receive(num_bytes);
+    status = binary_logger_polling_receive(num_bytes);
 #endif
     /* extract from circular buffer and pack into user buffer. */
     logger_size_t num_received = 0;
@@ -239,9 +241,9 @@ BinaryLoggerStatus log_receive_data(logger_size_t num_bytes, uint8_t *buffer)
     return status;
 }
 
-BinaryLoggerStatus logger_polling_receive(logger_size_t num_bytes)
+binary_logger_status_t binary_logger_polling_receive(logger_size_t num_bytes)
 {
-    BinaryLoggerStatus status = BinaryLogger_Success;
+    binary_logger_status_t status = BINARY_LOGGER_SUCCESS;
     circular_buffer_status_t cb_status = CIRCULAR_BUFFER_SUCCESS;
     for (logger_size_t n = 0; n < num_bytes; n++) {
         uint8_t byte;
@@ -249,7 +251,7 @@ BinaryLoggerStatus logger_polling_receive(logger_size_t num_bytes)
             uint32_t interrupt_state = start_critical_region();
             CommStatus comm_status = global_async_data.logger->comm.receive_byte(&byte);
             if (Comm_Status_Success != comm_status) {
-                status = BinaryLogger_Error;
+                status = BINARY_LOGGER_ERROR;
             } else {
                 cb_status = circular_buffer_add_item(global_async_data.logger->receive_buffer,
                                                      &byte);
@@ -267,40 +269,42 @@ BinaryLoggerStatus logger_polling_receive(logger_size_t num_bytes)
 // simply return status OK. These may be removed by the linker when link
 // time optimization in enabled. If profiling shows that they are not, we
 // can replace them with a macro that substitutes status ok.
-BinaryLoggerStatus BinaryLoggerCreate(logger_size_t num_bytes)
+binary_logger_status_t binary_logger_create(logger_size_t num_bytes)
 {
     (void)num_bytes;
-    return BinaryLogger_Success;
+    return BINARY_LOGGER_SUCCESS;
 }
 
-BinaryLoggerStatus log_data(logger_size_t num_bytes, uint8_t *buffer)
+binary_logger_status_t binary_logger_log_data(logger_size_t num_bytes,
+        uint8_t *buffer)
 {
     (void)num_bytes;
     (void)buffer;
-    return BinaryLogger_Success;
+    return BINARY_LOGGER_SUCCESS;
 }
 
-BinaryLoggerStatus log_string(uint8_t *string)
+binary_logger_status_t binary_logger_log_string(uint8_t *string)
 {
     (void)string;
-    return BinaryLogger_Success;
+    return BINARY_LOGGER_SUCCESS;
 }
 
-BinaryLoggerStatus log_integer(int32_t integer)
+binary_logger_status_t binary_logger_log_integer(int32_t integer)
 {
     (void)integer;
-    return BinaryLogger_Success;
+    return BINARY_LOGGER_SUCCESS;
 }
 
-BinaryLoggerStatus log_flush(void)
+binary_logger_status_t binary_logger_flush(void)
 {
-    return BinaryLogger_Success;
+    return BINARY_LOGGER_SUCCESS;
 }
 
-BinaryLoggerStatus log_receive_data(logger_size_t num_bytes, uint8_t *buffer)
+binary_logger_status_t binary_logger_receive_data(logger_size_t num_bytes,
+        uint8_t *buffer)
 {
     (void)num_bytes;
     (void)buffer;
-    return BinaryLogger_Success;
+    return BINARY_LOGGER_SUCCESS;
 }
 #endif

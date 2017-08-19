@@ -25,7 +25,7 @@
 #include <stdint.h>
 #include <time.h>
 
-#include "logger.h"
+#include "binary_logger.h"
 
 /**
    Identifiers for data sent via the binary logger.
@@ -95,7 +95,7 @@ typedef struct {
      3. one byte - the second is the number of bytes in the log_item_t
      payload_num_bytes.
  */
-BinaryLoggerStatus log_item_initialize_logger(void);
+binary_logger_status_t log_item_initialize_logger(void);
 
 /**
    Allocate a log item and internal buffer.
@@ -104,7 +104,7 @@ BinaryLoggerStatus log_item_initialize_logger(void);
 
    \return status of the operation
  */
-BinaryLoggerStatus log_item_create(log_item_t **item);
+binary_logger_status_t log_item_create(log_item_t **item);
 
 /**
    Update the values stored in a previously allocated log item
@@ -116,8 +116,8 @@ BinaryLoggerStatus log_item_create(log_item_t **item);
 
    \return status of the operation
  */
-BinaryLoggerStatus log_item_update(log_item_t *item, binary_logger_id_t id,
-                                   logger_size_t num_bytes, const void *payload);
+binary_logger_status_t log_item_update(log_item_t *item, binary_logger_id_t id,
+                                       logger_size_t num_bytes, const void *payload);
 
 /**
    Update the values stored in a previously allocated log item with defaults for no payload.
@@ -127,7 +127,7 @@ BinaryLoggerStatus log_item_update(log_item_t *item, binary_logger_id_t id,
 
    \return status of the operation
  */
-BinaryLoggerStatus log_item_update_no_payload(log_item_t *item,
+binary_logger_status_t log_item_update_no_payload(log_item_t *item,
         binary_logger_id_t id);
 
 /**
@@ -137,7 +137,7 @@ BinaryLoggerStatus log_item_update_no_payload(log_item_t *item,
 
    \return status of the operation
  */
-BinaryLoggerStatus log_item_destroy(log_item_t **item);
+binary_logger_status_t log_item_destroy(log_item_t **item);
 
 /**
    Log the user provided item to the global logger.
@@ -146,6 +146,6 @@ BinaryLoggerStatus log_item_destroy(log_item_t **item);
 
    \return status of the operation
  */
-BinaryLoggerStatus log_item(const log_item_t *item);
+binary_logger_status_t log_item(const log_item_t *item);
 
 #endif/* ESE_APP_LOG_ITEM_H_ */

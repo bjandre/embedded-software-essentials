@@ -18,7 +18,7 @@
 #include "util.h"
 #include "circular_buffer.h"
 #include "log_item.h"
-#include "logger.h"
+#include "binary_logger.h"
 
 #include "command.h"
 #include "message.h"
@@ -139,7 +139,7 @@ uint32_t process_message(log_item_t *item, message_t *message)
     bool msg_buffer_empty = false;
     do {
 #ifdef TESTING_MOCK_INTERRUPT
-        logger_polling_receive(1);
+        binary_logger_polling_receive(1);
 #endif
         circular_buffer_is_empty(global_async_data.logger->receive_buffer,
                                  &msg_buffer_empty);

@@ -16,7 +16,7 @@
 #include "memory_common.h"
 #include "memory_cpu.h"
 
-#include "logger.h"
+#include "binary_logger.h"
 #include "log_item.h"
 
 #ifdef LOGGING_ENABLED
@@ -30,52 +30,52 @@ static const logger_size_t zero_payload_bytes =
     0;/*!< consant for zero payload size */
 static const void *null_payload = NULL;/*!< constant for a null payload */
 
-BinaryLoggerStatus log_item_initialize_logger(void)
+binary_logger_status_t log_item_initialize_logger(void)
 {
-    BinaryLoggerStatus status = BinaryLogger_Success;
+    binary_logger_status_t status = BINARY_LOGGER_SUCCESS;
     uint16_t magic_number = 0x4577u;
-    log_data(sizeof(magic_number), (uint8_t *)(&magic_number));
+    binary_logger_log_data(sizeof(magic_number), (uint8_t *)(&magic_number));
     uint8_t data = sizeof(binary_logger_id_t);
-    log_data(sizeof(data), (uint8_t *)(&data));
+    binary_logger_log_data(sizeof(data), (uint8_t *)(&data));
     data = sizeof(time_t);
-    log_data(sizeof(data), (uint8_t *)(&data));
+    binary_logger_log_data(sizeof(data), (uint8_t *)(&data));
     data = sizeof(logger_size_t);
-    log_data(sizeof(data), (uint8_t *)(&data));
+    binary_logger_log_data(sizeof(data), (uint8_t *)(&data));
     return status;
 }
 
 
-BinaryLoggerStatus log_item_create(log_item_t **item)
+binary_logger_status_t log_item_create(log_item_t **item)
 {
-    BinaryLoggerStatus status = BinaryLogger_Success;
+    binary_logger_status_t status = BINARY_LOGGER_SUCCESS;
     *item = malloc(sizeof(log_item_t));
     if (NULL == *item) {
-        status = BinaryLogger_Item_Alloc_Error;
+        status = BINARY_LOGGER_ITEM_ALLOC_ERROR;
     } else {
         (*item)->id = 0;
         (*item)->payload_num_bytes = 0;
         (*item)->payload = malloc(max_payload_bytes);
         if (NULL == (*item)->payload) {
-            status = BinaryLogger_Item_Alloc_Error;
+            status = BINARY_LOGGER_ITEM_ALLOC_ERROR;
         }
     }
-    if (BinaryLogger_Success != status) {
+    if (BINARY_LOGGER_SUCCESS != status) {
         log_item_destroy(item);
     }
     return status;
 }
 
-BinaryLoggerStatus log_item_update(log_item_t *item, binary_logger_id_t id,
-                                   logger_size_t num_bytes, const void *payload)
+binary_logger_status_t log_item_update(log_item_t *item, binary_logger_id_t id,
+                                       logger_size_t num_bytes, const void *payload)
 {
-    BinaryLoggerStatus status = BinaryLogger_Success;
+    binary_logger_status_t status = BINARY_LOGGER_SUCCESS;
     if (NULL == item) {
-        status = BinaryLogger_Null_Pointer;
+        status = BINARY_LOGGER_NULL_POINTER;
     } else {
         if (NULL == item->payload) {
-            status = BinaryLogger_Null_Pointer;
+            status = BINARY_LOGGER_NULL_POINTER;
         } else {
-            if (BinaryLogger_Success == status) {
+            if (BINARY_LOGGER_SUCCESS == status) {
                 item->id = id;
                 item->timestamp = get_global_async_heartbeat_timestamp();
                 /* FIXME(bja, 2017-03) what's the best error handling for a size greater */
@@ -86,7 +86,7 @@ BinaryLoggerStatus log_item_update(log_item_t *item, binary_logger_id_t id,
                     MemStatus mem_stat = memmove_cpu(item->payload, (uint8_t *)payload,
                                                      item->payload_num_bytes);
                     if (MemStatus_Success != mem_stat) {
-                        status = BinaryLogger_Item_Alloc_Error;
+                        status = BINARY_LOGGER_ITEM_ALLOC_ERROR;
                     }
                 }
             }
@@ -95,36 +95,37 @@ BinaryLoggerStatus log_item_update(log_item_t *item, binary_logger_id_t id,
     return status;
 }
 
-BinaryLoggerStatus log_item_update_no_payload(log_item_t *item,
+binary_logger_status_t log_item_update_no_payload(log_item_t *item,
         binary_logger_id_t id)
 {
     return log_item_update(item, id, zero_payload_bytes, null_payload);
 }
 
-BinaryLoggerStatus log_item(const log_item_t *item)
+binary_logger_status_t log_item(const log_item_t *item)
 {
-    BinaryLoggerStatus status = BinaryLogger_Success;
+    binary_logger_status_t status = BINARY_LOGGER_SUCCESS;
     if (NULL == item) {
-        status = BinaryLogger_Null_Item;
+        status = BINARY_LOGGER_NULL_ITEM;
     } else {
-        log_data(sizeof(item->id), (uint8_t *)(&(item->id)));
-        log_data(sizeof(item->timestamp), (uint8_t *)(&(item->timestamp)));
-        log_data(sizeof(item->payload_num_bytes),
-                 (uint8_t *)(&item->payload_num_bytes));
+        binary_logger_log_data(sizeof(item->id), (uint8_t *)(&(item->id)));
+        binary_logger_log_data(sizeof(item->timestamp),
+                               (uint8_t *)(&(item->timestamp)));
+        binary_logger_log_data(sizeof(item->payload_num_bytes),
+                               (uint8_t *)(&item->payload_num_bytes));
         if (item->payload_num_bytes > 0) {
             if (null_payload == item->payload) {
-                status = BinaryLogger_Null_Data;
+                status = BINARY_LOGGER_NULL_DATA;
             } else {
-                log_data(item->payload_num_bytes, item->payload);
+                binary_logger_log_data(item->payload_num_bytes, item->payload);
             }
         }
     }
     return status;
 }
 
-BinaryLoggerStatus log_item_destroy(log_item_t **item)
+binary_logger_status_t log_item_destroy(log_item_t **item)
 {
-    BinaryLoggerStatus status = BinaryLogger_Success;
+    binary_logger_status_t status = BINARY_LOGGER_SUCCESS;
     if (NULL != *item) {
         free((*item)->payload);
     }
@@ -137,31 +138,31 @@ BinaryLoggerStatus log_item_destroy(log_item_t **item)
 /* simply return status OK. These may be removed by the linker when link
    time optimization in enabled. If profiling shows that they are not, we
    can replace them with a macro that substitutes status ok. */
-BinaryLoggerStatus log_item_create(log_item_t **item)
+binary_logger_status_t log_item_create(log_item_t **item)
 {
     (void)item;
-    return BinaryLogger_Success;
+    return BINARY_LOGGER_SUCCESS;
 }
 
-BinaryLoggerStatus log_item_update(log_item_t *item, binary_logger_id_t id,
-                                   logger_size_t num_bytes, const void *payload)
+binary_logger_status_t log_item_update(log_item_t *item, binary_logger_id_t id,
+                                       logger_size_t num_bytes, const void *payload)
 {
     (void)item;
     (void)num_bytes;
     (void)payload;
-    return BinaryLogger_Success;
+    return BINARY_LOGGER_SUCCESS;
 }
 
-BinaryLoggerStatus log_item_destroy(log_item_t **item)
+binary_logger_status_t log_item_destroy(log_item_t **item)
 {
     (void)item;
-    return BinaryLogger_Success;
+    return BINARY_LOGGER_SUCCESS;
 }
 
-BinaryLoggerStatus log_item(const log_item_t *item)
+binary_logger_status_t log_item(const log_item_t *item)
 {
     (void)item;
-    return BinaryLogger_Success;
+    return BINARY_LOGGER_SUCCESS;
 }
 
 #endif

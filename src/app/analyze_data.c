@@ -16,7 +16,7 @@
 #define TESTING_MOCK_INTERRUPT
 #endif
 
-#include "logger.h"
+#include "binary_logger.h"
 #include "log_item.h"
 #include "analyze_data.h"
 
@@ -37,7 +37,7 @@ void analyze_logger_data_event(data_summary_t *data_summary, log_item_t *item)
 {
     uint8_t byte = 0x00;
     bool data_available = false;
-    BinaryLoggerStatus logger_status = BinaryLogger_Success;
+    binary_logger_status_t logger_status = BINARY_LOGGER_SUCCESS;
 
 #ifdef TESTING_MOCK_INTERRUPT
     set_global_async_logger_data_available(true);
@@ -47,9 +47,9 @@ void analyze_logger_data_event(data_summary_t *data_summary, log_item_t *item)
     set_global_async_logger_data_available(false);
 
     if (data_available) {
-        log_receive_data(1, &byte);
+        binary_logger_receive_data(1, &byte);
         logger_status = log_item_update(item, DATA_RECEIVED, 1, &byte);
-        if (BinaryLogger_Success != logger_status) {
+        if (BINARY_LOGGER_SUCCESS != logger_status) {
             abort();
         }
         log_item(item);

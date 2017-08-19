@@ -25,7 +25,7 @@
 #include "hal.h"
 #include "spi_peripheral_factory.h"
 
-#include "logger.h"
+#include "binary_logger.h"
 #include "log_item.h"
 #include "message.h"
 #include "command.h"
@@ -135,20 +135,20 @@ void initialize(log_item_t **item)
 {
     initialize_hardware();
 
-    BinaryLoggerStatus logger_status = BinaryLogger_Success;
+    binary_logger_status_t logger_status = BINARY_LOGGER_SUCCESS;
     uint8_t const buffer_size_bytes = 32;
-    logger_status = BinaryLoggerCreate(buffer_size_bytes);
-    if (BinaryLogger_Success != logger_status) {
+    logger_status = binary_logger_create(buffer_size_bytes);
+    if (BINARY_LOGGER_SUCCESS != logger_status) {
         abort();
     }
 
     log_item_initialize_logger();
     logger_status = log_item_create(item);
-    if (BinaryLogger_Success != logger_status) {
+    if (BINARY_LOGGER_SUCCESS != logger_status) {
         abort();
     }
     logger_status = log_item_update_no_payload(*item, LOGGER_INITIALIZED);
-    if (BinaryLogger_Success != logger_status) {
+    if (BINARY_LOGGER_SUCCESS != logger_status) {
         abort();
     }
     log_item(*item);
@@ -179,8 +179,8 @@ void shutdown(log_item_t **item)
     log_item_update_no_payload(*item, SYSTEM_HALTED);
     log_item(*item);
     log_item_destroy(item);
-    log_flush();
-    BinaryLoggerDestroy();
+    binary_logger_flush();
+    binary_logger_destroy();
 #if (PLATFORM == PLATFORM_FRDM)
     NVIC_SystemReset();
 #endif

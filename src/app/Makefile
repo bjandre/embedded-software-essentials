@@ -25,7 +25,7 @@ SRCS = \
 	post_profiler.c \
 	message.c \
 	command.c \
-	logger.c \
+	binary_logger.c \
 	log_item.c
 
 INCLUDES = -I. -I../util -I../hal -I../main
