@@ -24,10 +24,16 @@ static const uint32_t profile_time_min =
     20; /* lower bound for optimized builds, typical about 38 debug, 22 optimized? */
 static const uint32_t profile_time_max =
     510; /* upper bound for debug builds, typical about 500? */
+#elif (PLATFORM == PLATFORM_BBB)
+static const uint32_t profile_time_min =
+    10; /* lower bound, debug builds ~14, optimized builds ~? */
+static const uint32_t profile_time_max =
+    20; /* upper bound for debug builds */
 #else
 static const uint32_t profile_time_min = 1;
 static const uint32_t profile_time_max = 5;
 #endif
+
 POSTstatus post_profiler_nop()
 {
     /** test the profiler for a single no-op.
