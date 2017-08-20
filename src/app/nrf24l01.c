@@ -13,16 +13,12 @@
 #include "compiler_compat.h"
 
 #include "spi_peripheral_factory.h"
+#include "gpio_common.h"
+#include "gpio.h"
 
 #include "nrf24l01.h"
 #include "nrf24l01_const.h"
 #include "async_global.h"
-
-#if (PLATFORM == PLATFORM_FRDM)
-#include "gpio_frdm_kl25z.h"
-#else
-#define PTD_NRF24_CHIP_ACTIVATE 0
-#endif
 
 extern volatile async_data_t global_async_data;
 
@@ -34,9 +30,7 @@ __STATIC_INLINE void nrf24_chip_activate(void)
     /* active high */
     {
         uint32_t interrupt_state = start_critical_region();
-#if (PLATFORM == PLATFORM_FRDM)
-        GPIOD->PSOR |= (1 << global_async_data.nrf24.chip_active_pin);
-#endif
+        gpio_set_pin(global_async_data.nrf24.chip_active_pin);
         end_critical_region(interrupt_state);
     }
 }
@@ -49,9 +43,7 @@ __STATIC_INLINE void nrf24_chip_deactivate(void)
     /* inactive low */
     {
         uint32_t interrupt_state = start_critical_region();
-#if (PLATFORM == PLATFORM_FRDM)
-        GPIOD->PCOR |= (1 << global_async_data.nrf24.chip_active_pin);
-#endif
+        gpio_clear_pin(global_async_data.nrf24.chip_active_pin);
         end_critical_region(interrupt_state);
     }
 }
@@ -66,9 +58,7 @@ __STATIC_INLINE void nrf24_spi_chip_select(void)
     /* active low */
     {
         uint32_t interrupt_state = start_critical_region();
-#if (PLATFORM == PLATFORM_FRDM)
-        GPIOD->PCOR |= (1 << global_async_data.nrf24.spi.CS_pin);
-#endif
+        gpio_clear_pin(global_async_data.nrf24.spi.CS_pin);
         end_critical_region(interrupt_state);
     }
 }
@@ -81,9 +71,7 @@ __STATIC_INLINE void nrf24_chip_spi_unselect(void)
     /* inactive high */
     {
         uint32_t interrupt_state = start_critical_region();
-#if (PLATFORM == PLATFORM_FRDM)
-        GPIOD->PSOR |= (1 << global_async_data.nrf24.spi.CS_pin);
-#endif
+        gpio_set_pin(global_async_data.nrf24.spi.CS_pin);
         end_critical_region(interrupt_state);
     }
 }
@@ -128,17 +116,14 @@ void nrf24_initialize(const size_t num_bytes_buffer)
     assert(SPI_Status_Success == status);
 
     /* GPIO radio enable line, active high, inactive low */
-    GPIO_PINS pin = PTD_NRF24_CHIP_ACTIVATE;
+    GPIO_PINS pin = NRF24_CHIP_ACTIVATE;
     {
         uint32_t interrupt_state = start_critical_region();
         /* FIXME(bja, 2017-04) frdm-kl25z specific GPIO pin! Needs to be abstracted! */
         global_async_data.nrf24.chip_active_pin = pin;
         end_critical_region(interrupt_state);
     }
-#if (PLATFORM == PLATFORM_FRDM)
-    PORTD->PCR[pin] |= PORT_PCR_MUX(1);
-    frdm_kl25z_initialize_port_d_output_pin(pin);
-#endif
+    gpio_initialize_chip_active_pin(pin);
 }
 
 

@@ -19,6 +19,7 @@ SRCS = \
 	memory_dma.c \
 	post_dma.c \
 	hal.c \
+	gpio.c \
 	communication_peripheral_generic.c \
 	communication_peripheral_factory.c \
 	spi_peripheral_factory.c

@@ -10,11 +10,7 @@
 
 #include <stdint.h>
 
-#include "platform_defs.h"
-#if (PLATFORM == PLATFORM_FRDM)
-#include "gpio_frdm_kl25z.h"
-#include "MKL25Z4.h"
-#endif
+#include "gpio.h"
 
 #include "leds.h"
 
@@ -30,16 +26,12 @@ void _change_intensity_led(leds_color_t const index, uint8_t const intensity);
 
 void leds_update(void)
 {
-#if (PLATFORM == PLATFORM_FRDM)
-    frdm_kl25z_toggle_red_led();
-#endif
+    gpio_toggle_red_led();
 }
 
 void leds_heartbeat(void)
 {
-#if (PLATFORM == PLATFORM_FRDM)
-    frdm_kl25z_heartbeat_led();
-#endif
+    gpio_toggle_heartbeat_led();
 }
 
 //  FIXME(bja, 2017-08) move to HAL
@@ -50,13 +42,9 @@ void leds_on_off(leds_color_t const led_color)
 {
     // NOTE(bja, 2017-08) invalid colors are ignored!
     if (LEDS_RED == led_color) {
-#if (PLATFORM == PLATFORM_FRDM)
-        frdm_kl25z_toggle_red_led();
-#endif
+        gpio_toggle_red_led();
     } else if (LEDS_GREEN == led_color) {
-#if (PLATFORM == PLATFORM_FRDM)
-        frdm_kl25z_toggle_green_led();
-#endif
+        gpio_toggle_green_led();
     }
     // NOTE(bja, 2017-04) blue is not included here because it is used for the
     // heartbeat
@@ -76,16 +64,11 @@ void leds_toggle(leds_color_t const led_color)
 
 void _toggle_led(leds_color_t const index)
 {
-#if (PLATFORM == PLATFORM_FRDM)
-    if (TPM2->CONTROLS[index].CnV == 0) {
-        TPM2->CONTROLS[index].CnV = TPM2->MOD / 8;
-    } else {
-        TPM2->CONTROLS[index].CnV = 0;
-    }
-#endif
+    gpio_pwm_toggle_led(index);
 }
 
-void leds_change_intensity(leds_color_t const led_color, uint8_t const direction)
+void leds_change_intensity(leds_color_t const led_color,
+                           uint8_t const direction)
 {
     // NOTE(bja, 2017-08) invalid colors and changes are ignored!
     if (LEDS_RED == led_color) {
@@ -99,13 +82,9 @@ void leds_change_intensity(leds_color_t const led_color, uint8_t const direction
 void _change_intensity_led(leds_color_t const index, uint8_t const direction)
 {
     if (increase_intensity == direction) {
-#if (PLATFORM == PLATFORM_FRDM)
-        TPM2->CONTROLS[index].CnV <<= 1;
-#endif
+        gpio_pwm_increase_intensity(index);
     } else if (decrease_intensity == direction) {
-#if (PLATFORM == PLATFORM_FRDM)
-        TPM2->CONTROLS[index].CnV >>= 1;
-#endif
+        gpio_pwm_decrease_intensity(index);
     }
 }
 

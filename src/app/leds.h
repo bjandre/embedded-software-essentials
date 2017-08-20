@@ -66,7 +66,8 @@ void leds_toggle(leds_color_t const led_color);
 
    \return status
  */
-void leds_change_intensity(leds_color_t const led_color, uint8_t const direction);
+void leds_change_intensity(leds_color_t const led_color,
+                           uint8_t const direction);
 
 
 
