@@ -116,14 +116,14 @@ void nrf24_initialize(const size_t num_bytes_buffer)
     assert(SPI_Status_Success == status);
 
     /* GPIO radio enable line, active high, inactive low */
-    GPIO_PINS pin = NRF24_CHIP_ACTIVATE;
+    gpio_pin_num_t pin = NRF24_CHIP_ACTIVATE;
     {
         uint32_t interrupt_state = start_critical_region();
         /* FIXME(bja, 2017-04) frdm-kl25z specific GPIO pin! Needs to be abstracted! */
         global_async_data.nrf24.chip_active_pin = pin;
         end_critical_region(interrupt_state);
     }
-    gpio_initialize_chip_active_pin(pin);
+    gpio_initialize_chip_active_pin();
 }
 
 

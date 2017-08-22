@@ -22,7 +22,7 @@
 
 typedef struct _nrf24l01p {
     spi_peripheral_t spi;
-    GPIO_PINS chip_active_pin;
+    gpio_pin_num_t chip_active_pin;
 } nrf24l01p_t;
 
 

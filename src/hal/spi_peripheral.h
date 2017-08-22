@@ -160,7 +160,7 @@ struct spi_peripheral_t {
     /**
        manually controled chip select pin
      */
-    GPIO_PINS CS_pin;
+    gpio_pin_num_t CS_pin;
 
     /**
        transmit buffer

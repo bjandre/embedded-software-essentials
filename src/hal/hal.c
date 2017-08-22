@@ -8,9 +8,16 @@
 #include "dma_frdm_kl25z.h"
 #include "spi_frdm_kl25z.h"
 #include "shutdown_frdm_kl25z.h"
+#elif (PLATFORM == PLATFORM_BBB)
+#include "gpio_bbb.h"
 #endif
 
 #include "hal.h"
+
+/**
+   Shutdown the GPIO hardware
+ */
+void shutdown_gpio(void);
 
 void initialize_hardware(void)
 {
@@ -31,6 +38,8 @@ void initialize_gpio(void)
 #if (PLATFORM == PLATFORM_FRDM)
     frdm_kl25z_initialize_gpio();
     frdm_kl25z_initialize_pwm_timer();
+#elif (PLATFORM == PLATFORM_BBB)
+    gpio_bbb_initialize();
 #endif
 }
 
@@ -52,5 +61,13 @@ void shutdown_hardware(void)
 {
 #if (PLATFORM == PLATFORM_FRDM)
     frdm_kl25z_shutdown();
+#endif
+    shutdown_gpio();
+}
+
+void shutdown_gpio(void)
+{
+#if (PLATFORM == PLATFORM_BBB)
+    gpio_bbb_shutdown();
 #endif
 }

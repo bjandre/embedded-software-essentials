@@ -20,29 +20,25 @@
 
 #include "gpio_common.h"
 
-// FIXME(bja, 2017-08) need to abstract out for kl25z and bbb.
-static const GPIO_PINS NRF24_CHIP_ACTIVATE = 3;
-
 /**
    Activate a GPIO pin - set to one
 
    \param[in] pin Id
  */
-void gpio_set_pin(uint32_t const pin);
+void gpio_set_pin(gpio_pin_num_t const pin);
 
 /**
    Clear a GPIO pin - set to zero
 
    \param[in] pin id
  */
-void gpio_clear_pin(uint32_t const pin);
+void gpio_clear_pin(gpio_pin_num_t const pin);
 
 /**
    Initialize the chip active pin used by the nrf24l01
 
-   \param[in] pin id
  */
-void gpio_initialize_chip_active_pin(uint32_t const pin);
+void gpio_initialize_chip_active_pin(void);
 
 /**
    Toggle the heartbeat led

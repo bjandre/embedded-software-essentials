@@ -14,29 +14,37 @@
 #if (PLATFORM == PLATFORM_FRDM)
 #include "gpio_frdm_kl25z.h"
 #include "MKL25z4.h"
+#elif (PLATFORM == PLATFORM_BBB)
+#include "gpio_bbb.h"
 #endif
 
 #include "gpio_common.h"
 #include "gpio.h"
 
-void gpio_set_pin(uint32_t const pin)
+void gpio_set_pin(gpio_pin_num_t const pin)
 {
 #if (PLATFORM == PLATFORM_FRDM)
     GPIOD->PSOR |= (1 << pin);
+#elif (PLATFORM == PLATFORM_BBB)
+    gpio_bbb_set_pin(pin);
 #endif
 }
 
-void gpio_clear_pin(uint32_t const pin)
+void gpio_clear_pin(gpio_pin_num_t const pin)
 {
 #if (PLATFORM == PLATFORM_FRDM)
     GPIOD->PCOR |= (1 << pin);
+#elif (PLATFORM == PLATFORM_BBB)
+    gpio_bbb_clear_pin(pin);
 #endif
 }
 
-void gpio_initialize_chip_active_pin(uint32_t const pin)
+void gpio_initialize_chip_active_pin(void)
 {
 #if (PLATFORM == PLATFORM_FRDM)
-    frdm_kl25z_initialize_port_d_output_pin(pin);
+    frdm_kl25z_initialize_port_d_output_pin(NRF24_CHIP_ACTIVATE);
+#elif (PLATFORM == PLATFORM_BBB)
+    gpio_bbb_initialize_pin(NRF24_CHIP_ACTIVATE, GPIO_OUTPUT);
 #endif
 }
 

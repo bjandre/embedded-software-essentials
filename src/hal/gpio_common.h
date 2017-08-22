@@ -11,6 +11,23 @@
 #ifndef ESE_HAL_GPIO_COMMON_H_
 #define ESE_HAL_GPIO_COMMON_H_
 
-typedef uint8_t GPIO_PINS;
+#include "platform_defs.h"
+
+typedef enum {
+    GPIO_INPUT,
+    GPIO_OUTPUT,
+} gpio_pin_direction_t;
+
+typedef enum {
+    GPIO_ERROR,
+    GPIO_SUCCESS,
+} gpio_status_t;
+
+typedef uint8_t gpio_pin_num_t;
+#if (PLATFORM == PLATFORM_FRDM)
+static const gpio_pin_num_t NRF24_CHIP_ACTIVATE = 3;
+#elif (PLATFORM == PLATFORM_BBB)
+static const gpio_pin_num_t NRF24_CHIP_ACTIVATE = 48;
+#endif
 
 #endif/* ESE_HAL_GPIO_COMMON_H_ */

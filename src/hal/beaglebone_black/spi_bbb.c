@@ -49,7 +49,7 @@ typedef struct _bbb_spi_state {
 
    \param[out] *state current state of the spi pins.
  */
-void bbb_get_spi_state(bbb_spi_state_t *state, const GPIO_PINS pin);
+void bbb_get_spi_state(bbb_spi_state_t *state, const gpio_pin_num_t pin);
 
 /**
    set the state of the spi interface that may need to be preserved across
@@ -57,7 +57,7 @@ void bbb_get_spi_state(bbb_spi_state_t *state, const GPIO_PINS pin);
 
    \param[in] *state new state of the spi pins.
  */
-void bbb_set_spi_state(bbb_spi_state_t *state, const GPIO_PINS pin);
+void bbb_set_spi_state(bbb_spi_state_t *state, const gpio_pin_num_t pin);
 
 /**
    zero out the spi_ioc_transfer structure
@@ -325,11 +325,11 @@ void bbb_spi_begin_async_transmit(void)
 {
 }
 
-void bbb_get_spi_state(bbb_spi_state_t *state, const GPIO_PINS pin)
+void bbb_get_spi_state(bbb_spi_state_t *state, const gpio_pin_num_t pin)
 {
 }
 
-void bbb_set_spi_state(bbb_spi_state_t *state, const GPIO_PINS pin)
+void bbb_set_spi_state(bbb_spi_state_t *state, const gpio_pin_num_t pin)
 {
 }
 

@@ -20,6 +20,7 @@ SRCS = \
 	dma_bbb.c \
 	rtc_bbb.c \
 	spi_bbb.c \
+	gpio_bbb.c \
 	uart_bbb.c
 
 OBJS = $(SRCS:%.c=%.o)
