@@ -24,24 +24,24 @@
    define the pins used for various gpio tasks
 */
 
-static const GPIO_PINS PTB_GPIO_LED_RED = 18; //!< built in red led, port b
-static const GPIO_PINS PTB_GPIO_LED_GREEN = 19; //!< built in green led, port b
+static const gpio_pin_num_t PTB_GPIO_LED_RED = 18; //!< built in red led, port b
+static const gpio_pin_num_t PTB_GPIO_LED_GREEN = 19; //!< built in green led, port b
 
-static const GPIO_PINS PTC_RTC_CLOCKIN =
+static const gpio_pin_num_t PTC_RTC_CLOCKIN =
     1; //!< alternate function 1, RTC clock input line
-static const GPIO_PINS PTC_MCG_CLOCKOUT =
+static const gpio_pin_num_t PTC_MCG_CLOCKOUT =
     3; //!< alternate function 5, MCG clock output line
 
-static const GPIO_PINS PTD_GPIO_LED_BLUE = 1; //!< built in blue led, port d
-static const GPIO_PINS PTD_NRF24_CHIP_ACTIVATE =
+static const gpio_pin_num_t PTD_GPIO_LED_BLUE = 1; //!< built in blue led, port d
+static const gpio_pin_num_t PTD_NRF24_CHIP_ACTIVATE =
     3; //!< Alternate function 1 - nRF24L01+, radio power up/enable when high
-static const GPIO_PINS PTD_SPI1_CS_NRF24 =
+static const gpio_pin_num_t PTD_SPI1_CS_NRF24 =
     4; //!< Alternate function 1 - SPI1_PCS0 - slave select for NRF24, manually controlled!
-static const GPIO_PINS PTD_SPI1_CLK =
+static const gpio_pin_num_t PTD_SPI1_CLK =
     5; //!< Alternate function 2 - SPI1_SCK - clock
-static const GPIO_PINS PTD_SPI1_MOSI =
+static const gpio_pin_num_t PTD_SPI1_MOSI =
     6; //!< Alternate function 2 - SPI1_MOSI - Master Out Slave In
-static const GPIO_PINS PTD_SPI1_MISO =
+static const gpio_pin_num_t PTD_SPI1_MISO =
     7; //!< Alternate function 2 - SPI1_MISO - Master In Slave Out
 
 /**
@@ -55,7 +55,7 @@ void frdm_kl25z_initialize_gpio(void);
   \param[in] pin gpio output pin
 
  */
-void frdm_kl25z_initialize_port_b_output_pin(GPIO_PINS pin);
+void frdm_kl25z_initialize_port_b_output_pin(gpio_pin_num_t pin);
 
 /**
   Platform specific code to initialize GPIO pins as output on port c.
@@ -64,7 +64,7 @@ void frdm_kl25z_initialize_port_b_output_pin(GPIO_PINS pin);
   \param[in] mux pin mux functionality
 
  */
-void frdm_kl25z_initialize_port_c_output_pin(GPIO_PINS pin, uint8_t mux);
+void frdm_kl25z_initialize_port_c_output_pin(gpio_pin_num_t pin, uint8_t mux);
 
 /**
   Platform specific code to initialize GPIO pins as input on port c.
@@ -73,7 +73,7 @@ void frdm_kl25z_initialize_port_c_output_pin(GPIO_PINS pin, uint8_t mux);
   \param[in] mux pin mux functionality
 
  */
-void frdm_kl25z_initialize_port_c_input_pin(GPIO_PINS pin, uint8_t mux);
+void frdm_kl25z_initialize_port_c_input_pin(gpio_pin_num_t pin, uint8_t mux);
 
 /**
   Platform specific code to initialize GPIO pins as output on port d.
@@ -81,7 +81,7 @@ void frdm_kl25z_initialize_port_c_input_pin(GPIO_PINS pin, uint8_t mux);
   \param[in] pin gpio output pin
 
  */
-void frdm_kl25z_initialize_port_d_output_pin(GPIO_PINS pin);
+void frdm_kl25z_initialize_port_d_output_pin(gpio_pin_num_t pin);
 
 /**
   Platform specific code to toggle the red led

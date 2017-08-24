@@ -35,7 +35,7 @@ void frdm_kl25z_initialize_gpio(void)
     GPIOD->PTOR |= (1 << PTD_GPIO_LED_BLUE);
 }
 
-void frdm_kl25z_initialize_port_b_output_pin(GPIO_PINS pin)
+void frdm_kl25z_initialize_port_b_output_pin(gpio_pin_num_t pin)
 {
     // Initialize the gpio pin for desired function
     // PORTB->PCR[pin] |= PORT_PCR_MUX(1);
@@ -45,7 +45,7 @@ void frdm_kl25z_initialize_port_b_output_pin(GPIO_PINS pin)
     GPIOB->PDDR |= (1 << pin);
 }
 
-void frdm_kl25z_initialize_port_c_output_pin(GPIO_PINS pin, uint8_t mux)
+void frdm_kl25z_initialize_port_c_output_pin(gpio_pin_num_t pin, uint8_t mux)
 {
     // enable clock for port C
     SIM->SCGC5 |= SIM_SCGC5_PORTC(1);
@@ -55,7 +55,7 @@ void frdm_kl25z_initialize_port_c_output_pin(GPIO_PINS pin, uint8_t mux)
     GPIOC->PDDR |= (1 << pin);
 }
 
-void frdm_kl25z_initialize_port_c_input_pin(GPIO_PINS pin, uint8_t mux)
+void frdm_kl25z_initialize_port_c_input_pin(gpio_pin_num_t pin, uint8_t mux)
 {
     // enable clock for port C
     SIM->SCGC5 |= SIM_SCGC5_PORTC(1);
@@ -65,7 +65,7 @@ void frdm_kl25z_initialize_port_c_input_pin(GPIO_PINS pin, uint8_t mux)
     GPIOC->PDDR &= ~(1 << pin);
 }
 
-void frdm_kl25z_initialize_port_d_output_pin(GPIO_PINS pin)
+void frdm_kl25z_initialize_port_d_output_pin(gpio_pin_num_t pin)
 {
     // Initialize the gpio pin desired function
     PORTD->PCR[pin] |= PORT_PCR_MUX(1);

@@ -13,7 +13,7 @@
 #include "platform_defs.h"
 #if (PLATFORM == PLATFORM_FRDM)
 #include "gpio_frdm_kl25z.h"
-#include "MKL25z4.h"
+#include "MKL25Z4.h"
 #elif (PLATFORM == PLATFORM_BBB)
 #include "gpio_bbb.h"
 #endif

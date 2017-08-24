@@ -31,7 +31,7 @@ void frdm_kl25z_set_clocks_per_second_profiling_timer(uint32_t cps);
 
    \return required selection factor for the prescaler
  */
-uint8_t determine_prescaler_selection(uint32_t prescaler);
+uint8_t profiling_determine_prescaler_selection(uint32_t prescaler);
 
 
 uint32_t frdm_kl25z_get_clocks_per_second_profiling_timer(void)
@@ -68,7 +68,7 @@ void frdm_kl25z_initialize_profiling_timer(void)
     // want to report clock ticks, not seconds, so just scale as 1;
     uint32_t prescaler = 1;
 
-    uint8_t prescaler_selection = determine_prescaler_selection(prescaler);
+    uint8_t prescaler_selection = profiling_determine_prescaler_selection(prescaler);
     TPM0->SC |= TPM_SC_PS(prescaler_selection);
 
     // FIXME(bja, 2017-04) don't hard code! Since we are incrementing the
@@ -92,7 +92,7 @@ void frdm_kl25z_initialize_profiling_timer(void)
     NVIC_EnableIRQ(TPM0_IRQn);
 }
 
-uint8_t determine_prescaler_selection(uint32_t prescaler)
+uint8_t profiling_determine_prescaler_selection(uint32_t prescaler)
 {
     uint8_t prescaler_selection = 0;
     switch (prescaler) {

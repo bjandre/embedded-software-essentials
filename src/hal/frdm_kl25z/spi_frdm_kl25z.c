@@ -40,7 +40,7 @@ typedef struct _frdm_kl25z_spi_state {
    \param[out] *state current state of the spi pins.
  */
 void frdm_kl25z_get_spi_state(frdm_kl25z_spi_state_t *state,
-                              const GPIO_PINS pin);
+                              const gpio_pin_num_t pin);
 
 /**
    set the state of the spi interface that may need to be preserved across
@@ -49,7 +49,7 @@ void frdm_kl25z_get_spi_state(frdm_kl25z_spi_state_t *state,
    \param[in] *state new state of the spi pins.
  */
 void frdm_kl25z_set_spi_state(frdm_kl25z_spi_state_t *state,
-                              const GPIO_PINS pin);
+                              const gpio_pin_num_t pin);
 
 
 SPIStatus frdm_kl25z_spi_initialize(spi_peripheral_t volatile *this,
@@ -290,14 +290,14 @@ void frdm_kl25z_spi_begin_async_transmit(void)
 }
 
 void frdm_kl25z_get_spi_state(frdm_kl25z_spi_state_t *state,
-                              const GPIO_PINS pin)
+                              const gpio_pin_num_t pin)
 {
     // set chip select, inactive high, active low
     state->chip_select = GPIOD->PDOR & (1 << pin);
 }
 
 void frdm_kl25z_set_spi_state(frdm_kl25z_spi_state_t *state,
-                              const GPIO_PINS pin)
+                              const gpio_pin_num_t pin)
 {
     if (state->chip_select == 0) {
         // active low

@@ -28,6 +28,8 @@ typedef uint8_t gpio_pin_num_t;
 static const gpio_pin_num_t NRF24_CHIP_ACTIVATE = 3;
 #elif (PLATFORM == PLATFORM_BBB)
 static const gpio_pin_num_t NRF24_CHIP_ACTIVATE = 48;
+#else
+static const gpio_pin_num_t NRF24_CHIP_ACTIVATE = 0;
 #endif
 
 #endif/* ESE_HAL_GPIO_COMMON_H_ */

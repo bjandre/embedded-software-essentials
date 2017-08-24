@@ -24,7 +24,7 @@
 
    \return required selection factor for the prescaler
  */
-uint8_t determine_prescaler_selection(uint32_t prescaler);
+uint8_t pwm_determine_prescaler_selection(uint32_t prescaler);
 
 
 void frdm_kl25z_initialize_pwm_timer(void)
@@ -50,7 +50,7 @@ void frdm_kl25z_initialize_pwm_timer(void)
     // want to report clock ticks, not seconds, so just scale as 1;
     uint32_t prescaler = 1;
 
-    uint8_t prescaler_selection = determine_prescaler_selection(prescaler);
+    uint8_t prescaler_selection = pwm_determine_prescaler_selection(prescaler);
     TPM2->SC |= TPM_SC_PS(prescaler_selection);
 
     // continue counting in debug mode?
@@ -72,7 +72,7 @@ void frdm_kl25z_initialize_pwm_timer(void)
     TPM2->CONTROLS[1].CnV = 0;
 }
 
-uint8_t determine_prescaler_selection(uint32_t prescaler)
+uint8_t pwm_determine_prescaler_selection(uint32_t prescaler)
 {
     uint8_t prescaler_selection = 0;
     switch (prescaler) {
